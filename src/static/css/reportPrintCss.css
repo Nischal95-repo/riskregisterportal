@@ -1,0 +1,334 @@
+.colorStyle {
+  color: black !important;
+}
+@media print {
+  .row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    margin-right: -15px !important;
+    margin-left: -15px !important;
+  }
+
+  .checkbox {
+    margin-top: -40px !important;
+    /* margin-top: -30px !important; */
+    position: relative !important;
+    /* top: -70px !important; */
+    /* vertical-align: top !important; */
+    /* padding-top: -30px !important; */
+    /* margin-left: 40% !important; */
+  }
+  /* tr {
+    display: table-row !important;
+    vertical-align: inherit !important;
+    border-color: inherit !important;
+  } */
+  .printMarginTR {
+    /* word-break: break-all !important; */
+    /* margin-bottom: 10px !important;
+     */
+    margin: 10% !important;
+    justify-content: space-around !important;
+  }
+  .printChecboxMargin {
+    margin-left: 236px !important;
+    white-space: nowrap !important;
+    /* 33% !important; */
+  }
+  /* #option1 {
+    top: 0px !important;
+  } */
+  .printCSSIMAGE {
+    width: 200px;
+    height: 200px;
+  }
+
+  .margin32Print {
+    margin-top: -4px !important;
+    font-family: Sans-serif !important;
+
+    /* font-family: Arial, Helvetica, sans-serif; */
+  }
+  .Chprintmargin {
+    margin-top: 60px !important;
+  }
+  .printClass {
+    margin-top: -0px !important;
+    /* font-style: bold !important; */
+    font-family: Sans-serif !important;
+    /* font-weight: 300px !important; */
+
+    /* padding-top: -60px !important; */
+    font-size: 16px;
+  }
+  .col-print-3 {
+    flex: 0 0 25% !important;
+    max-width: 25% !important;
+  }
+
+  .printLabel {
+    display: inline !important;
+    font-size: xx-small !important;
+  }
+
+  .col-print-4 {
+    flex: 0 0 33.33333% !important;
+    max-width: 33.33333% !important;
+  }
+
+  .col-print-5 {
+    flex: 0 0 41.66667% !important;
+    max-width: 41.66667% !important;
+  }
+
+  .col-print-6 {
+    flex: 0 0 50% !important;
+    max-width: 50% !important;
+  }
+
+  .col-print-7 {
+    flex: 0 0 58.33333% !important;
+    max-width: 58.33333% !important;
+  }
+
+  .col-print-8 {
+    flex: 0 0 66.66667% !important;
+    max-width: 66.66667% !important;
+  }
+
+  .col-print-9 {
+    flex: 0 0 75% !important;
+    max-width: 75% !important;
+  }
+
+  .col-print-10 {
+    flex: 0 0 83.33333% !important;
+    max-width: 83.33333% !important;
+  }
+
+  .col-print-11 {
+    flex: 0 0 91.66667% !important;
+    max-width: 91.66667% !important;
+  }
+
+  .col-print-12 {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+  }
+
+  #Header,
+  #Footer {
+    display: none !important;
+  }
+  .col-sm-1,
+  .col-sm-2,
+  .col-sm-3,
+  .col-sm-4,
+  .col-sm-5,
+  .col-sm-6,
+  .col-sm-7,
+  .col-sm-8,
+  .col-sm-9,
+  .col-sm-10,
+  .col-sm-11,
+  .col-sm-12 {
+    float: left;
+  }
+  .col-sm-12 {
+    width: 100%;
+  }
+  .col-sm-11 {
+    width: 91.66666667%;
+  }
+  .col-sm-10 {
+    width: 83.33333333%;
+  }
+  .col-sm-9 {
+    width: 75%;
+  }
+  .col-sm-8 {
+    width: 66.66666667%;
+  }
+  .col-sm-7 {
+    width: 58.33333333%;
+  }
+  .col-sm-6 {
+    width: 50%;
+  }
+  .col-sm-5 {
+    width: 41.66666667%;
+  }
+  .col-sm-4 {
+    width: 33.33333333%;
+  }
+  .col-sm-3 {
+    width: 25%;
+  }
+  .col-sm-2 {
+    width: 16.66666667%;
+  }
+  .col-sm-1 {
+    width: 8.33333333%;
+  }
+  @page {
+    /* size: portrait; */
+    size: landscape;
+    margin: 3rem;
+  }
+}
+
+/* firefox css */
+@-moz-document url-prefix() {
+  @media print {
+    .row {
+      display: flex !important;
+      flex-wrap: wrap !important;
+      margin-right: -15px !important;
+      margin-left: -15px !important;
+      overflow: visible !important;
+    }
+
+    .checkbox {
+      margin-top: -40px !important;
+      /* margin-left: 40% !important; */
+    }
+    /* tr {
+    display: table-row !important;
+    vertical-align: inherit !important;
+    border-color: inherit !important;
+  } */
+    .printMarginTR {
+      /* word-break: break-all !important; */
+      /* margin-bottom: 10px !important;
+     */
+      margin: 10% !important;
+      justify-content: space-around !important;
+    }
+    .printChecboxMargin {
+      margin-left: 236px !important;
+      white-space: nowrap !important;
+      /* 33% !important; */
+    }
+    .printClass {
+      /* margin-top: -30px !important; */
+      padding-top: -30px !important;
+      font-size: 16px;
+    }
+    .col-print-3 {
+      flex: 0 0 25% !important;
+      max-width: 25% !important;
+    }
+
+    .printLabel {
+      display: inline !important;
+      font-size: xx-small !important;
+    }
+
+    .col-print-4 {
+      flex: 0 0 33.33333% !important;
+      max-width: 33.33333% !important;
+    }
+
+    .col-print-5 {
+      flex: 0 0 41.66667% !important;
+      max-width: 41.66667% !important;
+    }
+
+    .col-print-6 {
+      flex: 0 0 50% !important;
+      max-width: 50% !important;
+    }
+
+    .col-print-7 {
+      flex: 0 0 58.33333% !important;
+      max-width: 58.33333% !important;
+    }
+
+    .col-print-8 {
+      flex: 0 0 66.66667% !important;
+      max-width: 66.66667% !important;
+    }
+
+    .col-print-9 {
+      flex: 0 0 75% !important;
+      max-width: 75% !important;
+    }
+
+    .col-print-10 {
+      flex: 0 0 83.33333% !important;
+      max-width: 83.33333% !important;
+    }
+
+    .col-print-11 {
+      flex: 0 0 91.66667% !important;
+      max-width: 91.66667% !important;
+    }
+
+    .col-print-12 {
+      flex: 0 0 100% !important;
+      max-width: 100% !important;
+    }
+
+    #Header,
+    #Footer {
+      display: none !important;
+    }
+    .col-sm-1,
+    .col-sm-2,
+    .col-sm-3,
+    .col-sm-4,
+    .col-sm-5,
+    .col-sm-6,
+    .col-sm-7,
+    .col-sm-8,
+    .col-sm-9,
+    .col-sm-10,
+    .col-sm-11,
+    .col-sm-12 {
+      float: left;
+    }
+    .col-sm-12 {
+      width: 100%;
+    }
+    .col-sm-11 {
+      width: 91.66666667%;
+    }
+    .col-sm-10 {
+      width: 83.33333333%;
+    }
+    .col-sm-9 {
+      width: 75%;
+    }
+    .col-sm-8 {
+      width: 66.66666667%;
+    }
+    .col-sm-7 {
+      width: 58.33333333%;
+    }
+    .col-sm-6 {
+      width: 50%;
+    }
+    .col-sm-5 {
+      width: 41.66666667%;
+    }
+    .col-sm-4 {
+      width: 33.33333333%;
+    }
+    .col-sm-3 {
+      width: 25%;
+    }
+    .col-sm-2 {
+      width: 16.66666667%;
+    }
+    .col-sm-1 {
+      width: 8.33333333%;
+    }
+    @page {
+      size: portrait;
+      /* margin-top: 1rem; */
+      /* margin-bottom: -3rem; */
+      /* margin-left: 2rem;
+      margin-right: 2rem; */
+    }
+  }
+}

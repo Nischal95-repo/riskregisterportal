@@ -1,0 +1,515 @@
+/* print css */
+/* label {
+    margin-top: 8rem !important;
+  }
+
+  .signature {
+    margin-top: 5%;
+  }
+
+  .medal-img {
+    margin-left: -120% !important;
+  }
+
+  .logo-img {
+    padding-top: 2%;
+  }
+  .name {
+    margin-top: -12px !important;
+  }
+} */
+
+.certificate1 {
+  background-image: url("../certificateImage/frame.png") !important;
+  background-repeat: no-repeat !important;
+  /* background-attachment: fixed !important; */
+
+  background-size: 100% 100% !important;
+  /* height: 400px !important; */
+}
+@media print {
+  .certificate1 {
+    background-image: url("../certificateImage/frame.png") !important;
+    background-repeat: no-repeat !important;
+
+    background-size: 100% 100% !important;
+    height: 680px !important;
+  }
+  .signRow {
+    margin-top: -20px;
+  }
+  .printMargin {
+    margin-left: 30px !important;
+    margin-right: 30px !important;
+  }
+  .imageLogo {
+    margin-top: 140px !important;
+    margin-left: 30px;
+  }
+  .printmMrgin {
+    margin-top: -10%;
+  }
+  .courceCredit {
+    text-align: left;
+    margin-left: 25% !important;
+    margin-top: 20px !important;
+  }
+  .courceCredit1 {
+    text-align: right;
+    margin-right: 25% !important;
+    margin-top: -30px !important;
+  }
+  .certificateContain {
+    height: 140px !important;
+    width: 100% !important;
+    color: black !important;
+  }
+  label {
+    margin-top: 2rem;
+    font-style: italic;
+    font-family: fantasy;
+    font-size: 25px;
+    font-weight: normal;
+    line-height: 1.8;
+  }
+  hr {
+    margin-bottom: 0;
+    border-top: 0.1rem solid;
+    width: 60%;
+  }
+  .certificateSign {
+    margin-left: 39%;
+    margin-top: -5px !important;
+    /* text-align: right; */
+    /* margin-right: 10px; */
+    /* margin-left: 10% !important; */
+  }
+  .certificateSignIMG {
+    margin-top: -40px !important;
+    margin-left: 40%;
+  }
+  .certificateSignIMG1 {
+    margin-right: 40%;
+    margin-top: -62px !important;
+  }
+  .certificateSign1 {
+    margin-right: 40%;
+    /* text-align: left; */
+    /* margin-right: 40% !important; */
+    margin-top: -5px !important;
+  }
+  @page {
+    /* margin: 1.5cm !important; */
+    /* margin: 7mm 10mm 7mm 10mm; */
+    size: landscape !important;
+  }
+
+  .col-print-1 {
+    flex: 0 0 8.33333%;
+    max-width: 8.33333%;
+  }
+
+  .col-print-2 {
+    flex: 0 0 16.66667%;
+    max-width: 16.66667%;
+  }
+
+  .col-print-3 {
+    flex: 0 0 25%;
+    max-width: 25%;
+  }
+
+  .col-print-4 {
+    flex: 0 0 33.33333%;
+    max-width: 33.33333%;
+  }
+
+  .col-print-5 {
+    flex: 0 0 41.66667%;
+    max-width: 41.66667%;
+  }
+
+  .col-print-6 {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+
+  .col-print-7 {
+    flex: 0 0 58.33333%;
+    max-width: 58.33333%;
+  }
+
+  .col-print-8 {
+    flex: 0 0 66.66667%;
+    max-width: 66.66667%;
+  }
+
+  .col-print-9 {
+    flex: 0 0 75%;
+    max-width: 75%;
+  }
+
+  .col-print-10 {
+    flex: 0 0 83.33333%;
+    max-width: 83.33333%;
+  }
+
+  .col-print-11 {
+    flex: 0 0 91.66667%;
+    max-width: 91.66667%;
+  }
+
+  .col-print-12 {
+    flex: 0 0 100%;
+    max-width: 100%;
+  }
+  a[href]:after {
+    content: none !important;
+  }
+  img[src]:after {
+    content: none !important;
+  }
+}
+/* .signature-name {
+  color: darkblue !important;
+  font-size: larger;
+  font-family: fantasy;
+  font-weight: bold;
+}
+.designation {
+  font-family: fantasy;
+  font-weight: 600;
+}
+
+.signature {
+  margin-top: 3%;
+}
+
+.medal-img {
+  margin-left: -100% !important;
+}
+
+.logo-img {
+  margin-top: -4% !important;
+  text-align: left;
+} */
+
+/* .name {
+    font-weight: bold;
+    font-size: larger;
+    left: 45%;
+    position: absolute;
+    margin-top: -12px;
+  } */
+
+/* #footer {
+  position: fixed;
+  bottom: 10%;
+  width: 100%;
+}
+#header {
+  margin-top: 8%;
+}
+#footer-2 {
+  /* position: absolute; */
+/* bottom: 100%;
+} */
+.height421 {
+  height: 421px !important;
+}
+.name {
+  font-weight: bold;
+  font-size: larger;
+  left: 45%;
+  position: absolute;
+  margin-top: -12px;
+}
+.signature-name {
+  color: darkblue !important;
+  font-size: larger;
+  font-family: fantasy;
+  font-weight: bold;
+}
+
+#header {
+  margin-top: 8%;
+}
+#footer-2 {
+  position: absolute;
+  bottom: 100%;
+}
+.logo-img {
+  margin-top: -3% !important;
+  text-align: left;
+}
+.certificateHeading {
+  color: black !important;
+  letter-spacing: 6px !important;
+}
+.caerti-user-name {
+  color: #42aed9;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif !important;
+}
+
+.printButton {
+  /* padding-top: 48px; */
+  margin-top: 79px;
+  margin-left: -31px;
+}
+
+.printClik {
+  /* padding-top: 48px; */
+  margin-top: 92px;
+  margin-left: -26px;
+}
+
+@-moz-document url-prefix() {
+  .certificate1 {
+    background-image: url("../certificateImage/frame.png") !important;
+    background-repeat: no-repeat !important;
+    /* background-attachment: fixed !important; */
+
+    background-size: 100% 100% !important;
+    /* height: 400px !important; */
+  }
+  @media print {
+    .certificate1 {
+      background-image: url("../certificateImage/frame.png") !important;
+      background-repeat: no-repeat !important;
+
+      background-size: 100% 100% !important;
+      height: 680px !important;
+    }
+    .signRow {
+      margin-top: -20px;
+    }
+    .printMargin {
+      margin-left: 30px !important;
+      margin-right: 30px !important;
+    }
+    .imageLogo {
+      margin-top: 140px !important;
+      margin-left: 30px;
+    }
+    .printmMrgin {
+      margin-top: -10%;
+    }
+    .courceCredit {
+      text-align: left;
+      margin-right: 70% !important;
+      margin-top: -70px !important;
+    }
+    .courceCredit1 {
+      text-align: right;
+      margin-left: 40% !important;
+
+      margin-top: -50% !important;
+      padding-top: -80px;
+    }
+    .firefox1 {
+      margin-top: -8px !important;
+    }
+    .certificateContain {
+      height: 140px !important;
+      width: 100% !important;
+      color: black !important;
+    }
+    label {
+      margin-top: 2rem;
+      font-style: italic;
+      font-family: fantasy;
+      font-size: 25px;
+      font-weight: normal;
+      line-height: 1.8;
+    }
+    hr {
+      margin-bottom: 0;
+      border-top: 0.1rem solid;
+      width: 60%;
+    }
+    .certificateSign {
+      margin-left: 39%;
+      margin-top: -5px !important;
+      /* text-align: right; */
+      /* margin-right: 10px; */
+      /* margin-left: 10% !important; */
+    }
+    .certificateSignIMG {
+      margin-top: -40px !important;
+      margin-left: 40%;
+    }
+    .certificateSignIMG1 {
+      margin-right: 40%;
+      margin-top: -62px !important;
+    }
+    .certificateSign1 {
+      margin-right: 40%;
+      /* text-align: left; */
+      /* margin-right: 40% !important; */
+      margin-top: -5px !important;
+    }
+    @page {
+      /* margin: 1.5cm !important; */
+      /* margin: 7mm 10mm 7mm 10mm; */
+      size: landscape !important;
+    }
+
+    .col-print-1 {
+      flex: 0 0 8.33333%;
+      max-width: 8.33333%;
+    }
+
+    .col-print-2 {
+      flex: 0 0 16.66667%;
+      max-width: 16.66667%;
+    }
+
+    .col-print-3 {
+      flex: 0 0 25%;
+      max-width: 25%;
+    }
+
+    .col-print-4 {
+      flex: 0 0 33.33333%;
+      max-width: 33.33333%;
+    }
+
+    .col-print-5 {
+      flex: 0 0 41.66667%;
+      max-width: 41.66667%;
+    }
+
+    .col-print-6 {
+      flex: 0 0 50%;
+      max-width: 50%;
+    }
+
+    .col-print-7 {
+      flex: 0 0 58.33333%;
+      max-width: 58.33333%;
+    }
+
+    .col-print-8 {
+      flex: 0 0 66.66667%;
+      max-width: 66.66667%;
+    }
+
+    .col-print-9 {
+      flex: 0 0 75%;
+      max-width: 75%;
+    }
+
+    .col-print-10 {
+      flex: 0 0 83.33333%;
+      max-width: 83.33333%;
+    }
+
+    .col-print-11 {
+      flex: 0 0 91.66667%;
+      max-width: 91.66667%;
+    }
+
+    .col-print-12 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+    a[href]:after {
+      content: none !important;
+    }
+    img[src]:after {
+      content: none !important;
+    }
+  }
+  /* .signature-name {
+  color: darkblue !important;
+  font-size: larger;
+  font-family: fantasy;
+  font-weight: bold;
+}
+.designation {
+  font-family: fantasy;
+  font-weight: 600;
+}
+
+.signature {
+  margin-top: 3%;
+}
+
+.medal-img {
+  margin-left: -100% !important;
+}
+
+.logo-img {
+  margin-top: -4% !important;
+  text-align: left;
+} */
+
+  /* .name {
+    font-weight: bold;
+    font-size: larger;
+    left: 45%;
+    position: absolute;
+    margin-top: -12px;
+  } */
+
+  /* #footer {
+  position: fixed;
+  bottom: 10%;
+  width: 100%;
+}
+#header {
+  margin-top: 8%;
+}
+#footer-2 {
+  /* position: absolute; */
+  /* bottom: 100%;
+} */
+  .height421 {
+    height: 421px !important;
+  }
+  .name {
+    font-weight: bold;
+    font-size: larger;
+    left: 45%;
+    position: absolute;
+    margin-top: -12px;
+  }
+  .signature-name {
+    color: darkblue !important;
+    font-size: larger;
+    font-family: fantasy;
+    font-weight: bold;
+  }
+
+  #header {
+    margin-top: 8%;
+  }
+  #footer-2 {
+    position: absolute;
+    bottom: 100%;
+  }
+  .logo-img {
+    margin-top: -3% !important;
+    text-align: left;
+  }
+  .certificateHeading {
+    color: black !important;
+    letter-spacing: 6px !important;
+  }
+  .caerti-user-name {
+    color: #42aed9;
+    font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif !important;
+  }
+
+  .printButton {
+    /* padding-top: 48px; */
+    margin-top: 79px;
+    margin-left: -31px;
+  }
+
+  .printClik {
+    /* padding-top: 48px; */
+    margin-top: 92px;
+    margin-left: -26px;
+  }
+}

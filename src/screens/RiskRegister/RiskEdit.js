@@ -6,7 +6,7 @@ import SelectComponent from "../Common/form-component/SelectComponent";
 import SimpleReactValidator from "simple-react-validator";
 import { getListofGenericMasterQuery } from "../../services/graphql/queries/user";
 import { getListofProjectsByCompanyId } from "../../services/graphql/queries/document-upload";
-import { CREATE_RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
+import { UPDATE_RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
 import { format } from "date-fns";
 
 import { withApollo } from "react-apollo";
@@ -21,8 +21,12 @@ const impAndProbOptions = [
   { Id: 2, label: "Medium" },
   { Id: 3, label: "High" }
 ];
+const statusOptions = [
+  { Id: 2, label: "Open" },
+  { Id: 1, label: "Closed" }
+];
 
-class AddRiskRegister extends React.Component {
+class EditRiskRegister extends React.Component {
   constructor() {
     super();
     this.state = {
@@ -34,7 +38,9 @@ class AddRiskRegister extends React.Component {
         description: "",
         impact: "",
         probability: "",
-        severity: ""
+        severity: "",
+        id: null,
+        status: null
       },
 
       companyOptions: [],
@@ -75,6 +81,10 @@ class AddRiskRegister extends React.Component {
         }
       };
     });
+    this.setState({ project: "" });
+    this.getProjectOptions(value);
+  };
+  getProjectOptions(value) {
     this.props.client
       .query({
         query: getListofProjectsByCompanyId,
@@ -97,12 +107,16 @@ class AddRiskRegister extends React.Component {
           projectOptions: projArr,
           project: ""
         };
-        this.setState({ ...this.initialState, loading: false, error: "" });
+        this.setState({
+          ...this.initialState,
+          loading: false,
+          error: ""
+        });
       })
       .catch(error => {
         this.setState({ loading: false, error: error.message });
       });
-  };
+  }
   getListOfOptions(id) {
     this.props.client
       .query({
@@ -150,37 +164,73 @@ class AddRiskRegister extends React.Component {
     // this.state.riskDetail.projectId = parseInt(this.state.riskDetail.projectId);
     this.props.client
       .mutate({
-        mutation: CREATE_RISK_REGISTER,
+        mutation: UPDATE_RISK_REGISTER,
         variables: this.state.riskDetail,
         fetchPolicy: "no-cache"
       })
       .then(result => {
         console.log("result", result);
+        this.props.riskUpdate();
+        this.props.changeMode();
       })
       .catch(error => {
         console.log("error", error);
       });
   };
 
-  clear() {
-    this.setState({
-      riskDetail: {
-        company: null,
-        project: null,
-        riskCategory: null,
-        name: "",
-        description: "",
-        impact: "",
-        probability: "",
-        severity: ""
-      },
-      projectOptions: []
-    });
+  reset() {
+    // this.setState({
+    //   riskDetail: {
+    //     company: null,
+    //     project: null,
+    //     riskCategory: null,
+    //     name: "",
+    //     description: "",
+    //     impact: "",
+    //     probability: "",
+    //     severity: ""
+    //   },
+    //   projectOptions: []
+    // });
+    this.updateData();
     this.validator.hideMessages();
+  }
+  updateData() {
+    const {
+      id,
+      name,
+      categoryId,
+      projectId,
+      companyId,
+      impact,
+      probability,
+      severity,
+      description,
+      status,
+      createdBy,
+      createdOn,
+      lastModifiedBy,
+      lastModifiedOn
+    } = this.props.riskDetails;
+    const riskDetail = {
+      name: name,
+      riskCategory: categoryId.Id,
+      project: projectId.Id,
+      company: companyId.Id,
+      impact: impact,
+      probability: probability,
+      severity: severity,
+      description: description,
+      id: id,
+      status: status
+    };
+    this.setState({ riskDetail: riskDetail });
+    this.getProjectOptions(companyId.Id);
   }
   componentDidMount() {
     this.getListOfOptions(18);
     this.getListOfOptions(3);
+    this.updateData();
   }
 
   render() {
@@ -192,7 +242,7 @@ class AddRiskRegister extends React.Component {
     } = this.state;
     return (
       <div>
-        <h1 className="heading m-b-25">Risk Creation</h1>
+        <h1 className="heading m-b-25">Risk Updation</h1>
         <div className="row">
           <div className="col-md-12">
             {/* Form Section start */}
@@ -222,6 +272,7 @@ class AddRiskRegister extends React.Component {
                     options={riskOptions}
                     optionKey={"label"}
                     valueKey={"Id"}
+                    default={false}
                     value={riskDetail.riskCategory}
                     placeholder={"Select Risk Category"}
                     handleChange={e => {
@@ -307,7 +358,24 @@ class AddRiskRegister extends React.Component {
                     <input type="text" className="form-control" readOnly />
                   </div>
                 </div>
+                <div className="col-md-6 col-lg-3">
+                  <SelectComponent
+                    required
+                    label="Status"
+                    title={"status"}
+                    name="status"
+                    options={statusOptions}
+                    optionKey={"label"}
+                    valueKey={"Id"}
+                    value={riskDetail.status}
+                    placeholder={"Select Status"}
+                    handleChange={this.handleInput}
+                    validator={this.validator}
+                    validation="required"
+                  />
+                </div>
               </div>
+
               <div className="row">
                 <div className="col-md-4 col-lg-6">
                   <div className="form-group">
@@ -376,9 +444,9 @@ class AddRiskRegister extends React.Component {
                   <ButtonComponent
                     className="btn-light  ml-3"
                     type="button"
-                    title="Clear"
+                    title="Reset"
                     onClick={() => {
-                      this.clear();
+                      this.reset();
                     }}
                   ></ButtonComponent>
                 </div>
@@ -392,4 +460,4 @@ class AddRiskRegister extends React.Component {
   }
 }
 
-export default withApollo(AddRiskRegister);
+export default withApollo(EditRiskRegister);

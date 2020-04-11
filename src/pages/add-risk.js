@@ -5,8 +5,8 @@ import LayoutContainer from "../screens/layout/admin-dashboard";
 import AddRiskRegister from "../screens/RiskRegister/createRiskRegister";
 
 const breadCrumbData = [
-  { link: "/user-profile", name: "User Profile" },
-  { link: "/user-edit", name: "User Edit" }
+  { link: "/risk-register", name: "Risk Register" },
+  { name: "Add Risk" }
 ];
 
 const Home = () => (

@@ -15,9 +15,7 @@ const SelectComponent = props => (
         disabled={props.disabled}
         className="form-control"
       >
-        <option value="" disabled>
-          {props.placeholder}
-        </option>
+        <option value="">{props.placeholder}</option>
         {props.optionKey
           ? props.options.map(option => {
               return (

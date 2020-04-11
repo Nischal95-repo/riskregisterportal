@@ -13,6 +13,8 @@ import Home from "./pages/home";
 // RiskRegister
 import RiskRegister from "./pages/risk-register";
 import AddRiskRegister from "./pages/add-risk";
+
+import RiskDetail from "./pages/risk-detail";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -32,6 +34,7 @@ class App extends React.Component {
         {/* Risk Register */}
         <Route exact path="/risk-register" component={RiskRegister} />
         <Route exact path="/add-risk" component={AddRiskRegister} />
+        <Route exact path="/risk-detail" component={RiskDetail} />
         {/* Risk Register */}
       </>
     );

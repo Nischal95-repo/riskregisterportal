@@ -133,6 +133,10 @@ export const RISK_DETAIL = gql`
         }
         completionDate
         forecastDate
+        departmentId {
+          Id
+          description
+        }
       }
     }
   }
@@ -163,6 +167,88 @@ export const UPDATE_RISK_REGISTER = gql`
         status: $status
       }
     ) {
+      message
+    }
+  }
+`;
+
+export const GET_LIST_OF_MITIGATIONS = gql`
+  query($id: Int) {
+    getListOfMitigationPlansById(riskId: $id) {
+      id
+      name
+      completionDate
+      responsible {
+        loginId
+      }
+      departmentId {
+        description
+      }
+      forecastDate
+      status {
+        name
+        Id
+      }
+      departmentId {
+        Id
+        description
+      }
+    }
+  }
+`;
+
+export const CREATE_MITIGATION = gql`
+  mutation(
+    $name: String!
+    $department: Int!
+    $responsible: Int!
+    $completionDate: Date!
+    $riskId: Int!
+  ) {
+    createMitigation(
+      data: {
+        name: $name
+        responsible: $responsible
+        department: $department
+        riskId: $riskId
+        completionDate: $completionDate
+      }
+    ) {
+      mitigation {
+        id
+      }
+    }
+  }
+`;
+
+// mutation($description:String!riskId:Int!responsible:Int!completionDate:Date!){
+//   createMitigation(data:{
+//     name:$description
+//     responsible:$responsible
+//     department:$department
+//     riskId:$riskId
+//   }){
+//     id
+//   }
+// }
+
+export const GET_LIST_OF_EMPLOYEES = gql`
+  query($riskId: Int) {
+    getListOfEmployeesForRisk(riskId: $riskId) {
+      id
+      userId {
+        loginId
+      }
+      riskId {
+        name
+      }
+    }
+  }
+`;
+
+export const ADD_EMPLOYEE = gql`
+  mutation($userId: [Int]!, $riskId: Int!) {
+    addRiskEmployee(data: { userId: $userId, riskId: $riskId }) {
       message
     }
   }

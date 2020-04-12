@@ -6,7 +6,7 @@ import { withRouter } from "react-router-dom";
 import { format } from "date-fns";
 
 import { dateFormatMonth } from "../../constants/app-constants";
-import { ALL_EMPLOYEE_LIST } from "../../services/graphql/queries/user";
+
 import Pagination from "../Common/Pagination";
 import NotAccessible from "../Common/NotAccessible";
 import InputComponent from "../Common/form-component/InputComponent";
@@ -15,11 +15,15 @@ import {
   SET_TIMEOUT_VALUE,
   dateInputFormat
 } from "../../constants/app-constants";
-import { getListofGenericMasterQuery } from "../../services/graphql/queries/user";
+import {
+  getListofGenericMasterQuery,
+  ALL_EMPLOYEE_LIST
+} from "../../services/graphql/queries/user";
 import { getListofProjectsByCompanyId } from "../../services/graphql/queries/document-upload";
 import { RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
 import { ApproveImage } from "../../static/images/svg/approve.svg";
 import { ViewImg } from "../../static/images/svg/view.svg";
+import { compareValues } from "../Common/customSort";
 const customStyles = {};
 const statusOptions = [
   { value: 1, label: "Open" },
@@ -72,19 +76,19 @@ class RiskRegister extends React.Component {
         });
         if (id == 3) {
           this.initialState = {
-            companyOptions: OptionArr
+            companyOptions: OptionArr.sort(compareValues("label"))
           };
         } else if (id == 4) {
           this.initialState = {
-            projectOptions: OptionArr
+            projectOptions: OptionArr.sort(compareValues("label"))
           };
         } else if (id == 18)
           this.initialState = {
-            riskOptions: OptionArr
+            riskOptions: OptionArr.sort(compareValues("label"))
           };
         else if (id == 2)
           this.initialState = {
-            departmentOptions: OptionArr
+            departmentOptions: OptionArr.sort(compareValues("label"))
           };
         this.setState({ ...this.initialState, loading: false, error: "" });
       })
@@ -112,7 +116,7 @@ class RiskRegister extends React.Component {
           projArr.push(obj);
         });
         this.initialState = {
-          projectOption: projArr
+          projectOption: projArr.sort(compareValues("label"))
         };
         this.setState({ ...this.initialState, loading: false, error: "" });
       })
@@ -144,7 +148,7 @@ class RiskRegister extends React.Component {
           userArr.push(obj);
         });
         this.initialState = {
-          userOptions: userArr
+          userOptions: userArr.sort(compareValues("label"))
         };
         this.setState({
           ...this.initialState,

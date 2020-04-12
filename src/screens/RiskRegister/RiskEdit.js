@@ -7,6 +7,7 @@ import SimpleReactValidator from "simple-react-validator";
 import { getListofGenericMasterQuery } from "../../services/graphql/queries/user";
 import { getListofProjectsByCompanyId } from "../../services/graphql/queries/document-upload";
 import { UPDATE_RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
+import ReactModal from "../Common/ReactModal";
 import { format } from "date-fns";
 
 import { withApollo } from "react-apollo";
@@ -42,7 +43,9 @@ class EditRiskRegister extends React.Component {
         id: null,
         status: null
       },
-
+      reactModalVisible: false,
+      requireCancel: false,
+      modalMessage: "Updated Successfully",
       companyOptions: [],
 
       projectOptions: [],
@@ -170,8 +173,7 @@ class EditRiskRegister extends React.Component {
       })
       .then(result => {
         console.log("result", result);
-        this.props.riskUpdate();
-        this.props.changeMode();
+        this.setState({ reactModalVisible: true });
       })
       .catch(error => {
         console.log("error", error);
@@ -227,6 +229,13 @@ class EditRiskRegister extends React.Component {
     this.setState({ riskDetail: riskDetail });
     this.getProjectOptions(companyId.Id);
   }
+  submitModal = () => {
+    this.setState({ reactModalVisible: false, modalMessage: "" }, () => {
+      this.props.riskUpdate();
+      this.props.changeMode();
+    });
+    // this.props.onUpdateUser();
+  };
   componentDidMount() {
     this.getListOfOptions(18);
     this.getListOfOptions(3);
@@ -238,10 +247,19 @@ class EditRiskRegister extends React.Component {
       riskDetail,
       riskOptions,
       companyOptions,
-      projectOptions
+      projectOptions,
+      reactModalVisible,
+      requireCancel,
+      modalMessage
     } = this.state;
     return (
       <div>
+        <ReactModal
+          reactModalVisible={reactModalVisible}
+          submitModal={this.submitModal}
+          modalMessage={modalMessage}
+          requireCancel={requireCancel}
+        />
         <h1 className="heading m-b-25">Risk Updation</h1>
         <div className="row">
           <div className="col-md-12">

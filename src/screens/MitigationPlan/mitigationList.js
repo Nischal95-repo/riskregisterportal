@@ -8,7 +8,6 @@ class MitigationList extends React.Component {
     super(props);
   }
   render() {
-    debugger;
     console.log("mitigation details", this.props.mitigationDetails);
     const { mitigations } = this.props.mitigationDetails;
     return (
@@ -57,7 +56,11 @@ class MitigationList extends React.Component {
                         <tr>
                           <td>{data.id}</td>
                           <td>{data.name}</td>
-                          <td></td>
+                          <td>
+                            {data.departmentId
+                              ? data.departmentId.description
+                              : ""}
+                          </td>
                           <td>
                             {data.responsible ? data.responsible.loginId : ""}
                           </td>

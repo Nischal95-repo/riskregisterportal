@@ -1,6 +1,6 @@
 import React from "react";
 
-import { RISK_DETAIL } from "../../services/graphql/queries/riskRegister";
+import { GET_LIST_OF_MITIGATIONS } from "../../services/graphql/queries/riskRegister";
 import { getAccessPermisionQuery } from "../../services/graphql/queries/accessPermission";
 import MitigationList from "./mitigationList";
 import MitigationAdd from "./mitigationAdd";
@@ -12,26 +12,27 @@ class RiskProfile extends React.Component {
     this.state = {
       editMode: false,
       mitigationDetails: [],
-      loading: true
+      loading: true,
+      riskId: ""
     };
   }
-  //   getRiskDetail = () => {
-  //     this.setState({ loading: true });
-  //     this.props.client
-  //       .query({
-  //         query: RISK_DETAIL,
-  //         variables: { id: 6 },
-  //         fetchPolicy: "network-only"
-  //       })
-  //       .then(result => {
-  //         console.log("result", result);
-  //         let data = result.data.getRiskById;
-  //         this.setState({ mitigationDetails: data, loading: false });
-  //       })
-  //       .catch(error => {
-  //         console.log("error", error);
-  //       });
-  //   };
+  getList = () => {
+    this.setState({ loading: true });
+    this.props.client
+      .query({
+        query: GET_LIST_OF_MITIGATIONS,
+        variables: { id: this.state.riskId },
+        fetchPolicy: "network-only"
+      })
+      .then(result => {
+        console.log("result", result);
+        let data = result.data.getListOfMitigationPlansById;
+        this.setState({ mitigationDetails: data, loading: false });
+      })
+      .catch(error => {
+        console.log("error", error);
+      });
+  };
   changeMode = () => {
     this.setState(prevState => {
       return {
@@ -43,11 +44,12 @@ class RiskProfile extends React.Component {
     // this.getRiskDetail();
     this.setState({
       mitigationDetails: this.props.mitigationDetails,
-      loading: false
+      loading: false,
+      riskId: this.props.riskId
     });
   }
   render() {
-    const { mitigationDetails, editMode, loading } = this.state;
+    const { mitigationDetails, editMode, loading, riskId } = this.state;
 
     return (
       <div className="box-card">
@@ -57,7 +59,11 @@ class RiskProfile extends React.Component {
             changeMode={this.changeMode}
           ></MitigationList>
         ) : (
-          <MitigationAdd changeMode={this.changeMode}></MitigationAdd>
+          <MitigationAdd
+            changeMode={this.changeMode}
+            updateList={this.getList}
+            riskId={riskId}
+          ></MitigationAdd>
         )}
       </div>
     );

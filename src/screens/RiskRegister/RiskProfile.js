@@ -5,14 +5,17 @@ import { getAccessPermisionQuery } from "../../services/graphql/queries/accessPe
 import RiskView from "./RiskView";
 import RiskEdit from "./RiskEdit";
 import MitigationProfile from "../MitigationPlan/mitigationProfile";
+import Employee from "../RiskRegister/Employees/employee";
 import { withApollo } from "react-apollo";
+
 class RiskProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       editMode: false,
       riskDetails: {},
-      loading: true
+      loading: true,
+      riskId: ""
     };
   }
   getRiskDetail = () => {
@@ -20,7 +23,7 @@ class RiskProfile extends React.Component {
     this.props.client
       .query({
         query: RISK_DETAIL,
-        variables: { id: 6 },
+        variables: { id: parseInt(this.state.riskId) },
         fetchPolicy: "network-only"
       })
       .then(result => {
@@ -40,10 +43,12 @@ class RiskProfile extends React.Component {
     });
   };
   componentDidMount() {
-    this.getRiskDetail();
+    this.setState({ riskId: localStorage.getItem("riskId") }, () => {
+      this.getRiskDetail();
+    });
   }
   render() {
-    const { riskDetails, editMode, loading } = this.state;
+    const { riskDetails, editMode, loading, riskId } = this.state;
 
     return (
       <>
@@ -60,9 +65,13 @@ class RiskProfile extends React.Component {
           ></RiskEdit>
         ) : null}
         {!loading ? (
-          <MitigationProfile
-            mitigationDetails={riskDetails.mitigationplanSet}
-          ></MitigationProfile>
+          <>
+            <Employee riskId={riskId}></Employee>
+            <MitigationProfile
+              mitigationDetails={riskDetails.mitigationplanSet}
+              riskId={riskId}
+            ></MitigationProfile>
+          </>
         ) : null}
       </>
     );

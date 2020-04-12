@@ -255,7 +255,7 @@ export const ALL_EMPLOYEE_LIST = gql`
       userId
       emailId
       mobileNumber
-
+      department
       reportingManagerId
       reportingManager {
         Id

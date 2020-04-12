@@ -7,6 +7,7 @@ import SimpleReactValidator from "simple-react-validator";
 import { getListofGenericMasterQuery } from "../../services/graphql/queries/user";
 import { getListofProjectsByCompanyId } from "../../services/graphql/queries/document-upload";
 import { CREATE_RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
+import ReactModal from "../Common/ReactModal";
 import { format } from "date-fns";
 
 import { withApollo } from "react-apollo";
@@ -15,6 +16,7 @@ import {
   SET_TIMEOUT_VALUE,
   dateInputFormat
 } from "../../constants/app-constants";
+import { withRouter } from "react-router-dom";
 
 const impAndProbOptions = [
   { Id: 1, label: "Low" },
@@ -36,6 +38,9 @@ class AddRiskRegister extends React.Component {
         probability: "",
         severity: ""
       },
+      reactModalVisible: false,
+      requireCancel: false,
+      modalMessage: "Created Successfully",
 
       companyOptions: [],
 
@@ -145,9 +150,6 @@ class AddRiskRegister extends React.Component {
   }
 
   submitRisk = () => {
-    // this.state.riskDetail.companyId = parseInt(this.state.riskDetail.companyId);
-    // this.state.riskDetail.categoryId = parseInt(this.state.riskDetail.categoryId);
-    // this.state.riskDetail.projectId = parseInt(this.state.riskDetail.projectId);
     this.props.client
       .mutate({
         mutation: CREATE_RISK_REGISTER,
@@ -155,7 +157,9 @@ class AddRiskRegister extends React.Component {
         fetchPolicy: "no-cache"
       })
       .then(result => {
+        localStorage.setItem("riskId", result.data.createRisk.risk.id);
         console.log("result", result);
+        this.setState({ reactModalVisible: true });
       })
       .catch(error => {
         console.log("error", error);
@@ -178,6 +182,12 @@ class AddRiskRegister extends React.Component {
     });
     this.validator.hideMessages();
   }
+  submitModal = () => {
+    this.setState({ reactModalVisible: false, modalMessage: "" }, () => {
+      this.props.history.push("/risk-detail");
+    });
+    // this.props.onUpdateUser();
+  };
   componentDidMount() {
     this.getListOfOptions(18);
     this.getListOfOptions(3);
@@ -188,10 +198,19 @@ class AddRiskRegister extends React.Component {
       riskDetail,
       riskOptions,
       companyOptions,
-      projectOptions
+      projectOptions,
+      reactModalVisible,
+      requireCancel,
+      modalMessage
     } = this.state;
     return (
       <div>
+        <ReactModal
+          reactModalVisible={reactModalVisible}
+          submitModal={this.submitModal}
+          modalMessage={modalMessage}
+          requireCancel={requireCancel}
+        />
         <h1 className="heading m-b-25">Risk Creation</h1>
         <div className="row">
           <div className="col-md-12">
@@ -310,19 +329,17 @@ class AddRiskRegister extends React.Component {
               </div>
               <div className="row">
                 <div className="col-md-4 col-lg-6">
-                  <div className="form-group">
-                    <TextAreaComponent
-                      required
-                      label="Impact/Description"
-                      title="description"
-                      name="description"
-                      value={riskDetail.description}
-                      placeholder="Enter description"
-                      handleChange={this.handleInput}
-                      validation="required"
-                      validator={this.validator}
-                    ></TextAreaComponent>
-                  </div>
+                  <TextAreaComponent
+                    required
+                    label="Impact/Description"
+                    title="description"
+                    name="description"
+                    value={riskDetail.description}
+                    placeholder="Enter description"
+                    handleChange={this.handleInput}
+                    validation="required"
+                    validator={this.validator}
+                  ></TextAreaComponent>
                 </div>
                 <div className="col-md-6 col-lg-6 ">
                   <div className="row" style={{ paddingLeft: "10px" }}>
@@ -392,4 +409,4 @@ class AddRiskRegister extends React.Component {
   }
 }
 
-export default withApollo(AddRiskRegister);
+export default withRouter(withApollo(AddRiskRegister));

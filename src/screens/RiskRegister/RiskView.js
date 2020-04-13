@@ -1,7 +1,9 @@
 import React from "react";
 import { withApollo } from "react-apollo";
+
 import { format } from "date-fns";
 import { dateFormat, dateFormatMonth } from "../../constants/app-constants";
+import { withRouter } from "react-router-dom";
 class RiskView extends React.Component {
   constructor(props) {
     super(props);
@@ -27,7 +29,7 @@ class RiskView extends React.Component {
 
     return (
       <>
-        <h1 className="heading m-b-25">Risk Details</h1>
+        <h1 className="heading m-b-25">Risk Details-{id}</h1>
         <div className="row">
           <div className="col-md-12">
             {/* Form Section start */}
@@ -190,4 +192,4 @@ class RiskView extends React.Component {
   }
 }
 
-export default withApollo(RiskView);
+export default withRouter(withApollo(RiskView));

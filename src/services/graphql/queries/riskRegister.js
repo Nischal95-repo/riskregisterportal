@@ -130,6 +130,7 @@ export const RISK_DETAIL = gql`
         status {
           name
           Id
+          statusId
         }
         completionDate
         forecastDate
@@ -188,6 +189,7 @@ export const GET_LIST_OF_MITIGATIONS = gql`
       status {
         name
         Id
+        statusId
       }
       departmentId {
         Id
@@ -250,6 +252,57 @@ export const ADD_EMPLOYEE = gql`
   mutation($userId: [Int]!, $riskId: Int!) {
     addRiskEmployee(data: { userId: $userId, riskId: $riskId }) {
       message
+    }
+  }
+`;
+
+export const REMOVE_EMPLOYEE = gql`
+  mutation($id: String!) {
+    removeRiskEmployee(id: $id) {
+      message
+    }
+  }
+`;
+
+export const CREATE_MITIGATION_ACTIVITY = gql`
+  mutation(
+    $name: String!
+    $mitigationPlanId: Int!
+    $status: Int
+    $forecastDate: Date
+    $department: Int
+    $responsible: Int
+  ) {
+    addMitigationActivities(
+      data: {
+        remarks: $name
+        mitigationPlanId: $mitigationPlanId
+        status: $status
+        forecastDate: $forecastDate
+        responsible: $responsible
+        department: $department
+      }
+    ) {
+      activity {
+        id
+      }
+    }
+  }
+`;
+
+export const GET_LIST_OF_ACTIVITIES = gql`
+  query($mitigationPlanId: Int!) {
+    getListOfMitigationActivities(mitigationPlanId: $mitigationPlanId) {
+      id
+      remarks
+
+      createdByDetail {
+        name
+      }
+      createdOn
+      status {
+        name
+      }
     }
   }
 `;

@@ -2,16 +2,35 @@ import React from "react";
 import { withApollo } from "react-apollo";
 import { format } from "date-fns";
 import { dateFormat, dateFormatMonth } from "../../constants/app-constants";
-import { AddSvg } from "../../static/images/svg/Add.svg";
+import AddSvg from "../../static/images/svg/Add.svg";
+import ModifySvg from "../../static/images/svg/Modify.svg";
+import ApproveSvg from "../../static/images/svg/approve.svg";
+import MitigationActivity from "./mitigationActivity";
 class MitigationList extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      visible: false,
+      mitigationPlanId: ""
+    };
   }
+  toggleMode = () => {
+    this.setState(prevState => {
+      return { visible: !prevState.visible };
+    });
+  };
   render() {
     console.log("mitigation details", this.props.mitigationDetails);
-    const { mitigations } = this.props.mitigationDetails;
+    const { visible, mitigationPlanId } = this.state;
     return (
       <>
+        {visible ? (
+          <MitigationActivity
+            visible={visible}
+            toggleMode={this.toggleMode}
+            mitigationPlanId={mitigationPlanId}
+          ></MitigationActivity>
+        ) : null}
         <div id="mitigationList">
           <div className="row align-items-center">
             <div className="col-md-10">
@@ -23,13 +42,11 @@ class MitigationList extends React.Component {
                   className="link-click"
                   href="#"
                   data-placement="bottom"
-                  title="Upload"
-                  style={{ fontSize: "16px" }}
-                  data-toggle="modal"
+                  title="Add"
                   onClick={() => this.props.changeMode()}
                 >
                   <img src={AddSvg} />
-                  Add
+                  &nbsp; Add
                 </a>
               </div>
             </div>
@@ -67,7 +84,36 @@ class MitigationList extends React.Component {
                           <td>{format(data.completionDate, dateFormat)}</td>
                           <td>{format(data.forecastDate, dateFormat)}</td>
                           <td>{data.status ? data.status.name : ""}</td>
-                          <td></td>
+                          <td>
+                            {data.status && data.status.statusId == 2 ? (
+                              <a
+                                className="link-click"
+                                href="#"
+                                data-placement="bottom"
+                                title="  Mitigation Activity"
+                                onClick={() => {
+                                  this.setState(
+                                    { mitigationPlanId: parseInt(data.id) },
+                                    () => {
+                                      this.toggleMode();
+                                    }
+                                  );
+                                }}
+                              >
+                                <img src={ModifySvg} />
+                              </a>
+                            ) : (
+                              <a
+                                className="link-click"
+                                href="#"
+                                data-placement="bottom"
+                                title="  Approve"
+                                onClick={() => this.toggleMode()}
+                              >
+                                <img src={ApproveSvg} />
+                              </a>
+                            )}
+                          </td>
                         </tr>
                       );
                     })

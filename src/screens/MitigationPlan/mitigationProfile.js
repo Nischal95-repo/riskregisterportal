@@ -10,7 +10,7 @@ class RiskProfile extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      editMode: false,
+      addMode: false,
       mitigationDetails: [],
       loading: true,
       riskId: ""
@@ -36,7 +36,7 @@ class RiskProfile extends React.Component {
   changeMode = () => {
     this.setState(prevState => {
       return {
-        editMode: !prevState.editMode
+        addMode: !prevState.addMode
       };
     });
   };
@@ -49,11 +49,11 @@ class RiskProfile extends React.Component {
     });
   }
   render() {
-    const { mitigationDetails, editMode, loading, riskId } = this.state;
+    const { mitigationDetails, addMode, loading, riskId } = this.state;
 
     return (
       <div className="box-card">
-        {!editMode && !loading ? (
+        {!addMode && !loading ? (
           <MitigationList
             mitigationDetails={mitigationDetails}
             changeMode={this.changeMode}

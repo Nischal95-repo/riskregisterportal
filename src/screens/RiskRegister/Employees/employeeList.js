@@ -2,7 +2,10 @@ import React from "react";
 
 import { withApollo } from "react-apollo";
 
-import { GET_LIST_OF_EMPLOYEES } from "../../../services/graphql/queries/riskRegister";
+import {
+  GET_LIST_OF_EMPLOYEES,
+  REMOVE_EMPLOYEE
+} from "../../../services/graphql/queries/riskRegister";
 
 import ReactModal from "../../Common/ReactModal";
 import DisplayErrors from "../../Common/DisplayErrors";
@@ -10,7 +13,8 @@ import DisplayErrors from "../../Common/DisplayErrors";
 import { SET_TIMEOUT_VALUE } from "../../../constants/app-constants";
 
 import { errorMessage } from "../../../miscellaneous/error-messages";
-
+import AddSvg from "../../../static/images/svg/Add.svg";
+import DeleteSvg from "../../../static/images/svg/Delete.svg";
 class EmployeeList extends React.Component {
   constructor(props) {
     super(props);
@@ -31,7 +35,7 @@ class EmployeeList extends React.Component {
   submitModal() {
     this.props.client
       .mutate({
-        mutation: "",
+        mutation: REMOVE_EMPLOYEE,
         variables: {
           id: this.state.deleteId
         },
@@ -39,7 +43,7 @@ class EmployeeList extends React.Component {
       })
       .then(result => {
         this.setState({ reactModalVisible: false });
-        this.getListOfReviewers();
+        this.getListOfEmployees();
       })
       .catch(error => {
         console.log("~~~error: ", error);
@@ -57,7 +61,7 @@ class EmployeeList extends React.Component {
   onRemoveReviewer(id) {
     this.setState({
       reactModalVisible: true,
-      modalMessage: "Are you sure, you want to delete this reviewer?",
+      modalMessage: "Are you sure, you want to delete this employee?",
       deleteId: id
     });
   }
@@ -149,53 +153,14 @@ class EmployeeList extends React.Component {
             </div>
           </div>
           <div className="col-md-2 text-right">
-            <a href="#" onClick={this.props.changeMode} className="link-click ">
-              <svg
-                x="0px"
-                y="0px"
-                width="16px"
-                height="16px"
-                viewBox="0 0 16 16"
-                enableBackground="new 0 0 16 16"
-                xmlSpace="preserve"
-              >
-                <g>
-                  <circle
-                    fill="none"
-                    stroke="#69951a"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    cx={8}
-                    cy={8}
-                    r="7.5"
-                  />
-                  <g>
-                    <line
-                      fill="none"
-                      stroke="#69951a"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeMiterlimit={10}
-                      x1="2.5"
-                      y1={8}
-                      x2="13.5"
-                      y2={8}
-                    />
-                    <line
-                      fill="none"
-                      stroke="#69951a"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeMiterlimit={10}
-                      x1={8}
-                      y1="2.5"
-                      x2={8}
-                      y2="13.5"
-                    />
-                  </g>
-                </g>
-              </svg>
-              Add
+            <a
+              href="#"
+              title="Add"
+              onClick={this.props.changeMode}
+              className="link-click "
+            >
+              <img src={AddSvg} />
+              &nbsp; Add
             </a>
           </div>
         </div>
@@ -230,80 +195,9 @@ class EmployeeList extends React.Component {
                               data-toggle="tooltip"
                               data-placement="bottom"
                               title="Delete"
+                              onClick={() => this.onRemoveReviewer(data.id)}
                             >
-                              <svg
-                                x="0px"
-                                y="0px"
-                                width="16px"
-                                height="16px"
-                                viewBox="0 0 16 16"
-                                onClick={() => this.onRemoveReviewer(data.id)}
-                              >
-                                <g transform="translate(0, 0)">
-                                  <path
-                                    fill="none"
-                                    stroke="#61951a"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeMiterlimit={10}
-                                    d="M2.5,6.5v7 c0,1.105,0.895,2,2,2h8c1.105,0,2-0.895,2-2v-7"
-                                  />
-                                  <line
-                                    data-color="color-2"
-                                    fill="none"
-                                    stroke="#61951a"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeMiterlimit={10}
-                                    x1="1.5"
-                                    y1="3.5"
-                                    x2="15.5"
-                                    y2="3.5"
-                                  />
-                                  <polyline
-                                    data-color="color-2"
-                                    fill="none"
-                                    stroke="#61951a"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeMiterlimit={10}
-                                    points=" 6.5,3.5 6.5,0.5 10.5,0.5 10.5,3.5 "
-                                  />
-                                  <line
-                                    fill="none"
-                                    stroke="#61951a"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeMiterlimit={10}
-                                    x1="8.5"
-                                    y1="7.5"
-                                    x2="8.5"
-                                    y2="12.5"
-                                  />
-                                  <line
-                                    fill="none"
-                                    stroke="#61951a"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeMiterlimit={10}
-                                    x1="11.5"
-                                    y1="7.5"
-                                    x2="11.5"
-                                    y2="12.5"
-                                  />
-                                  <line
-                                    fill="none"
-                                    stroke="#61951a"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeMiterlimit={10}
-                                    x1="5.5"
-                                    y1="7.5"
-                                    x2="5.5"
-                                    y2="12.5"
-                                  />
-                                </g>
-                              </svg>
+                              <img src={DeleteSvg} />
                             </a>
                           </td>
                         </tr>

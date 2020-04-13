@@ -2,12 +2,9 @@ import React from "react";
 import Select from "react-select";
 import { withApollo } from "react-apollo";
 import { withRouter } from "react-router-dom";
-
 import { format } from "date-fns";
-
 import { dateFormatMonth } from "../../constants/app-constants";
 
-import Pagination from "../Common/Pagination";
 import NotAccessible from "../Common/NotAccessible";
 import InputComponent from "../Common/form-component/InputComponent";
 import ButtonComponent from "../Common/form-component/ButtonComponent";
@@ -21,9 +18,11 @@ import {
 } from "../../services/graphql/queries/user";
 import { getListofProjectsByCompanyId } from "../../services/graphql/queries/document-upload";
 import { RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
-import { ApproveImage } from "../../static/images/svg/approve.svg";
-import { ViewImg } from "../../static/images/svg/view.svg";
+import ApproveImage from "../../static/images/svg/approve.svg";
+import ViewImg from "../../static/images/svg/view.svg";
 import { compareValues } from "../Common/customSort";
+import Expand from "../../static/images/svg/plus.svg";
+require("../../static/css/bootstrap.min.css");
 const customStyles = {};
 const statusOptions = [
   { value: 1, label: "Open" },
@@ -52,10 +51,14 @@ class RiskRegister extends React.Component {
       riskRegisterData: [],
       userOptions: [],
       userSelectedOptions: null,
-      riskId: null
+      riskId: null,
+      activePage: 1
     };
   }
-
+  handlePageChange(pageNumber) {
+    console.log(`active page is ${pageNumber}`);
+    this.setState({ activePage: pageNumber });
+  }
   getListOfOptions(id) {
     this.props.client
       .query({
@@ -179,24 +182,24 @@ class RiskRegister extends React.Component {
       riskId
     } = this.state;
 
-    let risk = null;
+    let risk = [];
     riskSelectedOption &&
       riskSelectedOption.forEach(element => {
         risk.push(element.value);
       });
 
-    let company = null;
+    let company = [];
     companySelectedOption &&
       companySelectedOption.forEach(element => {
         company.push(element.value);
       });
-    let project = null;
+    let project = [];
     projectSelectedOption &&
       projectSelectedOption.forEach(element => {
         project.push(element.value);
       });
 
-    let user = null;
+    let user = [];
     userSelectedOptions &&
       userSelectedOptions.forEach(element => {
         user.push(element.value);
@@ -208,16 +211,16 @@ class RiskRegister extends React.Component {
         query: RISK_REGISTER,
         variables: {
           riskId: riskId,
-          companyId: company,
-          projectId: project,
-          riskCategory: risk,
+          companyId: company.length ? company : null,
+          projectId: project.length ? project : null,
+          riskCategory: risk.length ? risk : null,
           status: statusSelectedOptions ? statusSelectedOptions.value : null,
           deviated: customSelectedOptions
             ? customSelectedOptions.value == 1
               ? false
               : true
             : false,
-          responsible: user
+          responsible: user.length ? user : null
         },
         fetchPolicy: "network-only"
       })
@@ -256,7 +259,7 @@ class RiskRegister extends React.Component {
       }
     );
   };
-  accordion(data) {
+  accordion(data, riskId) {
     return (
       <tr>
         <td
@@ -299,11 +302,29 @@ class RiskRegister extends React.Component {
                         <td>{format(ele.forecastDate, dateFormatMonth)}</td>
                         <td>
                           {ele.status && ele.status.Id == 1 ? (
-                            <a href="#">
+                            <a
+                              href="#"
+                              href="#"
+                              className="link-primary"
+                              title="Approve"
+                              onClick={() => {
+                                localStorage.setItem("riskId", data.id);
+                                this.props.history.push("/risk-detail");
+                              }}
+                            >
                               <img src={ApproveImage} />
                             </a>
                           ) : (
-                            <a href="#">
+                            <a
+                              href="#"
+                              href="#"
+                              className="link-primary"
+                              title="view"
+                              onClick={() => {
+                                localStorage.setItem("riskId", data.id);
+                                this.props.history.push("/risk-detail");
+                              }}
+                            >
                               <img src={ViewImg} />
                             </a>
                           )}
@@ -318,6 +339,7 @@ class RiskRegister extends React.Component {
       </tr>
     );
   }
+
   componentDidMount() {
     this.getListOfOptions(3);
     this.getListOfOptions(4);
@@ -547,19 +569,21 @@ class RiskRegister extends React.Component {
                       <tr>
                         <td>
                           {data.mitigationplanSet.length > 0 ? (
-                            <i
-                              className="fa fa-chevron-circle-down"
-                              aria-hidden="true"
-                              onClick={() => {
-                                this.setState(prevState => {
-                                  let display = [];
-                                  display[index] = !prevState.display[index];
-                                  return {
-                                    display: [...display]
-                                  };
-                                });
-                              }}
-                            />
+                            <figure style={{ cursor: "pointer" }}>
+                              <img
+                                src={Expand}
+                                onClick={() => {
+                                  this.setState(prevState => {
+                                    let display = [];
+                                    display[index] = !prevState.display[index];
+                                    return {
+                                      display: [...display]
+                                    };
+                                  });
+                                }}
+                                alt=""
+                              />
+                            </figure>
                           ) : null}
                         </td>
                         <td>{data.id}</td>
@@ -576,7 +600,15 @@ class RiskRegister extends React.Component {
                         <td>Low</td>
                         <td>Active</td>
                         <td>
-                          <a href="riskDetails.html" className="link-primary">
+                          <a
+                            href="#"
+                            className="link-primary"
+                            title="view"
+                            onClick={() => {
+                              localStorage.setItem("riskId", data.id);
+                              this.props.history.push("/risk-detail");
+                            }}
+                          >
                             <img src={ViewImg} />
                           </a>
                         </td>
@@ -584,7 +616,7 @@ class RiskRegister extends React.Component {
 
                       {this.state.display[index] &&
                       data.mitigationplanSet.length > 0
-                        ? this.accordion(data.mitigationplanSet)
+                        ? this.accordion(data.mitigationplanSet, data.id)
                         : null}
                       {/* {this.accordion(data.mitigationPlanSet)} */}
                     </>
@@ -613,4 +645,4 @@ class RiskRegister extends React.Component {
   }
 }
 
-export default withApollo(RiskRegister);
+export default withRouter(withApollo(RiskRegister));

@@ -11,6 +11,7 @@ import ButtonComponent from "../Common/form-component/ButtonComponent";
 import TextAreaComponent from "../Common/form-component/TextAreComponent";
 import SelectComponent from "../Common/form-component/SelectComponent";
 import { compareValues } from "../Common/customSort";
+import CloseSvg from "../../static/images/svg/Close.svg";
 import Select from "react-select";
 import InputComponent from "../Common/form-component/InputComponent";
 import {
@@ -189,14 +190,13 @@ class MitigationAdd extends React.Component {
                   className="link-click"
                   href="#"
                   data-placement="bottom"
-                  title="Upload"
-                  style={{ fontSize: "16px" }}
+                  title="Close"
                   data-toggle="modal"
-                  onclick={() => {
+                  onClick={() => {
                     this.props.changeMode();
                   }}
                 >
-                  <img src="../images/close.svg" />
+                  <img src={CloseSvg} />
                   Close
                 </a>
               </div>

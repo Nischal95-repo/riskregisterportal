@@ -50,6 +50,7 @@ export const RISK_REGISTER = gql`
         status {
           name
           Id
+          statusId
         }
         completionDate
         forecastDate
@@ -303,6 +304,34 @@ export const GET_LIST_OF_ACTIVITIES = gql`
       status {
         name
       }
+    }
+  }
+`;
+
+export const GET_MITIGATION_PLAN_BY_ID = gql`
+  query($id: Int!) {
+    getMitigationPlanById(id: $id) {
+      id
+      name
+      departmentId {
+        description
+      }
+      status {
+        name
+      }
+      responsible {
+        loginId
+      }
+      completionDate
+      forecastDate
+      lastModifiedBy {
+        loginId
+      }
+      lastModifiedOn
+      createdBy {
+        loginId
+      }
+      createdOn
     }
   }
 `;

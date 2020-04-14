@@ -179,20 +179,38 @@ class MitigationActivity extends React.Component {
   }
 
   submitMitigationActivity = () => {
-    const { activityDetail } = this.state;
+    const { showReassign, activityDetail } = this.state;
+    let variables = {};
+    if (!showReassign && activityDetail.forecastDate !== "") {
+      variables = {
+        name: activityDetail.name,
+        mitigationPlanId: parseInt(this.props.mitigationPlanId),
+        forecastDate: activityDetail.forecastDate,
+        status: activityDetail.status ? activityDetail.status : null,
+        department: activityDetail.department,
+        responsible: activityDetail.responsible
+      };
+    } else {
+      variables = {
+        name: activityDetail.name,
+        mitigationPlanId: parseInt(this.props.mitigationPlanId),
+
+        status: activityDetail.status ? activityDetail.status : null,
+        department: activityDetail.department,
+        responsible: activityDetail.responsible
+      };
+    }
     this.props.client
       .mutate({
         mutation: CREATE_MITIGATION_ACTIVITY,
-        variables: {
-          name: activityDetail.name,
-          mitigationPlanId: parseInt(this.props.mitigationPlanId)
-        },
+        variables: variables,
         fetchPolicy: "no-cache"
       })
       .then(result => {
         console.log("result", result);
         // this.getListOfActivities();
-        this.props.toggleMode();
+        this.props.updateList();
+        // this.props.toggleMode();
       })
       .catch(error => {
         console.log("error", error);
@@ -241,8 +259,8 @@ class MitigationActivity extends React.Component {
       <Modal
         visible={this.props.visible}
         effect="fadeInDown"
-        width="700px"
-        height="80vh"
+        width="900px"
+        height="70vh"
       >
         <div style={{ padding: "15px" }}>
           <div className="modal-content" style={{ border: "none" }}>
@@ -305,16 +323,18 @@ class MitigationActivity extends React.Component {
                     min={format(new Date(), dateInputFormat)}
                   ></InputComponent>
                 </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <label>Status</label>
-                    <select className="form-control select-style-1">
-                      <option>Select</option>
-                      {/* <option> Waiting For Approval</option> */}
-                      <option> Waiting For Closure</option>
-                    </select>
+                {showReassign ? null : (
+                  <div className="col-md-3">
+                    <div className="form-group">
+                      <label>Status</label>
+                      <select className="form-control select-style-1">
+                        <option>Select</option>
+                        {/* <option> Waiting For Approval</option> */}
+                        <option value="3"> Waiting For Closure</option>
+                      </select>
+                    </div>
                   </div>
-                </div>
+                )}
               </div>
               {showReassign ? (
                 <div className="row" id="reassign">
@@ -408,7 +428,7 @@ class MitigationActivity extends React.Component {
 
                     <div
                       className="table-responsive"
-                      style={{ maxHeight: "250px" }}
+                      style={{ maxHeight: "27vh" }}
                     >
                       <table
                         className="table table-style-1"

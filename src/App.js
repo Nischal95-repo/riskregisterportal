@@ -15,6 +15,7 @@ import RiskRegister from "./pages/risk-register";
 import AddRiskRegister from "./pages/add-risk";
 
 import RiskDetail from "./pages/risk-detail";
+import MitigationApproval from "./pages/approve-mitigation";
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -35,6 +36,11 @@ class App extends React.Component {
         <Route exact path="/risk-register" component={RiskRegister} />
         <Route exact path="/add-risk" component={AddRiskRegister} />
         <Route exact path="/risk-detail" component={RiskDetail} />
+        <Route
+          exact
+          path="/approve-mitigation"
+          component={MitigationApproval}
+        />
         {/* Risk Register */}
       </>
     );

@@ -170,19 +170,21 @@ class RiskView extends React.Component {
                   </div>
                 </div>
               </div>
-              <div className="row">
-                <div className="col-md-12 col-lg-8">
-                  <button
-                    type="button"
-                    className="btn btn-danger"
-                    onClick={() => {
-                      this.props.changeMode();
-                    }}
-                  >
-                    Edit
-                  </button>
+              {this.props.displayEdit ? (
+                <div className="row">
+                  <div className="col-md-12 col-lg-8">
+                    <button
+                      type="button"
+                      className="btn btn-danger"
+                      onClick={() => {
+                        this.props.changeMode();
+                      }}
+                    >
+                      Edit
+                    </button>
+                  </div>
                 </div>
-              </div>
+              ) : null}
             </div>
           </div>
           {/* Form Section End */}

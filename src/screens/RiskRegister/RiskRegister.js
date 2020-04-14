@@ -3,7 +3,7 @@ import Select from "react-select";
 import { withApollo } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { format } from "date-fns";
-import { dateFormatMonth } from "../../constants/app-constants";
+import { dateFormatMonth, dateFormat } from "../../constants/app-constants";
 
 import NotAccessible from "../Common/NotAccessible";
 import InputComponent from "../Common/form-component/InputComponent";
@@ -52,7 +52,8 @@ class RiskRegister extends React.Component {
       userOptions: [],
       userSelectedOptions: null,
       riskId: null,
-      activePage: 1
+      activePage: 1,
+      options: []
     };
   }
   handlePageChange(pageNumber) {
@@ -157,7 +158,8 @@ class RiskRegister extends React.Component {
           ...this.initialState,
           loading: false,
           error: "",
-          deSelectEmployees: false
+          deSelectEmployees: false,
+          options: users
         });
       })
       .catch(error => {
@@ -298,18 +300,22 @@ class RiskRegister extends React.Component {
                           {ele.responsible ? ele.responsible.loginId : ""}
                         </td>
                         <td>{ele.status ? ele.status.name : ""}</td>
-                        <td>{format(ele.completionDate, dateFormatMonth)}</td>
-                        <td>{format(ele.forecastDate, dateFormatMonth)}</td>
+                        <td>{format(ele.completionDate, dateFormat)}</td>
+                        <td>{format(ele.forecastDate, dateFormat)}</td>
                         <td>
-                          {ele.status && ele.status.Id == 1 ? (
+                          {ele.status && ele.status.statusId == 1 ? (
                             <a
                               href="#"
                               href="#"
                               className="link-primary"
                               title="Approve"
                               onClick={() => {
-                                localStorage.setItem("riskId", data.id);
-                                this.props.history.push("/risk-detail");
+                                localStorage.setItem("riskId", riskId);
+                                localStorage.setItem(
+                                  "mitigationPlanId",
+                                  ele.id
+                                );
+                                this.props.history.push("/approve-mitigation");
                               }}
                             >
                               <img src={ApproveImage} />
@@ -321,7 +327,7 @@ class RiskRegister extends React.Component {
                               className="link-primary"
                               title="view"
                               onClick={() => {
-                                localStorage.setItem("riskId", data.id);
+                                localStorage.setItem("riskId", riskId);
                                 this.props.history.push("/risk-detail");
                               }}
                             >
@@ -367,7 +373,7 @@ class RiskRegister extends React.Component {
       userSelectedOptions,
       riskId
     } = this.state;
-    console.log("company", companySelectedOption);
+    // console.log("company", companySelectedOption);
 
     return (
       <>
@@ -473,7 +479,39 @@ class RiskRegister extends React.Component {
                     <Select
                       value={departmentSelectedOption}
                       onChange={e => {
-                        this.setState({ departmentSelectedOption: e });
+                        this.setState(
+                          { departmentSelectedOption: e }
+
+                          // () => {
+                          //   let users = [];
+                          //   users.concat(userOptions);
+
+                          //   let departments = [];
+                          //   console.log("options", e);
+                          //   e &&
+                          //     e.forEach(data => {
+                          //       departments.push(data.value);
+                          //     });
+                          //   console.log(departments);
+                          //   departments.forEach(data => {
+                          //     this.state.options.forEach(element => {
+                          //       if (element.department.includes(data)) {
+                          //         let obj = {
+                          //           Id: element.Id,
+                          //           label: element.name
+                          //         };
+
+                          //         users.push(obj);
+                          //       }
+                          //     });
+                          //   });
+
+                          //   users = users.sort(compareValues("label"));
+
+                          //   this.setState({ userOptions: users });
+                          // }
+                        );
+                        console.log("test", e);
                       }}
                       options={departmentOptions}
                       isMulti={true}
@@ -488,7 +526,9 @@ class RiskRegister extends React.Component {
                     <Select
                       value={userSelectedOptions}
                       onChange={e => {
-                        this.setState({ userSelectedOptions: e });
+                        this.setState({ userSelectedOptions: e }, () => {
+                          console.log("test", userOptions);
+                        });
                       }}
                       isMulti
                       closeMenuOnSelect={false}

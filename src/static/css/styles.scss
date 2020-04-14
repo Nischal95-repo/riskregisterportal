@@ -2685,7 +2685,7 @@
 
   /* Componets Page Start */
   .form-group {
-    margin-bottom: 20px;
+    margin-bottom: 10px;
   }
   .form-group label {
     font-size: 12px;
@@ -2938,6 +2938,7 @@
     font-weight: 700;
     padding-bottom: 0px;
     text-transform: uppercase;
+    text-align: left;
   }
 
   .table-style-1 > tbody > tr > td {
@@ -2948,16 +2949,17 @@
     border: 1px solid #e4e8f0;
     border-left: none;
     border-right: none;
-    vertical-align: middle;
+    // vertical-align: middle;
     font-weight: 400;
     // white-space: nowrap;
+    text-align: left;
   }
   .table-style-1 > tbody > tr > td > a {
     text-decoration: none;
   }
   .table-style-1 > thead > tr > th:first-child,
   .table-style-1 > tbody > tr > td:first-child {
-    padding-left: 25px;
+    padding-left: 15px;
   }
   .table-style-1 > tbody > tr > td:first-child {
     border-left: 1px solid #e4e8f0;

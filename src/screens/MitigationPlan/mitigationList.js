@@ -6,6 +6,7 @@ import AddSvg from "../../static/images/svg/Add.svg";
 import ModifySvg from "../../static/images/svg/Modify.svg";
 import ApproveSvg from "../../static/images/svg/approve.svg";
 import MitigationActivity from "./mitigationActivity";
+import { withRouter } from "react-router-dom";
 class MitigationList extends React.Component {
   constructor(props) {
     super(props);
@@ -29,6 +30,7 @@ class MitigationList extends React.Component {
             visible={visible}
             toggleMode={this.toggleMode}
             mitigationPlanId={mitigationPlanId}
+            updateList={this.props.updateList}
           ></MitigationActivity>
         ) : null}
         <div id="mitigationList">
@@ -108,7 +110,20 @@ class MitigationList extends React.Component {
                                 href="#"
                                 data-placement="bottom"
                                 title="  Approve"
-                                onClick={() => this.toggleMode()}
+                                onClick={() => {
+                                  this.setState(
+                                    { mitigationPlanId: parseInt(data.id) },
+                                    () => {
+                                      localStorage.setItem(
+                                        "mitigationPlanId",
+                                        data.id
+                                      );
+                                      this.props.history.push(
+                                        "/approve-mitigation"
+                                      );
+                                    }
+                                  );
+                                }}
                               >
                                 <img src={ApproveSvg} />
                               </a>
@@ -126,4 +141,4 @@ class MitigationList extends React.Component {
     );
   }
 }
-export default withApollo(MitigationList);
+export default withRouter(withApollo(MitigationList));

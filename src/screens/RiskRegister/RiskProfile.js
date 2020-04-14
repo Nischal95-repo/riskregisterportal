@@ -56,6 +56,7 @@ class RiskProfile extends React.Component {
           <RiskView
             riskDetails={riskDetails}
             changeMode={this.changeMode}
+            displayEdit={true}
           ></RiskView>
         ) : !loading ? (
           <RiskEdit

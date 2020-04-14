@@ -57,6 +57,7 @@ class RiskProfile extends React.Component {
           <MitigationList
             mitigationDetails={mitigationDetails}
             changeMode={this.changeMode}
+            updateList={this.getList}
           ></MitigationList>
         ) : (
           <MitigationAdd

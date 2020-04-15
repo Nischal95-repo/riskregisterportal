@@ -10,11 +10,11 @@ import InputComponent from "../Common/form-component/InputComponent";
 import ButtonComponent from "../Common/form-component/ButtonComponent";
 import {
   SET_TIMEOUT_VALUE,
-  dateInputFormat
+  dateInputFormat,
 } from "../../constants/app-constants";
 import {
   getListofGenericMasterQuery,
-  ALL_EMPLOYEE_LIST
+  ALL_EMPLOYEE_LIST,
 } from "../../services/graphql/queries/user";
 import { getListofProjectsByCompanyId } from "../../services/graphql/queries/document-upload";
 import { RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
@@ -26,11 +26,11 @@ require("../../static/css/bootstrap.min.css");
 const customStyles = {};
 const statusOptions = [
   { value: 1, label: "Open" },
-  { value: 2, label: "Closed" }
+  { value: 2, label: "Closed" },
 ];
 const customOptions = [
   { value: 1, label: "Select All" },
-  { value: 2, label: "Deviated" }
+  { value: 2, label: "Deviated" },
 ];
 class RiskRegister extends React.Component {
   constructor(props) {
@@ -53,7 +53,7 @@ class RiskRegister extends React.Component {
       userSelectedOptions: null,
       riskId: null,
       activePage: 1,
-      options: []
+      options: [],
     };
   }
   handlePageChange(pageNumber) {
@@ -65,66 +65,66 @@ class RiskRegister extends React.Component {
       .query({
         query: getListofGenericMasterQuery,
         variables: {
-          masterFor: id
+          masterFor: id,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var user = result.data.getListofGenericMaster;
         let OptionArr = [];
-        user.forEach(element => {
+        user.forEach((element) => {
           OptionArr.push({
             value: element.Id,
-            label: element.description
+            label: element.description,
           });
         });
         if (id == 3) {
           this.initialState = {
-            companyOptions: OptionArr.sort(compareValues("label"))
+            companyOptions: OptionArr.sort(compareValues("label")),
           };
         } else if (id == 4) {
           this.initialState = {
-            projectOptions: OptionArr.sort(compareValues("label"))
+            projectOptions: OptionArr.sort(compareValues("label")),
           };
         } else if (id == 18)
           this.initialState = {
-            riskOptions: OptionArr.sort(compareValues("label"))
+            riskOptions: OptionArr.sort(compareValues("label")),
           };
         else if (id == 2)
           this.initialState = {
-            departmentOptions: OptionArr.sort(compareValues("label"))
+            departmentOptions: OptionArr.sort(compareValues("label")),
           };
-        this.setState({ ...this.initialState, loading: false, error: "" });
+        this.setState({ ...this.initialState, error: "" });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
-  getListOfProjects = id => {
+  getListOfProjects = (id) => {
     this.props.client
       .query({
         query: getListofProjectsByCompanyId,
         variables: {
-          companyId: ""
+          companyId: "",
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var projectList = result.data.getListOfProjectsByCompanyId;
         let projArr = [];
-        projectList.forEach(element => {
+        projectList.forEach((element) => {
           let obj = {
             value: element.projectDetail.Id,
-            label: element.projectDetail.description
+            label: element.projectDetail.description,
           };
           projArr.push(obj);
         });
         this.initialState = {
-          projectOption: projArr.sort(compareValues("label"))
+          projectOption: projArr.sort(compareValues("label")),
         };
-        this.setState({ ...this.initialState, loading: false, error: "" });
+        this.setState({ ...this.initialState, error: "" });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   };
@@ -136,33 +136,33 @@ class RiskRegister extends React.Component {
         variables: {
           // employeeId: this.state.employeeId ? this.state.employeeId : null,
           // name: this.state.name ? this.state.name : "",
-          status: 1
+          status: 1,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var users = result.data.getListOfAyanaEmployees;
 
         let userArr = [];
-        users.forEach(element => {
+        users.forEach((element) => {
           let obj = {
             value: element.Id,
-            label: element.name
+            label: element.name,
           };
           userArr.push(obj);
         });
         this.initialState = {
-          userOptions: userArr.sort(compareValues("label"))
+          userOptions: userArr.sort(compareValues("label")),
         };
         this.setState({
           ...this.initialState,
-          loading: false,
+
           error: "",
           deSelectEmployees: false,
-          options: users
+          options: users,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -181,29 +181,29 @@ class RiskRegister extends React.Component {
       customSelectedOptions,
       userOptions,
       userSelectedOptions,
-      riskId
+      riskId,
     } = this.state;
 
     let risk = [];
     riskSelectedOption &&
-      riskSelectedOption.forEach(element => {
+      riskSelectedOption.forEach((element) => {
         risk.push(element.value);
       });
 
     let company = [];
     companySelectedOption &&
-      companySelectedOption.forEach(element => {
+      companySelectedOption.forEach((element) => {
         company.push(element.value);
       });
     let project = [];
     projectSelectedOption &&
-      projectSelectedOption.forEach(element => {
+      projectSelectedOption.forEach((element) => {
         project.push(element.value);
       });
 
     let user = [];
     userSelectedOptions &&
-      userSelectedOptions.forEach(element => {
+      userSelectedOptions.forEach((element) => {
         user.push(element.value);
       });
     let status = null;
@@ -222,20 +222,20 @@ class RiskRegister extends React.Component {
               ? false
               : true
             : false,
-          responsible: user.length ? user : null
+          responsible: user.length ? user : null,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var riskList = result.data.getListOfRisk;
         console.log("risk list", riskList);
         this.setState({
           loading: false,
           error: "",
-          riskRegisterData: riskList
+          riskRegisterData: riskList,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   };
@@ -254,7 +254,7 @@ class RiskRegister extends React.Component {
 
         customSelectedOptions: null,
         userSelectedOptions: null,
-        riskId: null
+        riskId: null,
       },
       () => {
         this.getListOfRisk();
@@ -269,7 +269,7 @@ class RiskRegister extends React.Component {
           style={{
             fontSize: "13px",
             textAlign: "center",
-            whiteSpace: "normal"
+            whiteSpace: "normal",
           }}
         >
           <table
@@ -371,10 +371,10 @@ class RiskRegister extends React.Component {
       riskRegisterData,
       userOptions,
       userSelectedOptions,
-      riskId
+      riskId,
     } = this.state;
     // console.log("company", companySelectedOption);
-
+    // if (loading) return <>Fetching!!!</>;
     return (
       <>
         <div className="row align-items-center no-gutters">
@@ -398,8 +398,8 @@ class RiskRegister extends React.Component {
                   <div className="form-group">
                     <Select
                       value={companySelectedOption}
-                      onChange={e => {
-                        this.setState({ companySelectedOption: e }, e => {
+                      onChange={(e) => {
+                        this.setState({ companySelectedOption: e }, (e) => {
                           console.log("inside", companySelectedOption);
                         });
                       }}
@@ -415,7 +415,7 @@ class RiskRegister extends React.Component {
                   <div className="form-group">
                     <Select
                       value={projectSelectedOption}
-                      onChange={e => {
+                      onChange={(e) => {
                         this.setState({ projectSelectedOption: e });
                       }}
                       options={projectOptions}
@@ -430,7 +430,7 @@ class RiskRegister extends React.Component {
                   <div className="form-group">
                     <Select
                       value={riskSelectedOption}
-                      onChange={e => {
+                      onChange={(e) => {
                         this.setState({ riskSelectedOption: e });
                       }}
                       options={riskOptions}
@@ -450,10 +450,10 @@ class RiskRegister extends React.Component {
                       className="form-control"
                       style={{
                         height: "37px !important",
-                        borderColor: "hsl(0,0%,80%)"
+                        borderColor: "hsl(0,0%,80%)",
                       }}
                       placeholder="Enter Risk Id"
-                      onChange={e => {
+                      onChange={(e) => {
                         this.setState({ riskId: parseInt(e.target.value) });
                       }}
                     />
@@ -465,7 +465,7 @@ class RiskRegister extends React.Component {
                   <div className="form-group">
                     <Select
                       value={statusSelectedOptions}
-                      onChange={e => {
+                      onChange={(e) => {
                         this.setState({ statusSelectedOptions: e });
                       }}
                       options={statusOptions}
@@ -478,7 +478,7 @@ class RiskRegister extends React.Component {
                   <div className="form-group">
                     <Select
                       value={departmentSelectedOption}
-                      onChange={e => {
+                      onChange={(e) => {
                         this.setState(
                           { departmentSelectedOption: e }
 
@@ -525,7 +525,7 @@ class RiskRegister extends React.Component {
                   <div className="form-group">
                     <Select
                       value={userSelectedOptions}
-                      onChange={e => {
+                      onChange={(e) => {
                         this.setState({ userSelectedOptions: e }, () => {
                           console.log("test", userOptions);
                         });
@@ -542,7 +542,7 @@ class RiskRegister extends React.Component {
                   <div className="form-group">
                     <Select
                       value={customSelectedOptions}
-                      onChange={e => {
+                      onChange={(e) => {
                         this.setState({ customSelectedOptions: e });
                       }}
                       options={customOptions}
@@ -602,7 +602,7 @@ class RiskRegister extends React.Component {
               </tr>
             </thead>
             <tbody>
-              {riskRegisterData && riskRegisterData.length ? (
+              {!loading && riskRegisterData && riskRegisterData.length ? (
                 riskRegisterData.map((data, index) => {
                   return (
                     <>
@@ -613,11 +613,11 @@ class RiskRegister extends React.Component {
                               <img
                                 src={Expand}
                                 onClick={() => {
-                                  this.setState(prevState => {
+                                  this.setState((prevState) => {
                                     let display = [];
                                     display[index] = !prevState.display[index];
                                     return {
-                                      display: [...display]
+                                      display: [...display],
                                     };
                                   });
                                 }}
@@ -662,18 +662,10 @@ class RiskRegister extends React.Component {
                     </>
                   );
                 })
-              ) : loading ? (
-                <tr>
-                  <td align={"center"} colSpan="9">
-                    Fetching
-                  </td>
-                </tr>
+              ) : !loading && !riskRegisterData.length ? (
+                <div>No Data</div>
               ) : (
-                <tr>
-                  <td align={"center"} colSpan="9">
-                    No Data
-                  </td>
-                </tr>
+                <div>Fetching !!!</div>
               )}
             </tbody>
           </table>

@@ -114,6 +114,10 @@ export const RISK_DETAIL = gql`
       lastModifiedBy {
         loginId
       }
+      riskregisterattachmentSet {
+        url
+        id
+      }
       lastModifiedOn
       impact
       probability
@@ -332,6 +336,83 @@ export const GET_MITIGATION_PLAN_BY_ID = gql`
         loginId
       }
       createdOn
+    }
+  }
+`;
+
+export const CREATE_RISK_ATTACHMENT = gql`
+  mutation($riskId: Int, $data: [CreateRiskAttachmentInputType]!) {
+    createRiskAttachment(riskId: $riskId, data: $data) {
+      message
+    }
+  }
+`;
+
+export const DELETE_RISK_ATTACHMENT = gql`
+  mutation($attachmentId: String!) {
+    deleteRiskAttachment(attachmentId: $attachmentId) {
+      message
+    }
+  }
+`;
+
+export const DOWNLOAD_RISK_ATTACHMENT = gql`
+  mutation($attachmentId: String!, $versionNo: Int!) {
+    downloadAttachment(attachmentId: $attachmentId, versionNo: $versionNo) {
+      fileData
+      fileName
+    }
+  }
+`;
+
+export const CREATE_MITIGATION_ATTACHMENT = gql`
+  mutation(
+    $mitigationPlanId: Int!
+    $data: [CreateMitigationAttachmentInputType]!
+  ) {
+    createMitigationAttachment(
+      mitigationPlanId: $mitigationPlanId
+
+      data: $data
+    ) {
+      message
+    }
+  }
+`;
+
+export const DELETE_MITIGATION_ATTACHMENT = gql`
+  mutation($attachmentId: String!) {
+    deleteMitigationAttachment(attachmentId: $attachmentId) {
+      message
+    }
+  }
+`;
+
+export const DOWNLOAD_MITIGATION_ATTACHMENT = gql`
+  mutation($attachmentId: String!, $versionNo: Int!) {
+    downloadAttachment(attachmentId: $attachmentId, versionNo: $versionNo) {
+      fileData
+      fileName
+    }
+  }
+`;
+
+export const RISK_ATTACHMENTS = gql`
+  query($riskId: Int) {
+    getListOfAttachmentsByRiskId(riskId: $riskId) {
+      url
+      id
+    }
+  }
+`;
+
+export const MITIGATION_ATTACHMENTS = gql`
+  query($mitigationPlanId: Int) {
+    getListOfAttachmentsByMitigationPlanId(
+      mitigationPlanId: $mitigationPlanId
+    ) {
+      url
+      id
     }
   }
 `;

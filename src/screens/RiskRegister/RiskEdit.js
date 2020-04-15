@@ -6,25 +6,35 @@ import SelectComponent from "../Common/form-component/SelectComponent";
 import SimpleReactValidator from "simple-react-validator";
 import { getListofGenericMasterQuery } from "../../services/graphql/queries/user";
 import { getListofProjectsByCompanyId } from "../../services/graphql/queries/document-upload";
-import { UPDATE_RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
+import {
+  UPDATE_RISK_REGISTER,
+  CREATE_RISK_ATTACHMENT,
+  DELETE_RISK_ATTACHMENT,
+  RISK_ATTACHMENTS,
+} from "../../services/graphql/queries/riskRegister";
 import ReactModal from "../Common/ReactModal";
 import { format } from "date-fns";
+import CloseSvg from "../../static/images/svg/Close.svg";
 
 import { withApollo } from "react-apollo";
 
 import {
   SET_TIMEOUT_VALUE,
-  dateInputFormat
+  dateInputFormat,
+  MAX_DOC_UPLOAD_SIZE,
 } from "../../constants/app-constants";
+import { errorMessage } from "../../miscellaneous/error-messages";
+const FileSaver = require("file-saver");
+const mime = require("mime-types");
 
 const impAndProbOptions = [
   { Id: 1, label: "Low" },
   { Id: 2, label: "Medium" },
-  { Id: 3, label: "High" }
+  { Id: 3, label: "High" },
 ];
 const statusOptions = [
   { Id: 2, label: "Open" },
-  { Id: 1, label: "Closed" }
+  { Id: 1, label: "Closed" },
 ];
 
 class EditRiskRegister extends React.Component {
@@ -41,7 +51,14 @@ class EditRiskRegister extends React.Component {
         probability: "",
         severity: "",
         id: null,
-        status: null
+        status: null,
+        riskregisterattachmentSet: [],
+      },
+      fileinput: null,
+      attachmentDetail: {
+        fileData: "",
+        fileName: "",
+        fileType: "",
       },
       reactModalVisible: false,
       requireCancel: false,
@@ -50,38 +67,38 @@ class EditRiskRegister extends React.Component {
 
       projectOptions: [],
 
-      riskOptions: []
+      riskOptions: [],
     };
 
     this.validator = new SimpleReactValidator({
       autoForceUpdate: this,
-      element: message => <div style={{ color: "red" }}>{message}</div>
+      element: (message) => <div style={{ color: "red" }}>{message}</div>,
     });
   }
-  handleInput = e => {
+  handleInput = (e) => {
     let value = e.target.value;
     let name = e.target.name;
     if (name != "name" && name != "description" && value !== "")
       value = parseInt(value);
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
         riskDetail: {
           ...prevState.riskDetail,
-          [name]: value
-        }
+          [name]: value,
+        },
       };
     });
   };
 
-  handleCompany = e => {
+  handleCompany = (e) => {
     let value = e.target.value;
     let name = e.target.name;
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
         riskDetail: {
           ...prevState.riskDetail,
-          [name]: value != "" ? parseInt(value) : value
-        }
+          [name]: value != "" ? parseInt(value) : value,
+        },
       };
     });
     this.setState({ project: "" });
@@ -92,31 +109,31 @@ class EditRiskRegister extends React.Component {
       .query({
         query: getListofProjectsByCompanyId,
         variables: {
-          companyId: parseInt(value)
+          companyId: parseInt(value),
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var projectList = result.data.getListOfProjectsByCompanyId;
         let projArr = [];
-        projectList.forEach(element => {
+        projectList.forEach((element) => {
           let obj = {
             Id: element.projectDetail.Id,
-            label: element.projectDetail.description
+            label: element.projectDetail.description,
           };
           projArr.push(obj);
         });
         this.initialState = {
           projectOptions: projArr,
-          project: ""
+          project: "",
         };
         this.setState({
           ...this.initialState,
           loading: false,
-          error: ""
+          error: "",
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -125,42 +142,198 @@ class EditRiskRegister extends React.Component {
       .query({
         query: getListofGenericMasterQuery,
         variables: {
-          masterFor: id
+          masterFor: id,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var user = result.data.getListofGenericMaster;
         let OptionArr = [];
-        user.forEach(element => {
+        user.forEach((element) => {
           OptionArr.push({
             Id: element.Id,
-            label: element.description
+            label: element.description,
           });
         });
         if (id == 3) {
           this.initialState = {
-            companyOptions: OptionArr
+            companyOptions: OptionArr,
           };
         } else if (id == 4) {
           this.initialState = {
-            projectOptions: OptionArr
+            projectOptions: OptionArr,
           };
         } else if (id == 18)
           this.initialState = {
-            riskOptions: OptionArr
+            riskOptions: OptionArr,
           };
         else if (id == 2)
           this.initialState = {
-            departmentOptions: OptionArr
+            departmentOptions: OptionArr,
           };
         this.setState({ ...this.initialState, loading: false, error: "" });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
+  isAcceptedFile(file) {
+    let fileName = file.name;
+    if (
+      fileName.includes(".xlsx") ||
+      fileName.includes(".xls") ||
+      fileName.includes(".doc") ||
+      fileName.includes(".docx") ||
+      fileName.includes(".ppt") ||
+      fileName.includes(".pptx") ||
+      fileName.includes(".pdf") ||
+      fileName.includes(".XLSX") ||
+      fileName.includes(".XLS") ||
+      fileName.includes(".DOC") ||
+      fileName.includes(".DOCX") ||
+      fileName.includes(".PPT") ||
+      fileName.includes(".PPTX") ||
+      fileName.includes(".PDF")
+    ) {
+      return true;
+    } else {
+      this.setState({
+        errors: [
+          "Please upload only these file types .xlsx, .xls, .doc, .docx, .ppt, .pptx, .pdf",
+        ],
+      });
+      this.timer = setTimeout(() => {
+        this.setState({ errors: [] });
+      }, SET_TIMEOUT_VALUE);
+      return false;
+    }
+  }
 
+  validateSize = (file) => {
+    var FileSize = file.size / 1024; // in KB
+    console.log("img size", FileSize, file.size);
+    if (FileSize > MAX_DOC_UPLOAD_SIZE * 1024) {
+      this.setState({
+        errors: ["Max file upload size is " + MAX_DOC_UPLOAD_SIZE + " MB"],
+      });
+      setTimeout(() => {
+        this.setState({ errors: [] });
+      }, SET_TIMEOUT_VALUE);
+      return false;
+    } else {
+      return true;
+    }
+  };
+
+  uploadFile(fileData, fileName, fileType) {
+    // console.log("filenaM",fileName)
+    var imgName = fileName;
+    var imgData = fileData;
+    var imgType = fileType;
+    let attachmentDetail = {
+      fileData: imgData,
+      fileName: imgName,
+      fileType: imgType,
+    };
+    this.setState(
+      (prev) => {
+        return {
+          attachmentDetail: {
+            ...prev.attachmentDetail,
+            fileData: imgData,
+            fileName: imgName,
+            fileType: imgType,
+          },
+        };
+      },
+      () => {
+        console.log("fileData", this.state.attachmentDetail);
+        this.uploadFileApollo();
+      }
+    );
+  }
+
+  uploadFileApollo() {
+    this.setState({ loading: true });
+    this.props.client
+      .mutate({
+        mutation: CREATE_RISK_ATTACHMENT,
+        variables: {
+          riskId: this.state.riskDetail.id,
+          data: [this.state.attachmentDetail],
+        },
+      })
+      .then((result) => {
+        // alert("Document Created successfully");
+        this.setState({
+          loading: false,
+          reactModalVisible: true,
+          modalMessage: "Attachment Added Successfully",
+        });
+        // this.getListOfAttachments();
+      })
+      .catch((error) => {
+        console.log("~~~error: ", error);
+        this.setState({ loading: false, errors: [errorMessage(error)] });
+        this.timer = setTimeout(() => {
+          this.setState({ errors: [] });
+        }, SET_TIMEOUT_VALUE);
+      });
+  }
+
+  convertFileToBase64(file, callback) {
+    var reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function() {
+      callback(null, reader.result, file);
+    };
+
+    reader.onerror = function(error) {
+      callback(error);
+    };
+  }
+  getListOfAttachments() {
+    this.props.client
+      .query({
+        query: RISK_ATTACHMENTS,
+        variables: {
+          riskId: this.state.riskDetail.id,
+        },
+        fetchPolicy: "network-only",
+      })
+      .then((result) => {
+        var attachmentlist = result.data.getListOfAttachmentsByRiskId;
+        this.setState((prevState) => {
+          return {
+            riskDetail: {
+              ...prevState.riskDetail,
+              riskregisterattachmentSet: attachmentlist,
+            },
+          };
+        });
+      })
+      .catch((error) => {
+        this.setState({ loading: false, error: error.message });
+      });
+  }
+  deleteAttachment = (id) => {
+    // this.state.riskDetail.companyId = parseInt(this.state.riskDetail.companyId);
+    // this.state.riskDetail.categoryId = parseInt(this.state.riskDetail.categoryId);
+    // this.state.riskDetail.projectId = parseInt(this.state.riskDetail.projectId);
+    this.props.client
+      .mutate({
+        mutation: DELETE_RISK_ATTACHMENT,
+        variables: { attachmentId: id },
+        fetchPolicy: "no-cache",
+      })
+      .then((result) => {
+        console.log("result", result);
+        this.getListOfAttachments();
+      })
+      .catch((error) => {
+        console.log("error", error);
+      });
+  };
   submitRisk = () => {
     // this.state.riskDetail.companyId = parseInt(this.state.riskDetail.companyId);
     // this.state.riskDetail.categoryId = parseInt(this.state.riskDetail.categoryId);
@@ -169,13 +342,13 @@ class EditRiskRegister extends React.Component {
       .mutate({
         mutation: UPDATE_RISK_REGISTER,
         variables: this.state.riskDetail,
-        fetchPolicy: "no-cache"
+        fetchPolicy: "no-cache",
       })
-      .then(result => {
+      .then((result) => {
         console.log("result", result);
         this.setState({ reactModalVisible: true });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("error", error);
       });
   };
@@ -212,8 +385,9 @@ class EditRiskRegister extends React.Component {
       createdBy,
       createdOn,
       lastModifiedBy,
-      lastModifiedOn
+      lastModifiedOn,
     } = this.props.riskDetails;
+
     const riskDetail = {
       name: name,
       riskCategory: categoryId.Id,
@@ -224,15 +398,22 @@ class EditRiskRegister extends React.Component {
       severity: severity,
       description: description,
       id: id,
-      status: status
+      status: status,
     };
-    this.setState({ riskDetail: riskDetail });
+    this.setState({ riskDetail: riskDetail }, () => {
+      this.getListOfAttachments();
+    });
     this.getProjectOptions(companyId.Id);
   }
   submitModal = () => {
-    this.setState({ reactModalVisible: false, modalMessage: "" }, () => {
-      this.props.riskUpdate();
-      this.props.changeMode();
+    const modalMessage = this.state.modalMessage;
+    this.setState({ reactModalVisible: false }, () => {
+      if ("Attachment Added Successfully" !== modalMessage) {
+        this.props.riskUpdate();
+        this.props.changeMode();
+      } else {
+        this.getListOfAttachments();
+      }
     });
     // this.props.onUpdateUser();
   };
@@ -250,7 +431,7 @@ class EditRiskRegister extends React.Component {
       projectOptions,
       reactModalVisible,
       requireCancel,
-      modalMessage
+      modalMessage,
     } = this.state;
     return (
       <div>
@@ -275,7 +456,7 @@ class EditRiskRegister extends React.Component {
                     value={riskDetail.name}
                     placeholder="Enter Name"
                     validator={this.validator}
-                    handleChange={e => {
+                    handleChange={(e) => {
                       this.handleInput(e);
                     }}
                     validation="required"
@@ -293,7 +474,7 @@ class EditRiskRegister extends React.Component {
                     default={false}
                     value={riskDetail.riskCategory}
                     placeholder={"Select Risk Category"}
-                    handleChange={e => {
+                    handleChange={(e) => {
                       this.handleInput(e);
                     }}
                     validator={this.validator}
@@ -311,7 +492,7 @@ class EditRiskRegister extends React.Component {
                     valueKey={"Id"}
                     value={riskDetail.company}
                     placeholder={"Select Company"}
-                    handleChange={e => {
+                    handleChange={(e) => {
                       this.handleCompany(e);
                     }}
                     validator={this.validator}
@@ -417,25 +598,86 @@ class EditRiskRegister extends React.Component {
                       className="upload-btn-wrapper"
                       style={{ marginTop: "25px" }}
                     >
-                      <button className="btn btn-light">
+                      <button
+                        className="btn btn-light"
+                        onClick={() => {
+                          this.state.fileinput.click();
+                        }}
+                      >
                         Upload Attachment
+                        {/* <input type="file" name="myfile" /> */}
+                        <input
+                          type="file"
+                          id="uploadAttachments"
+                          hidden
+                          name="attachments"
+                          // accept="image/gif,image/jpeg,image/png"
+                          accept=".xlsx, .xls, .doc, .docx, .ppt, .pptx, .pdf"
+                          ref={(fileinput) => {
+                            this.state.fileinput = fileinput;
+                          }}
+                          onChange={(e) => {
+                            if (this.isAcceptedFile(e.target.files[0])) {
+                              if (this.validateSize(e.target.files[0])) {
+                                this.convertFileToBase64(
+                                  e.target.files[0],
+                                  (err, fileData, file) => {
+                                    if (err) {
+                                      console.log(err);
+                                    }
+                                    this.setState(
+                                      {
+                                        uploading: true,
+                                      },
+                                      () => {
+                                        this.uploadFile(
+                                          fileData,
+                                          file.name,
+                                          file.type
+                                        );
+                                      }
+                                    );
+                                  }
+                                );
+                              }
+                            }
+                          }}
+                        />
                       </button>
-                      <input type="file" name="myfile" />
                     </div>
                   </div>
                   <label className="mt-2">Attachment List</label>
                   <div className="row attachment-list">
                     <ol>
-                      <li>
-                        file1.pdf <img src="../images/close.svg" />
-                      </li>
-                      <li>
-                        file2.pdf
-                        <img src="../images/close.svg" />
-                      </li>
-                      <li>
-                        file3.pdf <img src="../images/close.svg" />
-                      </li>
+                      {riskDetail.riskregisterattachmentSet &&
+                      riskDetail.riskregisterattachmentSet.length
+                        ? riskDetail.riskregisterattachmentSet.map(
+                            (data, index) => {
+                              return (
+                                <li
+                                  title={decodeURI(
+                                    data.url
+                                      .substring(data.url.lastIndexOf("/") + 1)
+                                      .substr(32)
+                                  )}
+                                >
+                                  {decodeURI(
+                                    data.url
+                                      .substring(data.url.lastIndexOf("/") + 1)
+                                      .substr(32)
+                                  ).substring(0, 30)}
+                                  <img
+                                    src={CloseSvg}
+                                    title="Delete"
+                                    onClick={() =>
+                                      this.deleteAttachment(data.id)
+                                    }
+                                  />
+                                </li>
+                              );
+                            }
+                          )
+                        : null}
                     </ol>
                   </div>
                 </div>

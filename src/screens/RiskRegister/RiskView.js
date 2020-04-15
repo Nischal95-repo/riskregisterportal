@@ -23,7 +23,8 @@ class RiskView extends React.Component {
       createdOn,
       lastModifiedBy,
       lastModifiedOn,
-      status
+      status,
+      riskregisterattachmentSet,
     } = this.props.riskDetails;
     console.log("test details");
 
@@ -120,16 +121,26 @@ class RiskView extends React.Component {
                   <div className="form-group">
                     <label>Attachments</label>
                     <ol className="attachment-list">
-                      <li>
-                        file1.pdf <img src="../images/close.svg" />
-                      </li>
-                      <li>
-                        file2.pdf
-                        <img src="../images/close.svg" />
-                      </li>
-                      <li>
-                        file3.pdf <img src="../images/close.svg" />
-                      </li>
+                      {riskregisterattachmentSet &&
+                      riskregisterattachmentSet.length
+                        ? riskregisterattachmentSet.map((data, index) => {
+                            return (
+                              <li
+                                title={decodeURI(
+                                  data.url
+                                    .substring(data.url.lastIndexOf("/") + 1)
+                                    .substr(32)
+                                )}
+                              >
+                                {decodeURI(
+                                  data.url
+                                    .substring(data.url.lastIndexOf("/") + 1)
+                                    .substr(32)
+                                ).substring(0, 30)}
+                              </li>
+                            );
+                          })
+                        : null}
                     </ol>
                   </div>
                 </div>

@@ -12,6 +12,7 @@ import {
   DELETE_RISK_ATTACHMENT,
 } from "../../services/graphql/queries/riskRegister";
 import ReactModal from "../Common/ReactModal";
+import { toast } from "react-toastify";
 import { format } from "date-fns";
 
 import { withApollo } from "react-apollo";
@@ -30,6 +31,11 @@ const impAndProbOptions = [
   { Id: 3, label: "High" },
 ];
 
+toast.configure({
+  autoClose: 8000,
+  draggable: false,
+  //etc you get the idea
+});
 class AddRiskRegister extends React.Component {
   constructor() {
     super();
@@ -174,6 +180,9 @@ class AddRiskRegister extends React.Component {
       })
       .catch((error) => {
         console.log("error", error);
+        toast.error([errorMessage(error)][0][0], {
+          className: "error",
+        });
       });
   };
 

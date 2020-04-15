@@ -7,10 +7,12 @@ import { dateFormatMonth, dateFormat } from "../../constants/app-constants";
 
 import NotAccessible from "../Common/NotAccessible";
 import InputComponent from "../Common/form-component/InputComponent";
+import Pagination from "../Common/Pagination";
 import ButtonComponent from "../Common/form-component/ButtonComponent";
 import {
   SET_TIMEOUT_VALUE,
   dateInputFormat,
+  PAGINATION_OFFSET_VALUE,
 } from "../../constants/app-constants";
 import {
   getListofGenericMasterQuery,
@@ -52,8 +54,9 @@ class RiskRegister extends React.Component {
       userOptions: [],
       userSelectedOptions: null,
       riskId: null,
-      activePage: 1,
+      pageNumber: 1,
       options: [],
+      noOfRows: PAGINATION_OFFSET_VALUE,
     };
   }
   handlePageChange(pageNumber) {
@@ -182,6 +185,8 @@ class RiskRegister extends React.Component {
       userOptions,
       userSelectedOptions,
       riskId,
+      noOfRows,
+      pageNumber,
     } = this.state;
 
     let risk = [];
@@ -223,6 +228,8 @@ class RiskRegister extends React.Component {
               : true
             : false,
           responsible: user.length ? user : null,
+          noOfRows: noOfRows,
+          pageNumber: pageNumber,
         },
         fetchPolicy: "network-only",
       })
@@ -284,7 +291,9 @@ class RiskRegister extends React.Component {
                 <th scope="col">RESPONSIBLE</th>
                 <th scope="col">STATUS</th>
                 <th scope="col">DUE/COMPLETION DATE</th>
-                <th scope="col">FORECAST DATE</th>
+                <th scope="col" width={150}>
+                  FORECAST DATE
+                </th>
                 <th scope="col">ACTION</th>
               </tr>
             </thead>
@@ -343,6 +352,26 @@ class RiskRegister extends React.Component {
           </table>
         </td>
       </tr>
+    );
+  }
+  onChangePage(pageNumber) {
+    // update state with new page of items
+    this.setState(
+      {
+        pageNumber: pageNumber,
+      },
+      () => {
+        // if (this.state.isFilterApply) {
+        //   this.getListOfDocuments(
+        //     this.state.noOfRows,
+        //     pageNumber,
+        //     this.state.filterData
+        //   );
+        // } else {
+        //   this.getListOfDocuments(this.state.noOfRows, pageNumber);
+        // }
+        this.getListOfRisk();
+      }
     );
   }
 
@@ -669,6 +698,46 @@ class RiskRegister extends React.Component {
               )}
             </tbody>
           </table>
+          {/* {!pageOfItems.length && error ? <div>{error}</div> : null}
+            {!pageOfItems.length && loading ? <div>Fetching...</div> : null}
+            {!pageOfItems.length && !error && !loading ? (
+            <div style={{ textAlign: "center" }}>No Data</div>
+            ) : null} */}
+
+          {loading ? null : (
+            <div className="row" style={{ margin: "0px" }}>
+              <div className="col-md-2">
+                <select
+                  value={this.state.noOfRows}
+                  style={{ width: "70px", marginTop: "8px" }}
+                  className="form-control ml-2"
+                  onChange={(e) =>
+                    this.setState(
+                      { noOfRows: parseInt(e.target.value) },
+                      () => {
+                        this.getListOfRisk();
+                      }
+                    )
+                  }
+                >
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="25">25</option>
+                </select>
+              </div>
+              <div className="col-md-8">
+                <Pagination
+                  loading={loading}
+                  items={riskRegisterData}
+                  pageSize={this.state.noOfRows}
+                  initialPage={this.state.pageNumber}
+                  onChangePage={this.onChangePage.bind(this)}
+                />
+              </div>
+              <div className="col-md-2 text-right"></div>
+            </div>
+          )}
         </div>
         {/* Table Section End */}
         {/* Pagination Start */}

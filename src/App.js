@@ -1,5 +1,8 @@
 import React from "react";
 import { Route, withRouter } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import { SET_TIMEOUT_VALUE } from "./constants/app-constants";
+import "react-toastify/dist/ReactToastify.min.css";
 import logo from "./logo.svg";
 import "./App.css";
 
@@ -16,6 +19,11 @@ import AddRiskRegister from "./pages/add-risk";
 
 import RiskDetail from "./pages/risk-detail";
 import MitigationApproval from "./pages/approve-mitigation";
+toast.configure({
+  autoClose: SET_TIMEOUT_VALUE,
+  draggable: false,
+  //etc you get the idea
+});
 class App extends React.Component {
   constructor(props) {
     super(props);

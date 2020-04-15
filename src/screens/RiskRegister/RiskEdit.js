@@ -24,6 +24,9 @@ import {
   MAX_DOC_UPLOAD_SIZE,
 } from "../../constants/app-constants";
 import { errorMessage } from "../../miscellaneous/error-messages";
+import { toast } from "react-toastify";
+
+// import "react-toastify/dist/ReactToastify.min.css";
 const FileSaver = require("file-saver");
 const mime = require("mime-types");
 
@@ -36,7 +39,11 @@ const statusOptions = [
   { Id: 2, label: "Open" },
   { Id: 1, label: "Closed" },
 ];
-
+// toast.configure({
+//   autoClose: 8000,
+//   draggable: false,
+//   //etc you get the idea
+// });
 class EditRiskRegister extends React.Component {
   constructor() {
     super();
@@ -346,10 +353,17 @@ class EditRiskRegister extends React.Component {
       })
       .then((result) => {
         console.log("result", result);
-        this.setState({ reactModalVisible: true });
+        toast.success("Updated successfully", {
+          className: "success",
+        });
+        // this.setState({ reactModalVisible: true });
       })
       .catch((error) => {
         console.log("error", error);
+
+        toast.error([errorMessage(error)][0][0], {
+          className: "error",
+        });
       });
   };
 

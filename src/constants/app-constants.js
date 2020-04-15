@@ -3,7 +3,7 @@ import CeoSign from "../../src/static/certificateImage/sign2.png";
 
 export const PAGINATION_OFFSET_VALUE = 10;
 // export const NOTIFICATION_OFFSET_VALUE = 10;
-export const SET_TIMEOUT_VALUE = 30000;
+export const SET_TIMEOUT_VALUE = 10000;
 export const dateInputFormat = "YYYY-MM-DD";
 // export const dateTimeFormat = "DD-MMM-YYYY h:mm:ss";
 export const dateFormat = "DD-MM-YYYY";
@@ -24,7 +24,7 @@ export const PASSWORD_REGEX = new RegExp(
 export const MAX_UPLOAD_SIZE = 10;
 
 //size in mb
-export const MAX_DOC_UPLOAD_SIZE = 50
+export const MAX_DOC_UPLOAD_SIZE = 50;
 
 export const DESCRIPTION_MAX_LENGTH = "40";
 export const LIST_DESCRIPTION_MAXLENGTH = 40;

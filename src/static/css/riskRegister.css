@@ -166,3 +166,37 @@
   font-weight: 700;
   color: #fff;
 }
+
+.error {
+  background: #ec202a !important;
+  color: #e3e3e6;
+}
+
+.success {
+  background: #69951a !important;
+  color: #e3e3e6;
+}
+
+.toast-success-container {
+  color: #000 !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  border: 1px solid #34a853 !important;
+  box-shadow: 0px 1px 5px rgba(248, 175, 175, 0.1) !important;
+}
+
+.toast-success-container-after {
+  overflow: hidden;
+  position: relative;
+}
+
+.toast-success-container-after::after {
+  top: 0;
+  left: 0;
+  content: "";
+  width: 7px;
+  height: 100%;
+  position: absolute;
+  display: inline-block;
+  background-color: #34a853;
+}

@@ -200,3 +200,12 @@
   display: inline-block;
   background-color: #34a853;
 }
+
+.risk-register-table-colour > td {
+  background-color: #f3f6ef !important;
+}
+
+.mitigation-table td {
+  border: none !important;
+  background-color: #ffffff !important;
+}

@@ -113,24 +113,9 @@ class MitigationList extends React.Component {
                             <td>{format(data.forecastDate, dateFormat)}</td>
                             <td>{data.status ? data.status.name : ""}</td>
                             <td>
-                              {data.status && data.status.statusId == 2 ? (
-                                <a
-                                  className="link-click"
-                                  href="#"
-                                  data-placement="bottom"
-                                  title="  Mitigation Activity"
-                                  onClick={() => {
-                                    this.setState(
-                                      { mitigationPlanId: parseInt(data.id) },
-                                      () => {
-                                        this.toggleMode();
-                                      }
-                                    );
-                                  }}
-                                >
-                                  <img src={ModifySvg} />
-                                </a>
-                              ) : (
+                              {data.status &&
+                              (data.status.statusId == 1 ||
+                                data.status.statusId == 3) ? (
                                 <a
                                   className="link-click"
                                   href="#"
@@ -153,7 +138,23 @@ class MitigationList extends React.Component {
                                 >
                                   <img src={ApproveSvg} />
                                 </a>
-                              )}
+                              ) : null}
+                              <a
+                                className="link-click ml-3"
+                                href="#"
+                                data-placement="bottom"
+                                title="  Mitigation Activity"
+                                onClick={() => {
+                                  this.setState(
+                                    { mitigationPlanId: parseInt(data.id) },
+                                    () => {
+                                      this.toggleMode();
+                                    }
+                                  );
+                                }}
+                              >
+                                <img src={ModifySvg} />
+                              </a>
                             </td>
                           </tr>
                         );

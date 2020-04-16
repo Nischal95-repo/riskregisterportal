@@ -27,7 +27,7 @@ import Expand from "../../static/images/svg/plus.svg";
 require("../../static/css/bootstrap.min.css");
 const customStyles = {};
 const statusOptions = [
-  { value: 1, label: "Open" },
+  { value: 1, label: "Active" },
   { value: 2, label: "Closed" },
 ];
 const customOptions = [
@@ -270,13 +270,14 @@ class RiskRegister extends React.Component {
   };
   accordion(data, riskId) {
     return (
-      <tr>
+      <tr className="background-white">
         <td
           colSpan={9}
           style={{
             fontSize: "13px",
             textAlign: "center",
             whiteSpace: "normal",
+            backgroundColor: "white",
           }}
         >
           <table
@@ -304,7 +305,9 @@ class RiskRegister extends React.Component {
                       <tr>
                         <td>{ele.id}</td>
                         <td>{ele.name}</td>
-                        <td>Finance</td>
+                        <td>
+                          {ele.departmentId ? ele.departmentId.description : ""}
+                        </td>
                         <td>
                           {ele.responsible ? ele.responsible.loginId : ""}
                         </td>
@@ -608,7 +611,7 @@ class RiskRegister extends React.Component {
 
         <div className="table-responsive">
           <table
-            className="table table-style-1"
+            className="table table-style-1 risk-register-table"
             data-toggle="collapse"
             data-target="#collapseOne"
             aria-expanded="true"
@@ -635,7 +638,7 @@ class RiskRegister extends React.Component {
                 riskRegisterData.map((data, index) => {
                   return (
                     <>
-                      <tr>
+                      <tr className="risk-register-table-colour">
                         <td>
                           {data.mitigationplanSet.length > 0 ? (
                             <figure style={{ cursor: "pointer" }}>
@@ -707,6 +710,41 @@ class RiskRegister extends React.Component {
           {loading ? null : (
             <div className="row" style={{ margin: "0px" }}>
               <div className="col-md-2">
+                {/* <select
+                  value={this.state.noOfRows}
+                  style={{ width: "70px", marginTop: "8px" }}
+                  className="form-control ml-2"
+                  onChange={(e) =>
+                    this.setState(
+                      { noOfRows: parseInt(e.target.value) },
+                      () => {
+                        this.getListOfRisk();
+                      }
+                    )
+                  }
+                >
+                  <option value="5">5</option>
+                  <option value="10">10</option>
+                  <option value="20">20</option>
+                  <option value="25">25</option>
+                </select> */}
+              </div>
+              <div className="col-md-8">
+                <Pagination
+                  loading={loading}
+                  items={riskRegisterData}
+                  pageSize={this.state.noOfRows}
+                  initialPage={this.state.pageNumber}
+                  onChangePage={this.onChangePage.bind(this)}
+                />
+              </div>
+              <div
+                className="col-md-2 text-right"
+                style={{ display: "inline-flex" }}
+              >
+                <label style={{ marginTop: "12px", fontSize: "15px" }}>
+                  Page Size:{" "}
+                </label>
                 <select
                   value={this.state.noOfRows}
                   style={{ width: "70px", marginTop: "8px" }}
@@ -726,16 +764,6 @@ class RiskRegister extends React.Component {
                   <option value="25">25</option>
                 </select>
               </div>
-              <div className="col-md-8">
-                <Pagination
-                  loading={loading}
-                  items={riskRegisterData}
-                  pageSize={this.state.noOfRows}
-                  initialPage={this.state.pageNumber}
-                  onChangePage={this.onChangePage.bind(this)}
-                />
-              </div>
-              <div className="col-md-2 text-right"></div>
             </div>
           )}
         </div>

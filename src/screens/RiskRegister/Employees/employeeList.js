@@ -4,7 +4,7 @@ import { withApollo } from "react-apollo";
 
 import {
   GET_LIST_OF_EMPLOYEES,
-  REMOVE_EMPLOYEE
+  REMOVE_EMPLOYEE,
 } from "../../../services/graphql/queries/riskRegister";
 
 import ReactModal from "../../Common/ReactModal";
@@ -26,7 +26,7 @@ class EmployeeList extends React.Component {
       reactModalVisible: false,
       requireCancel: false,
       modalMessage: "",
-      requireCancel: true
+      requireCancel: true,
     };
     this.submitModal = this.submitModal.bind(this);
     this.closeModal = this.closeModal.bind(this);
@@ -37,15 +37,15 @@ class EmployeeList extends React.Component {
       .mutate({
         mutation: REMOVE_EMPLOYEE,
         variables: {
-          id: this.state.deleteId
+          id: this.state.deleteId,
         },
-        fetchPolicy: "no-cache"
+        fetchPolicy: "no-cache",
       })
-      .then(result => {
+      .then((result) => {
         this.setState({ reactModalVisible: false });
         this.getListOfEmployees();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("~~~error: ", error);
         this.setState({ loading: false, errors: [errorMessage(error)] });
         this.timer = setTimeout(() => {
@@ -62,7 +62,7 @@ class EmployeeList extends React.Component {
     this.setState({
       reactModalVisible: true,
       modalMessage: "Are you sure, you want to delete this employee?",
-      deleteId: id
+      deleteId: id,
     });
   }
 
@@ -84,20 +84,20 @@ class EmployeeList extends React.Component {
       .query({
         query: GET_LIST_OF_EMPLOYEES,
         variables: {
-          riskId: parseInt(localStorage.getItem("riskId"))
+          riskId: parseInt(localStorage.getItem("riskId")),
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var employees = result.data.getListOfEmployeesForRisk;
         // employees = employees.sort((a, b) => this.compare(a, b));
 
         this.initialState = {
-          employees: employees
+          employees: employees,
         };
         this.setState({ ...this.initialState, loading: false, error: "" });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -113,7 +113,7 @@ class EmployeeList extends React.Component {
       employees,
       reactModalVisible,
       requireCancel,
-      modalMessage
+      modalMessage,
     } = this.state;
     const { document } = this.props;
     return (
@@ -132,13 +132,13 @@ class EmployeeList extends React.Component {
               onClick={this.props.displayToggle}
               style={{ cursor: "pointer" }}
             >
-              Employee List
+              Additional Viewers
             </h1>
 
             <div
               className="row"
               style={{
-                display: errors.length === 0 ? "none" : "block"
+                display: errors.length === 0 ? "none" : "block",
               }}
             >
               <div className="col-md-6">

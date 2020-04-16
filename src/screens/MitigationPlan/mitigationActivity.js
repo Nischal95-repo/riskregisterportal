@@ -10,17 +10,17 @@ import popupLogo from "../../static/images/popup-logo.png";
 import InputComponent from "../Common/form-component/InputComponent";
 import {
   getListofGenericMasterQuery,
-  ALL_EMPLOYEE_LIST
+  ALL_EMPLOYEE_LIST,
 } from "../../services/graphql/queries/user";
 import {
   CREATE_MITIGATION_ACTIVITY,
-  GET_LIST_OF_ACTIVITIES
+  GET_LIST_OF_ACTIVITIES,
 } from "../../services/graphql/queries/riskRegister";
 import CloseSvg from "../../static/images/svg/Close.svg";
 import {
   SET_TIMEOUT_VALUE,
   dateInputFormat,
-  dateFormatMonth
+  dateFormatMonth,
 } from "../../constants/app-constants";
 import { format } from "date-fns";
 class MitigationActivity extends React.Component {
@@ -32,7 +32,7 @@ class MitigationActivity extends React.Component {
         responsible: null,
         forecastDate: "",
         department: null,
-        status: null
+        status: null,
       },
       departmentOptions: [],
       userOptions: [],
@@ -41,38 +41,38 @@ class MitigationActivity extends React.Component {
       activities: [],
       loading: true,
       errors: [],
-      error: ""
+      error: "",
     };
     this.validator = new SimpleReactValidator({
       autoForceUpdate: this,
-      element: message => <div style={{ color: "red" }}>{message}</div>
+      element: (message) => <div style={{ color: "red" }}>{message}</div>,
     });
   }
 
-  handleInput = e => {
+  handleInput = (e) => {
     let value = e.target.value;
     let name = e.target.name;
     if (value !== "" && (name == "department" || name == "responsible")) {
       value = parseInt(value);
     }
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
         activityDetail: {
           ...prevState.activityDetail,
-          [name]: value
-        }
+          [name]: value,
+        },
       };
     });
     if (name == "department") {
       debugger;
       let users = [];
 
-      this.state.options.forEach(element => {
+      this.state.options.forEach((element) => {
         console.log("department", element, value);
         if (element.department.includes(parseInt(value))) {
           let obj = {
             Id: element.Id,
-            label: element.name
+            label: element.name,
           };
 
           users.push(obj);
@@ -91,38 +91,38 @@ class MitigationActivity extends React.Component {
       .query({
         query: getListofGenericMasterQuery,
         variables: {
-          masterFor: id
+          masterFor: id,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var user = result.data.getListofGenericMaster;
         let OptionArr = [];
-        user.forEach(element => {
+        user.forEach((element) => {
           OptionArr.push({
             Id: element.Id,
-            label: element.description
+            label: element.description,
           });
         });
         if (id == 3) {
           this.initialState = {
-            companyOptions: OptionArr
+            companyOptions: OptionArr,
           };
         } else if (id == 4) {
           this.initialState = {
-            projectOptions: OptionArr
+            projectOptions: OptionArr,
           };
         } else if (id == 18)
           this.initialState = {
-            riskOptions: OptionArr.sort(compareValues("label"))
+            riskOptions: OptionArr.sort(compareValues("label")),
           };
         else if (id == 2)
           this.initialState = {
-            departmentOptions: OptionArr
+            departmentOptions: OptionArr,
           };
         this.setState({ ...this.initialState, loading: false, error: "" });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -134,21 +134,21 @@ class MitigationActivity extends React.Component {
         variables: {
           // employeeId: this.state.employeeId ? this.state.employeeId : null,
           // name: this.state.name ? this.state.name : "",
-          status: 1
+          status: 1,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var users = result.data.getListOfAyanaEmployees;
 
         this.setState({
           ...this.initialState,
           loading: false,
           error: "",
-          options: users
+          options: users,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -160,20 +160,20 @@ class MitigationActivity extends React.Component {
         variables: {
           // employeeId: this.state.employeeId ? this.state.employeeId : null,
           // name: this.state.name ? this.state.name : "",
-          mitigationPlanId: parseInt(this.props.mitigationPlanId)
+          mitigationPlanId: parseInt(this.props.mitigationPlanId),
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var activities = result.data.getListOfMitigationActivities;
 
         this.setState({
           loading: false,
 
-          activities: activities
+          activities: activities,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -188,7 +188,7 @@ class MitigationActivity extends React.Component {
         forecastDate: activityDetail.forecastDate,
         status: activityDetail.status ? activityDetail.status : null,
         department: activityDetail.department,
-        responsible: activityDetail.responsible
+        responsible: activityDetail.responsible,
       };
     } else {
       variables = {
@@ -197,30 +197,30 @@ class MitigationActivity extends React.Component {
 
         status: activityDetail.status ? activityDetail.status : null,
         department: activityDetail.department,
-        responsible: activityDetail.responsible
+        responsible: activityDetail.responsible,
       };
     }
     this.props.client
       .mutate({
         mutation: CREATE_MITIGATION_ACTIVITY,
         variables: variables,
-        fetchPolicy: "no-cache"
+        fetchPolicy: "no-cache",
       })
-      .then(result => {
+      .then((result) => {
         console.log("result", result);
         // this.getListOfActivities();
         this.props.updateList();
         // this.props.toggleMode();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("error", error);
       });
   };
 
   toggleReassign = () => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
-        showReassign: !prevState.showReassign
+        showReassign: !prevState.showReassign,
       };
     });
   };
@@ -230,12 +230,12 @@ class MitigationActivity extends React.Component {
       name: "",
       responsible: null,
       forecastDate: "",
-      department: null
+      department: null,
     };
     this.setState({
       userOptions: [],
       activityDetail: activityDetail,
-      showReassign: false
+      showReassign: false,
     });
 
     this.validator.hideMessages();
@@ -253,7 +253,7 @@ class MitigationActivity extends React.Component {
       userOptions,
       showReassign,
       loading,
-      activities
+      activities,
     } = this.state;
     return (
       <Modal
@@ -301,7 +301,7 @@ class MitigationActivity extends React.Component {
                     name="name"
                     value={activityDetail.name}
                     placeholder="Enter remarks"
-                    handleChange={e => {
+                    handleChange={(e) => {
                       this.handleInput(e);
                     }}
                     validation="required"
@@ -314,7 +314,7 @@ class MitigationActivity extends React.Component {
                     title="forecast date"
                     name="forecastDate"
                     value={activityDetail.forecastDate}
-                    handleChange={e => {
+                    handleChange={(e) => {
                       this.handleInput(e);
                     }}
                     // validator={this.validator}
@@ -349,7 +349,7 @@ class MitigationActivity extends React.Component {
                       valueKey={"Id"}
                       value={activityDetail.department}
                       placeholder={"Select Department"}
-                      handleChange={e => {
+                      handleChange={(e) => {
                         this.handleInput(e);
                       }}
                       validator={this.validator}
@@ -367,7 +367,7 @@ class MitigationActivity extends React.Component {
                       valueKey={"Id"}
                       value={activityDetail.responsible}
                       placeholder={"Select Responsible"}
-                      handleChange={e => {
+                      handleChange={(e) => {
                         this.handleInput(e);
                       }}
                       validator={this.validator}
@@ -436,13 +436,17 @@ class MitigationActivity extends React.Component {
                       >
                         <thead>
                           <tr>
-                            <th scope="col" width={30}>
+                            <th scope="col" width={55}>
                               Sl No
                             </th>
-                            <th scope="col" width={100}>
+
+                            <th scope="col" width={140}>
                               User
                             </th>
-                            <th scope="col" width={70}>
+                            <th scope="col" width={110}>
+                              Created On
+                            </th>
+                            <th scope="col" width={130}>
                               Status
                             </th>
                             <th scope="col" width={180}>
@@ -460,7 +464,8 @@ class MitigationActivity extends React.Component {
                                     {data.createdByDetail
                                       ? data.createdByDetail.name
                                       : ""}{" "}
-                                    <br />
+                                  </td>
+                                  <td>
                                     {format(data.createdOn, dateFormatMonth)}
                                   </td>
                                   <td>{data.status ? data.status.name : ""}</td>

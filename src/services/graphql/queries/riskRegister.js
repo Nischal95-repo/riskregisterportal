@@ -43,7 +43,10 @@ export const RISK_REGISTER = gql`
         responsible {
           loginId
         }
-
+        departmentId {
+          Id
+          description
+        }
         createdBy {
           loginId
         }

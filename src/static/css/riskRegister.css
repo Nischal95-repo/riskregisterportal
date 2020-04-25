@@ -178,11 +178,24 @@
 }
 
 .toast-success-container {
-  color: #000 !important;
+  color: #69951a !important;
   border-radius: 8px !important;
   background: #ffffff !important;
-  border: 1px solid #34a853 !important;
+  border: 2px solid #69951a !important;
   box-shadow: 0px 1px 5px rgba(248, 175, 175, 0.1) !important;
+  border-left: 8px solid #69951a !important;
+}
+.toast-error-container {
+  color: #ee5f33 !important;
+  border-radius: 8px !important;
+  background: #ffffff !important;
+  border: 2px solid #ee5f33 !important;
+  box-shadow: 0px 1px 5px rgba(248, 175, 175, 0.1) !important;
+  border-left: 8px solid #ee5f33 !important;
+}
+.toast-error-container-after {
+  overflow: hidden;
+  position: relative;
 }
 
 .toast-success-container-after {
@@ -198,7 +211,7 @@
   height: 100%;
   position: absolute;
   display: inline-block;
-  background-color: #34a853;
+  background-color: #69951a;
 }
 
 .risk-register-table-colour > td {
@@ -208,4 +221,12 @@
 .mitigation-table td {
   border: none !important;
   background-color: #ffffff !important;
+}
+
+.success-progress-bar {
+  background-color: #69951a !important;
+}
+
+.error-progress-bar {
+  background-color: #ee5f33 !important;
 }

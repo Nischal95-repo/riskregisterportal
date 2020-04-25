@@ -25,6 +25,7 @@ import {
 } from "../../constants/app-constants";
 import { errorMessage } from "../../miscellaneous/error-messages";
 import { toast } from "react-toastify";
+import { errorMsg, successMsg } from "../Common/alert";
 
 // import "react-toastify/dist/ReactToastify.min.css";
 const FileSaver = require("file-saver");
@@ -353,17 +354,29 @@ class EditRiskRegister extends React.Component {
       })
       .then((result) => {
         console.log("result", result);
-        toast.success("Updated successfully", {
-          className: "success",
-        });
+        // toast.success("Updated successfully", {
+        //   className: "success",
+        //   hideProgressBar: false,
+        // });
         // this.setState({ reactModalVisible: true });
+        successMsg("Updated successfully");
+        this.props.riskUpdate();
+        this.props.changeMode();
       })
       .catch((error) => {
         console.log("error", error);
 
-        toast.error([errorMessage(error)][0][0], {
-          className: "error",
-        });
+        // toast.error([errorMessage(error)][0][0], {
+        //   className: "toast-error-container",
+        //   hideProgressBar: false,
+        //   closeButton: <img src={CloseSvg} />,
+        //   draggable: true,
+        //   draggablePercent: 60,
+        //   progressClassName: "fancy-progress-bar",
+        //   hideProgressBar: false,
+        // });
+        // this.error([errorMessage(error)][0][0]);
+        errorMsg([errorMessage(error)][0][0]);
       });
   };
 

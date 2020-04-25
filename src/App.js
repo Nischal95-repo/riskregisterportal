@@ -20,7 +20,7 @@ import AddRiskRegister from "./pages/add-risk";
 import RiskDetail from "./pages/risk-detail";
 import MitigationApproval from "./pages/approve-mitigation";
 toast.configure({
-  autoClose: SET_TIMEOUT_VALUE,
+  // autoClose: SET_TIMEOUT_VALUE,
   draggable: false,
   //etc you get the idea
 });

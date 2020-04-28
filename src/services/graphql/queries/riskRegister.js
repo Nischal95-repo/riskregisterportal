@@ -71,6 +71,8 @@ export const CREATE_RISK_REGISTER = gql`
     $project: Int!
     $description: String!
     $probability: Int!
+    $upsidePotential: String
+    $currentControls: String
   ) {
     createRisk(
       data: {
@@ -81,6 +83,8 @@ export const CREATE_RISK_REGISTER = gql`
         projectId: $project
         description: $description
         probability: $probability
+        upsidePotential: $upsidePotential
+        currentControls: $currentControls
       }
     ) {
       risk {
@@ -97,6 +101,7 @@ export const RISK_DETAIL = gql`
       name
       severity
       status
+
       categoryId {
         Id
         description
@@ -110,6 +115,8 @@ export const RISK_DETAIL = gql`
         description
       }
       description
+      upsidePotential
+      currentControls
       createdBy {
         loginId
       }
@@ -166,6 +173,8 @@ export const UPDATE_RISK_REGISTER = gql`
     $project: Int!
     $description: String!
     $probability: Int!
+    $upsidePotential: String
+    $currentControls: String
     $id: Int!
     $status: Int!
   ) {
@@ -178,6 +187,8 @@ export const UPDATE_RISK_REGISTER = gql`
         projectId: $project
         description: $description
         probability: $probability
+        upsidePotential: $upsidePotential
+        currentControls: $currentControls
         id: $id
         status: $status
       }
@@ -211,6 +222,7 @@ export const GET_LIST_OF_MITIGATIONS = gql`
       }
       canEdit {
         canEdit
+        canEditMitigationActivity
       }
     }
   }
@@ -349,6 +361,7 @@ export const GET_MITIGATION_PLAN_BY_ID = gql`
       }
       canEdit {
         canEdit
+        canEditMitigationActivity
       }
       createdOn
     }

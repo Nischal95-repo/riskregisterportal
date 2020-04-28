@@ -49,6 +49,8 @@ class AddRiskRegister extends React.Component {
         impact: "",
         probability: "",
         severity: "",
+        currentControls: "",
+        upsidePotential: "",
       },
       attachmentDetail: {
         fileData: "",
@@ -477,6 +479,30 @@ class AddRiskRegister extends React.Component {
                     validation="required"
                     validator={this.validator}
                   ></TextAreaComponent>
+                </div>
+                <div className="col-md-4 col-lg-3">
+                  <InputComponent
+                    label="Current Controls"
+                    title="Current Controls"
+                    name="currentControls"
+                    value={riskDetail.currentControls}
+                    placeholder="Enter Current Controls"
+                    handleChange={(e) => {
+                      this.handleInput(e);
+                    }}
+                  ></InputComponent>
+                </div>
+                <div className="col-md-4 col-lg-3">
+                  <InputComponent
+                    label="Upside Potential"
+                    title="Upside Potential"
+                    name="upsidePotential"
+                    value={riskDetail.upsidePotential}
+                    placeholder="Enter Upside Potential"
+                    handleChange={(e) => {
+                      this.handleInput(e);
+                    }}
+                  ></InputComponent>
                 </div>
                 {/* <div className="col-md-6 col-lg-6 ">
                   <div className="row" style={{ paddingLeft: "10px" }}>

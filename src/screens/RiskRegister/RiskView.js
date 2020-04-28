@@ -26,12 +26,14 @@ class RiskView extends React.Component {
       status,
       riskregisterattachmentSet,
       canEdit,
+      upsidePotential,
+      currentControls,
     } = this.props.riskDetails;
     console.log("test details");
 
     return (
       <>
-        <h1 className="heading m-b-25">Risk Details-{id}</h1>
+        <h1 className="heading m-b-10">Risk Details-{id}</h1>
         <div className="row">
           <div className="col-md-12">
             {/* Form Section start */}
@@ -109,6 +111,28 @@ class RiskView extends React.Component {
                   </div>
                 </div>
               </div>
+              {upsidePotential != "" || currentControls != "" ? (
+                <div className="row">
+                  <div className="col-md-4 col-lg-3">
+                    <div className="form-group">
+                      <label>Upside Potential</label>
+                      <div className="form-control-plaintext word-break">
+                        {upsidePotential}
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-md-4 col-lg-3">
+                    <div className="form-group">
+                      <label>Current Controls</label>
+                      <div className="form-control-plaintext word-break">
+                        {currentControls}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
               <div className="row">
                 <div className="col-md-6 col-lg-6">
                   <div className="form-group">

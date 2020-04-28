@@ -38,6 +38,7 @@ class MitigationList extends React.Component {
             toggleMode={this.toggleMode}
             mitigationPlanId={mitigationPlanId}
             updateList={this.props.updateList}
+            mitigationDetails={this.props.mitigationDetails}
           ></MitigationActivity>
         ) : null}
         {mitigationView ? (

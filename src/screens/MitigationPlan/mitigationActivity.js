@@ -292,133 +292,139 @@ class MitigationActivity extends React.Component {
               </div>
             </div>
             <div className="modal-body" style={{ paddingTop: 0 }}>
-              <div className="row">
-                <div className="col-md-6">
-                  <TextAreaComponent
-                    required
-                    label="Remarks"
-                    title="remarks"
-                    name="name"
-                    value={activityDetail.name}
-                    placeholder="Enter remarks"
-                    handleChange={(e) => {
-                      this.handleInput(e);
-                    }}
-                    validation="required"
-                    validator={this.validator}
-                  ></TextAreaComponent>
-                </div>
-                <div className="col-md-3">
-                  <InputComponent
-                    label="Forecast Date"
-                    title="forecast date"
-                    name="forecastDate"
-                    value={activityDetail.forecastDate}
-                    handleChange={(e) => {
-                      this.handleInput(e);
-                    }}
-                    // validator={this.validator}
-                    // validation="required"
-                    type="date"
-                    min={format(new Date(), dateInputFormat)}
-                  ></InputComponent>
-                </div>
-                {showReassign ? null : (
-                  <div className="col-md-3">
-                    <div className="form-group">
-                      <label>Status</label>
-                      <select className="form-control select-style-1">
-                        <option>Select</option>
-                        {/* <option> Waiting For Approval</option> */}
-                        <option value="3"> Waiting For Closure</option>
-                      </select>
+              {this.props.riskDetails &&
+              this.props.riskDetails.canEdit &&
+              this.props.riskDetails.canEdit.canEditMitigationActivity ? (
+                <div>
+                  <div className="row">
+                    <div className="col-md-6">
+                      <TextAreaComponent
+                        required
+                        label="Remarks"
+                        title="remarks"
+                        name="name"
+                        value={activityDetail.name}
+                        placeholder="Enter remarks"
+                        handleChange={(e) => {
+                          this.handleInput(e);
+                        }}
+                        validation="required"
+                        validator={this.validator}
+                      ></TextAreaComponent>
                     </div>
+                    <div className="col-md-3">
+                      <InputComponent
+                        label="Forecast Date"
+                        title="forecast date"
+                        name="forecastDate"
+                        value={activityDetail.forecastDate}
+                        handleChange={(e) => {
+                          this.handleInput(e);
+                        }}
+                        // validator={this.validator}
+                        // validation="required"
+                        type="date"
+                        min={format(new Date(), dateInputFormat)}
+                      ></InputComponent>
+                    </div>
+                    {showReassign ? null : (
+                      <div className="col-md-3">
+                        <div className="form-group">
+                          <label>Status</label>
+                          <select className="form-control select-style-1">
+                            <option>Select</option>
+                            {/* <option> Waiting For Approval</option> */}
+                            <option value="3"> Waiting For Closure</option>
+                          </select>
+                        </div>
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-              {showReassign ? (
-                <div className="row" id="reassign">
-                  <div className="col-md-3 col-lg-3">
-                    <SelectComponent
-                      required
-                      label="Department"
-                      title="department"
-                      name="department"
-                      options={departmentOptions}
-                      optionKey={"label"}
-                      valueKey={"Id"}
-                      value={activityDetail.department}
-                      placeholder={"Select Department"}
-                      handleChange={(e) => {
-                        this.handleInput(e);
-                      }}
-                      validator={this.validator}
-                      validation="required"
-                    />
-                  </div>
-                  <div className="col-md-3 col-lg-3">
-                    <SelectComponent
-                      required
-                      label="Responsible"
-                      title="responsible"
-                      name="responsible"
-                      options={userOptions}
-                      optionKey={"label"}
-                      valueKey={"Id"}
-                      value={activityDetail.responsible}
-                      placeholder={"Select Responsible"}
-                      handleChange={(e) => {
-                        this.handleInput(e);
-                      }}
-                      validator={this.validator}
-                      validation="required"
-                    />
+                  {showReassign ? (
+                    <div className="row" id="reassign">
+                      <div className="col-md-3 col-lg-3">
+                        <SelectComponent
+                          required
+                          label="Department"
+                          title="department"
+                          name="department"
+                          options={departmentOptions}
+                          optionKey={"label"}
+                          valueKey={"Id"}
+                          value={activityDetail.department}
+                          placeholder={"Select Department"}
+                          handleChange={(e) => {
+                            this.handleInput(e);
+                          }}
+                          validator={this.validator}
+                          validation="required"
+                        />
+                      </div>
+                      <div className="col-md-3 col-lg-3">
+                        <SelectComponent
+                          required
+                          label="Responsible"
+                          title="responsible"
+                          name="responsible"
+                          options={userOptions}
+                          optionKey={"label"}
+                          valueKey={"Id"}
+                          value={activityDetail.responsible}
+                          placeholder={"Select Responsible"}
+                          handleChange={(e) => {
+                            this.handleInput(e);
+                          }}
+                          validator={this.validator}
+                          validation="required"
+                        />
+                      </div>
+                    </div>
+                  ) : null}
+                  <div className="row">
+                    <div className="col-md-12 col-lg-8">
+                      <ButtonComponent
+                        className="btn-danger"
+                        type="button"
+                        title="Submit"
+                        onClick={() => {
+                          if (showReassign && this.validator.allValid()) {
+                            // this.validator.hideMessages();
+                            this.submitMitigationActivity();
+                          } else if (
+                            !showReassign &&
+                            this.validator.fields.remarks
+                          ) {
+                            this.submitMitigationActivity();
+                          } else {
+                            this.validator.showMessages();
+                            // rerender to show messages for the first time
+                            // you can use the autoForceUpdate option to do this automatically`
+                            this.forceUpdate();
+                          }
+                        }}
+                      ></ButtonComponent>
+
+                      <ButtonComponent
+                        className="btn-light  ml-3"
+                        type="button"
+                        title="Clear"
+                        onClick={() => {
+                          this.clear();
+                        }}
+                      ></ButtonComponent>
+
+                      {showReassign ? null : (
+                        <ButtonComponent
+                          className="btn-light  ml-3"
+                          type="button"
+                          title="Reassign"
+                          onClick={this.toggleReassign}
+                        ></ButtonComponent>
+                      )}
+                    </div>
                   </div>
                 </div>
               ) : null}
-              <div className="row">
-                <div className="col-md-12 col-lg-8">
-                  <ButtonComponent
-                    className="btn-danger"
-                    type="button"
-                    title="Submit"
-                    onClick={() => {
-                      if (showReassign && this.validator.allValid()) {
-                        // this.validator.hideMessages();
-                        this.submitMitigationActivity();
-                      } else if (
-                        !showReassign &&
-                        this.validator.fields.remarks
-                      ) {
-                        this.submitMitigationActivity();
-                      } else {
-                        this.validator.showMessages();
-                        // rerender to show messages for the first time
-                        // you can use the autoForceUpdate option to do this automatically`
-                        this.forceUpdate();
-                      }
-                    }}
-                  ></ButtonComponent>
-
-                  <ButtonComponent
-                    className="btn-light  ml-3"
-                    type="button"
-                    title="Clear"
-                    onClick={() => {
-                      this.clear();
-                    }}
-                  ></ButtonComponent>
-
-                  {showReassign ? null : (
-                    <ButtonComponent
-                      className="btn-light  ml-3"
-                      type="button"
-                      title="Reassign"
-                      onClick={this.toggleReassign}
-                    ></ButtonComponent>
-                  )}
-                </div>
-              </div>
               <div className="row">
                 <div className="col-md-12">
                   <div>

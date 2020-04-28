@@ -2249,7 +2249,7 @@
   }
 
   .main-section {
-    padding: 65px 50px;
+    padding: 65px 40px;
     width: calc(100% - 80px);
     font-size: 13px;
 
@@ -2259,7 +2259,7 @@
   }
 
   .main-section.expand {
-    padding: 65px 45px;
+    padding: 65px 40px;
     width: calc(100% - 225px);
   }
 
@@ -3307,9 +3307,11 @@
 
   /* Breadcrumb Start */
   .breadcrumb {
-    padding: 0.75rem 0;
+    // padding: 0.75rem 0;
     background-color: transparent;
-    margin-top: -45px;
+    margin-top: -50px;
+    padding: 0px !important;
+    // padding-left: 0px;
   }
   .breadcrumb-item.active {
     color: #2e384d;

@@ -60,6 +60,8 @@ class EditRiskRegister extends React.Component {
         severity: "",
         id: null,
         status: null,
+        currentControls: "",
+        upsidePotential: "",
         riskregisterattachmentSet: [],
       },
       fileinput: null,
@@ -86,7 +88,13 @@ class EditRiskRegister extends React.Component {
   handleInput = (e) => {
     let value = e.target.value;
     let name = e.target.name;
-    if (name != "name" && name != "description" && value !== "")
+    if (
+      name !== "name" &&
+      name !== "description" &&
+      name !== "upsidePotential" &&
+      name !== "currentControls" &&
+      value !== ""
+    )
       value = parseInt(value);
     this.setState((prevState) => {
       return {
@@ -409,6 +417,8 @@ class EditRiskRegister extends React.Component {
       severity,
       description,
       status,
+      currentControls,
+      upsidePotential,
       createdBy,
       createdOn,
       lastModifiedBy,
@@ -426,6 +436,8 @@ class EditRiskRegister extends React.Component {
       description: description,
       id: id,
       status: status,
+      currentControls: currentControls,
+      upsidePotential: upsidePotential,
     };
     this.setState({ riskDetail: riskDetail }, () => {
       this.getListOfAttachments();
@@ -468,7 +480,7 @@ class EditRiskRegister extends React.Component {
           modalMessage={modalMessage}
           requireCancel={requireCancel}
         />
-        <h1 className="heading m-b-25">Risk Updation</h1>
+        <h1 className="heading m-b-10">Risk Updation</h1>
         <div className="row">
           <div className="col-md-12">
             {/* Form Section start */}
@@ -599,6 +611,32 @@ class EditRiskRegister extends React.Component {
                     validator={this.validator}
                     validation="required"
                   />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-4 col-lg-3">
+                  <InputComponent
+                    label="Upside Potential"
+                    title="Upside Potential"
+                    name="upsidePotential"
+                    value={riskDetail.upsidePotential}
+                    placeholder="Enter Upside Potential"
+                    handleChange={(e) => {
+                      this.handleInput(e);
+                    }}
+                  ></InputComponent>
+                </div>
+                <div className="col-md-4 col-lg-3">
+                  <InputComponent
+                    label="Current Controls"
+                    title="Current Controls"
+                    name="currentControls"
+                    value={riskDetail.currentControls}
+                    placeholder="Enter Current Controls"
+                    handleChange={(e) => {
+                      this.handleInput(e);
+                    }}
+                  ></InputComponent>
                 </div>
               </div>
 

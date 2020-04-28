@@ -8,7 +8,7 @@ import master from "../../../static/images/master.svg";
 import { Logout } from "../../../services/graphql/queries/auth";
 import {
   loginAction,
-  addPermission
+  addPermission,
 } from "../../../services/redux/actions/loginActions";
 import { GET_PERMISSION } from "../../../services/graphql/queries/accessPermission";
 import RiskRegisterImg from "../../../static/images/svg/category.svg";
@@ -30,25 +30,26 @@ class SideBar extends React.Component {
       .mutate({
         mutation: Logout,
         variables: { logoutBy: 1 },
-        fetchPolicy: "no-cache"
+        fetchPolicy: "no-cache",
       })
-      .then(result => {
+      .then((result) => {
         console.log("result", result.data.logout.message);
         let userType = localStorage.getItem("userType");
         console.log("!!!!!!!!!!!!!!", userType);
-        if (userType == "1") {
-          localStorage.clear();
-          this.props.history.push("/");
-        } else if (userType == "2") {
-          localStorage.clear();
-          this.props.history.push("/doc-workflow");
-        } else if (userType == "3") {
-          localStorage.clear();
-          this.props.history.push("/compliance-bi-admin");
-        }
-        // localStorage.clear();
+        localStorage.clear();
+        this.props.history.push("/");
+        // if (userType == "1") {
+        //   localStorage.clear();
+
+        // } else if (userType == "2") {
+        //   localStorage.clear();
+        //   this.props.history.push("/doc-workflow");
+        // } else if (userType == "3") {
+        //   localStorage.clear();
+        //   this.props.history.push("/compliance-bi-admin");
+        // }
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("~~~error: ", error);
       });
     // debugger;
@@ -58,21 +59,21 @@ class SideBar extends React.Component {
     this.props.client
       .query({
         query: GET_PERMISSION,
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         console.log("nav permission ", JSON.parse(result.data.getPermission));
         this.setState(
           {
             accessPermission: JSON.parse(result.data.getPermission),
-            loading: true
+            loading: true,
           },
           () => {
             this.props.dispatch(addPermission(this.state.accessPermission));
           }
         );
       })
-      .catch(error => {
+      .catch((error) => {
         this.props.dispatch(addPermission({}));
         console.log("~~~error: ", error);
       });
@@ -166,8 +167,8 @@ class SideBar extends React.Component {
     );
   }
 }
-const mapStateToProps = state => ({
+const mapStateToProps = (state) => ({
   ...state,
-  permission: state.auth.permission
+  permission: state.auth.permission,
 });
 export default connect(mapStateToProps)(withRouter(withApollo(SideBar)));

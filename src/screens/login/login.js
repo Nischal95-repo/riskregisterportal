@@ -6,7 +6,7 @@ import ButtonComponent from "../../components/form-component/ButtonComponent";
 import { connect } from "react-redux";
 import {
   loginAction,
-  addPermission
+  addPermission,
 } from "../../services/redux/actions/loginActions";
 
 import { AUTHENTICATE_USER } from "../../services/graphql/queries/auth";
@@ -26,29 +26,29 @@ class Login extends React.Component {
     this.state = {
       authDetail: {
         emailId: "",
-        password: ""
+        password: "",
       },
-      errors: []
+      errors: [],
     };
     this.validator = new SimpleReactValidator({
       autoForceUpdate: this,
-      element: message => <div className="invalid-feedback">{message}</div>
+      element: (message) => <div className="invalid-feedback">{message}</div>,
     });
   }
-  handleInput = e => {
+  handleInput = (e) => {
     let value = e.target.value;
     let name = e.target.name;
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
         authDetail: {
           ...prevState.authDetail,
-          [name]: value
-        }
+          [name]: value,
+        },
       };
     });
   };
 
-  handleKeyInput = e => {
+  handleKeyInput = (e) => {
     if (e.which == 13 || e.keyCode == 13) {
       e.preventDefault();
       this.authUser();
@@ -68,23 +68,23 @@ class Login extends React.Component {
             emailId: authDetail.emailId,
             password: authDetail.password,
             userAgent: navigator.userAgent,
-            ipAddress: ""
+            ipAddress: "",
           },
-          fetchPolicy: "no-cache"
+          fetchPolicy: "no-cache",
         })
-        .then(result => {
+        .then((result) => {
           console.log("result~~~", result.data.authenticateUser.token);
           localStorage.setItem("token", result.data.authenticateUser.token);
-          localStorage.setItem("userType", 1);
+          localStorage.setItem("userType", 5);
           this.props.dispatch(loginAction(result.data.authenticateUser.name));
           this.props.dispatch(addPermission({}));
           this.props.history.push("/home");
           // this.props.history.push("/users-view");
         })
-        .catch(error => {
+        .catch((error) => {
           error.graphQLErrors.map(({ message }, i) => {
             this.setState({
-              errors: [message]
+              errors: [message],
             });
           });
           setTimeout(() => {
@@ -102,6 +102,7 @@ class Login extends React.Component {
       "token",
       "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJhdXRoIjoiYXV0aEBhcG9sbG9nYXRld2F5IiwiZW1haWwiOiJkZXZAcmVkaW50ZWdyby5jb20iLCJ1c2VySWQiOjF9.cZkue-J1BWJZUQzBTzC5_PgUv_-OMLsD8-a26N8RsII"
     );
+    localStorage.setItem("userType", 5);
   }
   render() {
     const { authDetail, errors } = this.state;
@@ -117,7 +118,7 @@ class Login extends React.Component {
               <div
                 className="row"
                 style={{
-                  display: errors.length === 0 ? "none" : "block"
+                  display: errors.length === 0 ? "none" : "block",
                 }}
               >
                 <div className="col">

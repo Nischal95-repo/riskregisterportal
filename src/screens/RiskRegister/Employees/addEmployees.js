@@ -3,11 +3,11 @@ import React from "react";
 import { withApollo } from "react-apollo";
 import {
   getListofGenericMasterQuery,
-  ALL_EMPLOYEE_LIST
+  ALL_EMPLOYEE_LIST,
 } from "../../../services/graphql/queries/user";
 import {
   GET_LIST_OF_EMPLOYEES,
-  ADD_EMPLOYEE
+  ADD_EMPLOYEE,
 } from "../../../services/graphql/queries/riskRegister";
 import SimpleReactValidator from "simple-react-validator";
 import ButtonComponent from "../../Common/form-component/ButtonComponent";
@@ -27,7 +27,7 @@ class AddEmployee extends React.Component {
       employeeDetail: {
         department: null,
 
-        userId: null
+        userId: null,
       },
       departmentOptions: [],
       options: [],
@@ -35,36 +35,36 @@ class AddEmployee extends React.Component {
       reactModalVisible: false,
       requireCancel: false,
       modalMessage: "Employee Added successfully",
-      errors: []
+      errors: [],
     };
     this.validator = new SimpleReactValidator({
       autoForceUpdate: this,
-      element: message => <div style={{ color: "red" }}>{message}</div>
+      element: (message) => <div style={{ color: "red" }}>{message}</div>,
     });
   }
-  handleInput = e => {
+  handleInput = (e) => {
     let value = e.target.value;
     let name = e.target.name;
     if (value !== "" && (name == "department" || name == "userId")) {
       value = parseInt(value);
     }
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
         employeeDetail: {
           ...prevState.employeeDetail,
-          [name]: value
-        }
+          [name]: value,
+        },
       };
     });
     if (name == "department") {
       let users = [];
 
-      this.state.options.forEach(element => {
+      this.state.options.forEach((element) => {
         console.log("department", element, value);
         if (element.department.includes(parseInt(value))) {
           let obj = {
             Id: element.Id,
-            label: element.name
+            label: element.name,
           };
 
           users.push(obj);
@@ -74,43 +74,51 @@ class AddEmployee extends React.Component {
       this.setState({ userOptions: users });
     }
   };
+  handleKeyInput = (e) => {
+    if (e.which == 13 || e.keyCode == 13) {
+      e.preventDefault();
+      this.authUser();
+      return false;
+    }
+    return true;
+  };
   getListOfOptions(id) {
     this.props.client
       .query({
         query: getListofGenericMasterQuery,
         variables: {
-          masterFor: id
+          masterFor: id,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var user = result.data.getListofGenericMaster;
         let OptionArr = [];
-        user.forEach(element => {
+        user.forEach((element) => {
           OptionArr.push({
             Id: element.Id,
-            label: element.description
+            label: element.description,
           });
         });
         if (id == 3) {
           this.initialState = {
-            companyOptions: OptionArr
+            companyOptions: OptionArr,
           };
         } else if (id == 4) {
           this.initialState = {
-            projectOptions: OptionArr
+            projectOptions: OptionArr,
           };
         } else if (id == 18)
           this.initialState = {
-            riskOptions: OptionArr.sort(compareValues("label"))
+            riskOptions: OptionArr.sort(compareValues("label")),
           };
         else if (id == 2)
           this.initialState = {
-            departmentOptions: OptionArr
+            departmentOptions: OptionArr,
           };
         this.setState({ ...this.initialState, loading: false, error: "" });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -121,21 +129,21 @@ class AddEmployee extends React.Component {
         variables: {
           // employeeId: this.state.employeeId ? this.state.employeeId : null,
           // name: this.state.name ? this.state.name : "",
-          status: 1
+          status: 1,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var users = result.data.getListOfAyanaEmployees;
 
         this.setState({
           ...this.initialState,
           loading: false,
           error: "",
-          options: users
+          options: users,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -146,14 +154,14 @@ class AddEmployee extends React.Component {
       .mutate({
         mutation: ADD_EMPLOYEE,
         variables: this.state.employeeDetail,
-        fetchPolicy: "no-cache"
+        fetchPolicy: "no-cache",
       })
-      .then(result => {
+      .then((result) => {
         console.log("result", result);
 
         this.props.changeMode();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("error", error);
       });
   };
@@ -162,7 +170,7 @@ class AddEmployee extends React.Component {
     let employeeDetail = {
       userId: null,
 
-      department: null
+      department: null,
     };
     this.setState({ userOptions: [], employeeDetail: employeeDetail });
     this.validator.hideMessages();
@@ -177,7 +185,7 @@ class AddEmployee extends React.Component {
       errors,
       employeeDetail,
       userOptions,
-      departmentOptions
+      departmentOptions,
     } = this.state;
     return (
       <>
@@ -187,7 +195,7 @@ class AddEmployee extends React.Component {
             <div
               className="row"
               style={{
-                display: errors.length === 0 ? "none" : "block"
+                display: errors.length === 0 ? "none" : "block",
               }}
             >
               <div className="col-md-6">
@@ -253,7 +261,7 @@ class AddEmployee extends React.Component {
               valueKey={"Id"}
               value={employeeDetail.department}
               placeholder={"Select Department"}
-              handleChange={e => {
+              handleChange={(e) => {
                 this.handleInput(e);
               }}
               validator={this.validator}
@@ -271,7 +279,7 @@ class AddEmployee extends React.Component {
               valueKey={"Id"}
               value={employeeDetail.userId}
               placeholder={"Select Employee"}
-              handleChange={e => {
+              handleChange={(e) => {
                 this.handleInput(e);
               }}
               validator={this.validator}

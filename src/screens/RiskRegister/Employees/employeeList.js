@@ -103,6 +103,7 @@ class EmployeeList extends React.Component {
   }
 
   componentDidMount() {
+    debugger;
     this.getListOfEmployees();
   }
 
@@ -135,7 +136,7 @@ class EmployeeList extends React.Component {
               Additional Viewers
             </h1>
 
-            <div
+            {/* <div
               className="row"
               style={{
                 display: errors.length === 0 ? "none" : "block",
@@ -150,18 +151,22 @@ class EmployeeList extends React.Component {
                   </div>
                 </div>
               </div>
-            </div>
+            </div> */}
           </div>
           <div className="col-md-2 text-right">
-            <a
-              href="#"
-              title="Add"
-              onClick={this.props.changeMode}
-              className="link-click "
-            >
-              <img src={AddSvg} />
-              &nbsp; Add
-            </a>
+            {this.props.riskDetails &&
+            this.props.riskDetails.canEdit &&
+            this.props.riskDetails.canEdit.canEdit ? (
+              <a
+                href="#"
+                title="Add"
+                onClick={this.props.changeMode}
+                className="link-click "
+              >
+                <img src={AddSvg} />
+                &nbsp; Add
+              </a>
+            ) : null}
           </div>
         </div>
 
@@ -189,16 +194,20 @@ class EmployeeList extends React.Component {
                           {/* <td></td> */}
                           <td>{data.userId ? data.userId.loginId : ""}</td>
                           <td>
-                            <a
-                              href="#"
-                              className="link-delete m-l-45"
-                              data-toggle="tooltip"
-                              data-placement="bottom"
-                              title="Delete"
-                              onClick={() => this.onRemoveReviewer(data.id)}
-                            >
-                              <img src={DeleteSvg} />
-                            </a>
+                            {this.props.riskDetails &&
+                            this.props.riskDetails.canEdit &&
+                            this.props.riskDetails.canEdit.canEdit ? (
+                              <a
+                                href="#"
+                                className="link-delete m-l-45"
+                                data-toggle="tooltip"
+                                data-placement="bottom"
+                                title="Delete"
+                                onClick={() => this.onRemoveReviewer(data.id)}
+                              >
+                                <img src={DeleteSvg} />
+                              </a>
+                            ) : null}
                           </td>
                         </tr>
                       );

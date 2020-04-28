@@ -9,7 +9,8 @@ class Reviewer extends React.Component {
     this.state = {
       document: props.document,
       addMode: false,
-      display: false
+      display: false,
+      riskDetails: {},
     };
     this.toggleMode = this.toggleMode.bind(this);
   }
@@ -18,18 +19,24 @@ class Reviewer extends React.Component {
     this.setState({ addMode: !this.state.addMode });
   }
   displayToggle = () => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return { display: !prevState.display };
     });
   };
 
   componentDidUpdate(prevProps) {
-    if (prevProps.document !== this.props.document) {
-      this.setState({ document: this.props.document });
+    if (prevProps.riskDetails !== this.props.riskDetails) {
+      this.setState({
+        // document: this.props.document,
+        riskDetails: this.props.riskDetails,
+      });
     }
   }
+  componentDidMount() {
+    this.setState({ riskDetails: this.props.riskDetails });
+  }
   render() {
-    const { document, addMode, display } = this.state;
+    const { document, addMode, display, riskDetails } = this.state;
     return (
       <div className="box-card">
         {addMode ? (
@@ -43,6 +50,7 @@ class Reviewer extends React.Component {
             changeMode={this.toggleMode}
             displayToggle={this.displayToggle}
             display={display}
+            riskDetails={riskDetails}
           ></EmployeeList>
         )}
       </div>

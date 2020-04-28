@@ -54,16 +54,20 @@ class MitigationList extends React.Component {
               </div>
               <div className="col-md-2">
                 <div className="text-right">
-                  <a
-                    className="link-click"
-                    href="#"
-                    data-placement="bottom"
-                    title="Add"
-                    onClick={() => this.props.changeMode()}
-                  >
-                    <img src={AddSvg} />
-                    &nbsp; Add
-                  </a>
+                  {this.props.riskDetails &&
+                  this.props.riskDetails.canEdit &&
+                  this.props.riskDetails.canEdit.canEdit ? (
+                    <a
+                      className="link-click"
+                      href="#"
+                      data-placement="bottom"
+                      title="Add"
+                      onClick={() => this.props.changeMode()}
+                    >
+                      <img src={AddSvg} />
+                      &nbsp; Add
+                    </a>
+                  ) : null}
                 </div>
               </div>
             </div>

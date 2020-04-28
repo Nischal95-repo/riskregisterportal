@@ -15,7 +15,7 @@ class RiskProfile extends React.Component {
       editMode: false,
       riskDetails: {},
       loading: true,
-      riskId: ""
+      riskId: "",
     };
   }
   getRiskDetail = () => {
@@ -24,21 +24,21 @@ class RiskProfile extends React.Component {
       .query({
         query: RISK_DETAIL,
         variables: { id: parseInt(this.state.riskId) },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         console.log("result", result);
         let data = result.data.getRiskById;
         this.setState({ riskDetails: data, loading: false });
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("error", error);
       });
   };
   changeMode = () => {
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
-        editMode: !prevState.editMode
+        editMode: !prevState.editMode,
       };
     });
   };
@@ -67,10 +67,11 @@ class RiskProfile extends React.Component {
         ) : null}
         {!loading ? (
           <>
-            <Employee riskId={riskId}></Employee>
+            <Employee riskId={riskId} riskDetails={riskDetails}></Employee>
             <MitigationProfile
               mitigationDetails={riskDetails.mitigationplanSet}
               riskId={riskId}
+              riskDetails={riskDetails}
             ></MitigationProfile>
           </>
         ) : null}

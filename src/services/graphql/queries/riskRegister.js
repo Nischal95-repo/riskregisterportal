@@ -117,6 +117,9 @@ export const RISK_DETAIL = gql`
       lastModifiedBy {
         loginId
       }
+      canEdit {
+        canEdit
+      }
       riskregisterattachmentSet {
         url
         id
@@ -145,6 +148,9 @@ export const RISK_DETAIL = gql`
         departmentId {
           Id
           description
+        }
+        canEdit {
+          canEdit
         }
       }
     }
@@ -202,6 +208,9 @@ export const GET_LIST_OF_MITIGATIONS = gql`
       departmentId {
         Id
         description
+      }
+      canEdit {
+        canEdit
       }
     }
   }
@@ -337,6 +346,9 @@ export const GET_MITIGATION_PLAN_BY_ID = gql`
       lastModifiedOn
       createdBy {
         loginId
+      }
+      canEdit {
+        canEdit
       }
       createdOn
     }

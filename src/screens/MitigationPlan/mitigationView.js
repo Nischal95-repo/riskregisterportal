@@ -689,6 +689,13 @@ class MitigationView extends React.Component {
               <div className="upload-btn-wrapper" style={{ marginTop: "" }}>
                 <button
                   className="btn btn-light"
+                  disabled={
+                    mitigationDetails &&
+                    mitigationDetails.canEdit &&
+                    mitigationDetails.canEdit.canEdit
+                      ? false
+                      : true
+                  }
                   onClick={() => {
                     this.state.fileinput.click();
                   }}
@@ -766,36 +773,40 @@ class MitigationView extends React.Component {
             </div>
           </div>
         </div>
-        <div className="row">
-          <div className="col-md-12 col-lg-8">
-            <ButtonComponent
-              className="btn-danger"
-              type="button"
-              title="Submit"
-              onClick={() => {
-                // this.validator.hideMessages();
-                // this.submit();
-              }}
-            ></ButtonComponent>
+        {mitigationDetails &&
+        mitigationDetails.canEdit &&
+        mitigationDetails.canEdit.canEdit ? (
+          <div className="row">
+            <div className="col-md-12 col-lg-8">
+              <ButtonComponent
+                className="btn-danger"
+                type="button"
+                title="Submit"
+                onClick={() => {
+                  // this.validator.hideMessages();
+                  // this.submit();
+                }}
+              ></ButtonComponent>
 
-            <ButtonComponent
-              className="btn-light  ml-3"
-              type="button"
-              title="Reset"
-              onClick={() => {
-                this.setState({ name: mitigationDetails.name });
-              }}
-            ></ButtonComponent>
-            <ButtonComponent
-              className="btn-light  ml-3"
-              type="button"
-              title="Reassign"
-              onClick={() => {
-                this.toggleReassign();
-              }}
-            ></ButtonComponent>
+              <ButtonComponent
+                className="btn-light  ml-3"
+                type="button"
+                title="Reset"
+                onClick={() => {
+                  this.setState({ name: mitigationDetails.name });
+                }}
+              ></ButtonComponent>
+              <ButtonComponent
+                className="btn-light  ml-3"
+                type="button"
+                title="Reassign"
+                onClick={() => {
+                  this.toggleReassign();
+                }}
+              ></ButtonComponent>
+            </div>
           </div>
-        </div>
+        ) : null}
       </>
     );
   }

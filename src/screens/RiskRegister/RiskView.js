@@ -25,6 +25,7 @@ class RiskView extends React.Component {
       lastModifiedOn,
       status,
       riskregisterattachmentSet,
+      canEdit,
     } = this.props.riskDetails;
     console.log("test details");
 
@@ -187,6 +188,7 @@ class RiskView extends React.Component {
                     <button
                       type="button"
                       className="btn btn-danger"
+                      disabled={!canEdit.canEdit}
                       onClick={() => {
                         this.props.changeMode();
                       }}

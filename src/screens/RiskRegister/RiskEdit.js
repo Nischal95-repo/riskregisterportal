@@ -63,6 +63,9 @@ class EditRiskRegister extends React.Component {
         currentControls: "",
         upsidePotential: "",
         riskregisterattachmentSet: [],
+        residualImpact: "",
+        residualProbability: "",
+        residualSeverity: "",
       },
       fileinput: null,
       attachmentDetail: {
@@ -96,14 +99,59 @@ class EditRiskRegister extends React.Component {
       value !== ""
     )
       value = parseInt(value);
-    this.setState((prevState) => {
-      return {
-        riskDetail: {
-          ...prevState.riskDetail,
-          [name]: value,
-        },
-      };
-    });
+    this.setState(
+      (prevState) => {
+        return {
+          riskDetail: {
+            ...prevState.riskDetail,
+            [name]: value,
+          },
+        };
+      },
+      () => {
+        if (name == "impact" || name == "probability") {
+          console.log(
+            this.state.riskDetail.probability,
+            this.state.riskDetail.impact
+          );
+          let severity = this.state.riskDetail.probability;
+          if (
+            this.state.riskDetail.impact > this.state.riskDetail.probability
+          ) {
+            severity = this.state.riskDetail.impact;
+          }
+          this.setState((prevstate) => {
+            return {
+              riskDetail: {
+                ...prevstate.riskDetail,
+                severity: severity,
+              },
+            };
+          });
+        }
+        if (name == "residualImpact" || name == "residualProbability") {
+          console.log(
+            this.state.riskDetail.residualProbability,
+            this.state.riskDetail.residualImpact
+          );
+          let severity = this.state.riskDetail.residualProbability;
+          if (
+            this.state.riskDetail.residualImpact >
+            this.state.riskDetail.residualProbability
+          ) {
+            severity = this.state.riskDetail.residualImpact;
+          }
+          this.setState((prevstate) => {
+            return {
+              riskDetail: {
+                ...prevstate.riskDetail,
+                residualSeverity: severity,
+              },
+            };
+          });
+        }
+      }
+    );
   };
 
   handleCompany = (e) => {
@@ -374,34 +422,11 @@ class EditRiskRegister extends React.Component {
       .catch((error) => {
         console.log("error", error);
 
-        // toast.error([errorMessage(error)][0][0], {
-        //   className: "toast-error-container",
-        //   hideProgressBar: false,
-        //   closeButton: <img src={CloseSvg} />,
-        //   draggable: true,
-        //   draggablePercent: 60,
-        //   progressClassName: "fancy-progress-bar",
-        //   hideProgressBar: false,
-        // });
-        // this.error([errorMessage(error)][0][0]);
         errorMsg([errorMessage(error)][0][0]);
       });
   };
 
   reset() {
-    // this.setState({
-    //   riskDetail: {
-    //     company: null,
-    //     project: null,
-    //     riskCategory: null,
-    //     name: "",
-    //     description: "",
-    //     impact: "",
-    //     probability: "",
-    //     severity: ""
-    //   },
-    //   projectOptions: []
-    // });
     this.updateData();
     this.validator.hideMessages();
   }
@@ -419,6 +444,9 @@ class EditRiskRegister extends React.Component {
       status,
       currentControls,
       upsidePotential,
+      residualImpact,
+      residualProbability,
+      residualSeverity,
       createdBy,
       createdOn,
       lastModifiedBy,
@@ -438,6 +466,9 @@ class EditRiskRegister extends React.Component {
       status: status,
       currentControls: currentControls,
       upsidePotential: upsidePotential,
+      residualSeverity: residualSeverity,
+      residualProbability: residualProbability,
+      residualImpact: residualImpact,
     };
     this.setState({ riskDetail: riskDetail }, () => {
       this.getListOfAttachments();
@@ -590,10 +621,21 @@ class EditRiskRegister extends React.Component {
                 </div>
                 <div className="col-md-6 col-lg-3">
                   <div className="form-group">
-                    <label>
-                      Severity<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <input type="text" className="form-control" readOnly />
+                    <label>Severity</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      readOnly
+                      value={
+                        riskDetail.severity == 1
+                          ? "Low"
+                          : riskDetail.severity == 2
+                          ? "Medium"
+                          : riskDetail.severity == 3
+                          ? "High"
+                          : ""
+                      }
+                    />
                   </div>
                 </div>
                 <div className="col-md-6 col-lg-3">
@@ -611,6 +653,57 @@ class EditRiskRegister extends React.Component {
                     validator={this.validator}
                     validation="required"
                   />
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6 col-lg-3">
+                  <SelectComponent
+                    label="Residual Impact"
+                    title={"impact"}
+                    name="residualImpact"
+                    options={impAndProbOptions}
+                    optionKey={"label"}
+                    valueKey={"Id"}
+                    value={riskDetail.residualImpact}
+                    placeholder={"Select Impact"}
+                    handleChange={this.handleInput}
+                    // validator={this.validator}
+                    // validation="required"
+                  />
+                </div>
+                <div className="col-md-6 col-lg-3">
+                  <SelectComponent
+                    label="Residual Probability"
+                    title={"residual probability"}
+                    name="residualProbability"
+                    options={impAndProbOptions}
+                    optionKey={"label"}
+                    valueKey={"Id"}
+                    value={riskDetail.residualProbability}
+                    placeholder={"Select Probability"}
+                    handleChange={this.handleInput}
+                    // validator={this.validator}
+                    // validation="required"
+                  />
+                </div>
+                <div className="col-md-6 col-lg-3">
+                  <div className="form-group">
+                    <label>Residual Severity</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      readOnly
+                      value={
+                        riskDetail.residualSeverity == 1
+                          ? "Low"
+                          : riskDetail.residualSeverity == 2
+                          ? "Medium"
+                          : riskDetail.residualSeverity == 3
+                          ? "High"
+                          : ""
+                      }
+                    />
+                  </div>
                 </div>
               </div>
               <div className="row">
@@ -641,7 +734,7 @@ class EditRiskRegister extends React.Component {
               </div>
 
               <div className="row">
-                <div className="col-md-4 col-lg-6">
+                <div className="col-md-6 col-lg-6">
                   <div className="form-group">
                     <TextAreaComponent
                       required

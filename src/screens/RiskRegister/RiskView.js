@@ -8,6 +8,13 @@ class RiskView extends React.Component {
   constructor(props) {
     super(props);
   }
+
+  getValue = (number) => {
+    if (number == 1) return "Low";
+    else if (number == 2) return "Medium";
+    else if (number == 3) return "High";
+    else return "";
+  };
   render() {
     const {
       id,
@@ -28,6 +35,9 @@ class RiskView extends React.Component {
       canEdit,
       upsidePotential,
       currentControls,
+      residualSeverity,
+      residualProbability,
+      residualImpact,
     } = this.props.riskDetails;
     console.log("test details");
 
@@ -82,7 +92,7 @@ class RiskView extends React.Component {
                   <div className="form-group">
                     <label>Impact</label>
                     <div className="form-control-plaintext word-break">
-                      {impact}
+                      {this.getValue(impact)}
                     </div>
                   </div>
                 </div>
@@ -90,7 +100,7 @@ class RiskView extends React.Component {
                   <div className="form-group">
                     <label>Probability</label>
                     <div className="form-control-plaintext word-break">
-                      {probability}
+                      {this.getValue(probability)}
                     </div>
                   </div>
                 </div>
@@ -98,7 +108,7 @@ class RiskView extends React.Component {
                   <div className="form-group">
                     <label>Severity</label>
                     <div className="form-control-plaintext word-break">
-                      {severity}
+                      {this.getValue(severity)}
                     </div>
                   </div>
                 </div>
@@ -107,6 +117,39 @@ class RiskView extends React.Component {
                     <label>Status</label>
                     <div className="form-control-plaintext word-break">
                       {status == 2 ? "Open" : "Closed"}
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div className="row">
+                <div className="col-md-6 col-lg-3">
+                  <div className="form-group">
+                    <label>Impact</label>
+                    <div className="form-control-plaintext word-break">
+                      {this.getValue(residualImpact)}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-lg-3">
+                  <div className="form-group">
+                    <label>Probability</label>
+                    <div className="form-control-plaintext word-break">
+                      {this.getValue(residualProbability)}
+                    </div>
+                  </div>
+                </div>
+                <div className="col-md-6 col-lg-3">
+                  <div className="form-group">
+                    <label>Severity</label>
+                    <div className="form-control-plaintext word-break">
+                      {/* {residualSeverity == 1
+                        ? "Low"
+                        : severity == 2
+                        ? "Medium"
+                        : severity == 3
+                        ? "High"
+                        : ""} */}
+                      {this.getValue(residualSeverity)}
                     </div>
                   </div>
                 </div>

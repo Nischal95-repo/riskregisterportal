@@ -13,6 +13,7 @@ import {
 } from "../../services/graphql/queries/riskRegister";
 import ReactModal from "../Common/ReactModal";
 import { toast } from "react-toastify";
+import { errorMsg, successMsg } from "../Common/alert";
 import { format } from "date-fns";
 
 import { withApollo } from "react-apollo";
@@ -78,14 +79,40 @@ class AddRiskRegister extends React.Component {
     let name = e.target.name;
     if (name != "name" && name != "description" && value !== "")
       value = parseInt(value);
-    this.setState((prevState) => {
-      return {
-        riskDetail: {
-          ...prevState.riskDetail,
-          [name]: value,
-        },
-      };
-    });
+    this.setState(
+      (prevState) => {
+        return {
+          riskDetail: {
+            ...prevState.riskDetail,
+            [name]: value,
+          },
+        };
+      },
+      () => {
+        if (name == "impact" || name == "probability") {
+          console.log(
+            this.state.riskDetail.probability,
+            this.state.riskDetail.impact
+          );
+          let severity = this.state.riskDetail.probability;
+          if (
+            this.state.riskDetail.impact !== "" &&
+            this.state.riskDetail.probability !== "" &&
+            this.state.riskDetail.impact > this.state.riskDetail.probability
+          ) {
+            severity = this.state.riskDetail.impact;
+          }
+          this.setState((prevstate) => {
+            return {
+              riskDetail: {
+                ...prevstate.riskDetail,
+                severity: severity,
+              },
+            };
+          });
+        }
+      }
+    );
   };
 
   handleCompany = (e) => {
@@ -178,13 +205,13 @@ class AddRiskRegister extends React.Component {
       .then((result) => {
         localStorage.setItem("riskId", result.data.createRisk.risk.id);
         console.log("result", result);
-        this.setState({ reactModalVisible: true });
+        // this.setState({ reactModalVisible: true });
+        successMsg("Created successfully");
+        this.props.history.push("/risk-detail");
       })
       .catch((error) => {
         console.log("error", error);
-        toast.error([errorMessage(error)][0][0], {
-          className: "error",
-        });
+        errorMsg([errorMessage(error)][0][0]);
       });
   };
 
@@ -459,10 +486,21 @@ class AddRiskRegister extends React.Component {
                 </div>
                 <div className="col-md-6 col-lg-3">
                   <div className="form-group">
-                    <label>
-                      Severity<span style={{ color: "red" }}>*</span>
-                    </label>
-                    <input type="text" className="form-control" readOnly />
+                    <label>Severity</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      readOnly
+                      value={
+                        riskDetail.severity == 1
+                          ? "Low"
+                          : riskDetail.severity == 2
+                          ? "Medium"
+                          : riskDetail.severity == 3
+                          ? "High"
+                          : ""
+                      }
+                    />
                   </div>
                 </div>
               </div>

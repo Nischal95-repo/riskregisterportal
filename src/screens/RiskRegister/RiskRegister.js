@@ -315,7 +315,10 @@ class RiskRegister extends React.Component {
                         <td>{format(ele.completionDate, dateFormat)}</td>
                         <td>{format(ele.forecastDate, dateFormat)}</td>
                         <td>
-                          {ele.status && ele.status.statusId == 1 ? (
+                          {ele.canEdit &&
+                          ele.canEdit.canApprove &&
+                          ele.status &&
+                          ele.status.statusId == 1 ? (
                             <a
                               href="#"
                               href="#"
@@ -332,7 +335,9 @@ class RiskRegister extends React.Component {
                             >
                               <img src={ApproveImage} />
                             </a>
-                          ) : (
+                          ) : null}
+
+                          {ele.status && ele.status.statusId == 2 ? (
                             <a
                               href="#"
                               href="#"
@@ -345,7 +350,7 @@ class RiskRegister extends React.Component {
                             >
                               <img src={ViewImg} />
                             </a>
-                          )}
+                          ) : null}
                         </td>
                       </tr>
                     );

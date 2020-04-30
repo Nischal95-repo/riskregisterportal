@@ -36,6 +36,8 @@ import SimpleReactValidator from "simple-react-validator";
 import Modal from "react-awesome-modal";
 import popupLogo from "../../static/images/popup-logo.png";
 import CloseSvg from "../../static/images/svg/Close.svg";
+
+import { errorMsg, successMsg } from "../Common/alert";
 const FileSaver = require("file-saver");
 const mime = require("mime-types");
 class MitigationView extends React.Component {
@@ -372,6 +374,7 @@ class MitigationView extends React.Component {
       .then((result) => {
         console.log("result", result);
         // this.getListOfActivities();
+
         this.props.history.push("risk-detail");
         // this.props.toggleMode();
       })

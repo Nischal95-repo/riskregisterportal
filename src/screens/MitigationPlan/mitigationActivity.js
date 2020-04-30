@@ -23,6 +23,8 @@ import {
   dateFormatMonth,
 } from "../../constants/app-constants";
 import { format } from "date-fns";
+import { errorMessage } from "../../miscellaneous/error-messages";
+import { errorMsg, successMsg } from "../Common/alert";
 class MitigationActivity extends React.Component {
   constructor(props) {
     super(props);
@@ -214,6 +216,7 @@ class MitigationActivity extends React.Component {
       })
       .catch((error) => {
         console.log("error", error);
+        errorMsg([errorMessage(error)][0][0]);
       });
   };
 
@@ -292,9 +295,7 @@ class MitigationActivity extends React.Component {
               </div>
             </div>
             <div className="modal-body" style={{ paddingTop: 0 }}>
-              {this.props.riskDetails &&
-              this.props.riskDetails.canEdit &&
-              this.props.riskDetails.canEdit.canEditMitigationActivity ? (
+              {this.props.canEditMitigationActivity ? (
                 <div>
                   <div className="row">
                     <div className="col-md-6">

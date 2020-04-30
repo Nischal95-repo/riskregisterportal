@@ -48,7 +48,7 @@
   "scripts": {
     "start": "node server.js",
     "local": "react-scripts start",
-    "win": "react-scripts start",
+    "win": "set PORT=3001 && react-scripts start",
     "build": "react-scripts build",
     "gcp-build": "react-scripts build",
     "test": "react-scripts test",

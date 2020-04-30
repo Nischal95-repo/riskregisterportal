@@ -13,8 +13,10 @@ import DisplayErrors from "../../Common/DisplayErrors";
 import { SET_TIMEOUT_VALUE } from "../../../constants/app-constants";
 
 import { errorMessage } from "../../../miscellaneous/error-messages";
+import { errorMsg, successMsg } from "../../Common/alert";
 import AddSvg from "../../../static/images/svg/Add.svg";
 import DeleteSvg from "../../../static/images/svg/Delete.svg";
+import Expand from "../../../static/images/svg/plus.svg";
 class EmployeeList extends React.Component {
   constructor(props) {
     super(props);
@@ -43,14 +45,13 @@ class EmployeeList extends React.Component {
       })
       .then((result) => {
         this.setState({ reactModalVisible: false });
+        successMsg("Employee deleted successfully");
         this.getListOfEmployees();
       })
       .catch((error) => {
         console.log("~~~error: ", error);
-        this.setState({ loading: false, errors: [errorMessage(error)] });
-        this.timer = setTimeout(() => {
-          this.setState({ errors: [] });
-        }, SET_TIMEOUT_VALUE);
+        this.setState({ loading: false });
+        errorMsg([errorMessage(error)][0][0]);
       });
   }
 
@@ -133,6 +134,7 @@ class EmployeeList extends React.Component {
               onClick={this.props.displayToggle}
               style={{ cursor: "pointer" }}
             >
+              <img src={Expand} className="mr-2" />
               Additional Viewers
             </h1>
 

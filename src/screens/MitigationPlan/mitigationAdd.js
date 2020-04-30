@@ -3,7 +3,7 @@ import { withApollo } from "react-apollo";
 import { format } from "date-fns";
 import {
   getListofGenericMasterQuery,
-  ALL_EMPLOYEE_LIST
+  ALL_EMPLOYEE_LIST,
 } from "../../services/graphql/queries/user";
 import { CREATE_MITIGATION } from "../../services/graphql/queries/riskRegister";
 import SimpleReactValidator from "simple-react-validator";
@@ -16,8 +16,10 @@ import Select from "react-select";
 import InputComponent from "../Common/form-component/InputComponent";
 import {
   SET_TIMEOUT_VALUE,
-  dateInputFormat
+  dateInputFormat,
 } from "../../constants/app-constants";
+import { errorMessage } from "../../miscellaneous/error-messages";
+import { errorMsg, successMsg } from "../Common/alert";
 class MitigationAdd extends React.Component {
   constructor(props) {
     super(props);
@@ -26,41 +28,41 @@ class MitigationAdd extends React.Component {
         name: "",
         responsible: null,
         completionDate: "",
-        department: null
+        department: null,
       },
       departmentOptions: [],
       userOptions: [],
-      options: []
+      options: [],
     };
     this.validator = new SimpleReactValidator({
       autoForceUpdate: this,
-      element: message => <div style={{ color: "red" }}>{message}</div>
+      element: (message) => <div style={{ color: "red" }}>{message}</div>,
     });
   }
-  handleInput = e => {
+  handleInput = (e) => {
     let value = e.target.value;
     let name = e.target.name;
     if (value !== "" && (name == "department" || name == "responsible")) {
       value = parseInt(value);
     }
-    this.setState(prevState => {
+    this.setState((prevState) => {
       return {
         mitigationDetail: {
           ...prevState.mitigationDetail,
-          [name]: value
-        }
+          [name]: value,
+        },
       };
     });
     if (name == "department") {
       debugger;
       let users = [];
 
-      this.state.options.forEach(element => {
+      this.state.options.forEach((element) => {
         console.log("department", element, value);
         if (element.department.includes(parseInt(value))) {
           let obj = {
             Id: element.Id,
-            label: element.name
+            label: element.name,
           };
 
           users.push(obj);
@@ -80,38 +82,38 @@ class MitigationAdd extends React.Component {
       .query({
         query: getListofGenericMasterQuery,
         variables: {
-          masterFor: id
+          masterFor: id,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var user = result.data.getListofGenericMaster;
         let OptionArr = [];
-        user.forEach(element => {
+        user.forEach((element) => {
           OptionArr.push({
             Id: element.Id,
-            label: element.description
+            label: element.description,
           });
         });
         if (id == 3) {
           this.initialState = {
-            companyOptions: OptionArr
+            companyOptions: OptionArr,
           };
         } else if (id == 4) {
           this.initialState = {
-            projectOptions: OptionArr
+            projectOptions: OptionArr,
           };
         } else if (id == 18)
           this.initialState = {
-            riskOptions: OptionArr.sort(compareValues("label"))
+            riskOptions: OptionArr.sort(compareValues("label")),
           };
         else if (id == 2)
           this.initialState = {
-            departmentOptions: OptionArr
+            departmentOptions: OptionArr,
           };
         this.setState({ ...this.initialState, loading: false, error: "" });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -122,21 +124,21 @@ class MitigationAdd extends React.Component {
         variables: {
           // employeeId: this.state.employeeId ? this.state.employeeId : null,
           // name: this.state.name ? this.state.name : "",
-          status: 1
+          status: 1,
         },
-        fetchPolicy: "network-only"
+        fetchPolicy: "network-only",
       })
-      .then(result => {
+      .then((result) => {
         var users = result.data.getListOfAyanaEmployees;
 
         this.setState({
           ...this.initialState,
           loading: false,
           error: "",
-          options: users
+          options: users,
         });
       })
-      .catch(error => {
+      .catch((error) => {
         this.setState({ loading: false, error: error.message });
       });
   }
@@ -147,15 +149,17 @@ class MitigationAdd extends React.Component {
       .mutate({
         mutation: CREATE_MITIGATION,
         variables: this.state.mitigationDetail,
-        fetchPolicy: "no-cache"
+        fetchPolicy: "no-cache",
       })
-      .then(result => {
+      .then((result) => {
         console.log("result", result);
+        successMsg("Mitigation created successfully");
         this.props.updateList();
         this.props.changeMode();
       })
-      .catch(error => {
+      .catch((error) => {
         console.log("error", error);
+        errorMsg([errorMessage(error)][0][0]);
       });
   };
 
@@ -164,7 +168,7 @@ class MitigationAdd extends React.Component {
       name: "",
       responsible: null,
       completionDate: "",
-      department: null
+      department: null,
     };
     this.setState({ userOptions: [], mitigationDetail: mitigationDetail });
     this.validator.hideMessages();
@@ -212,7 +216,7 @@ class MitigationAdd extends React.Component {
                   name="name"
                   value={mitigationDetail.name}
                   placeholder="Enter description"
-                  handleChange={e => {
+                  handleChange={(e) => {
                     this.handleInput(e);
                   }}
                   validation="required"
@@ -231,7 +235,7 @@ class MitigationAdd extends React.Component {
                 valueKey={"Id"}
                 value={mitigationDetail.department}
                 placeholder={"Select Department"}
-                handleChange={e => {
+                handleChange={(e) => {
                   this.handleInput(e);
                 }}
                 validator={this.validator}
@@ -249,7 +253,7 @@ class MitigationAdd extends React.Component {
                 valueKey={"Id"}
                 value={mitigationDetail.responsible}
                 placeholder={"Select Responsible"}
-                handleChange={e => {
+                handleChange={(e) => {
                   this.handleInput(e);
                 }}
                 validator={this.validator}
@@ -263,7 +267,7 @@ class MitigationAdd extends React.Component {
                 title="due/completion date"
                 name="completionDate"
                 value={mitigationDetail.completionDate}
-                handleChange={e => {
+                handleChange={(e) => {
                   this.handleInput(e);
                 }}
                 validator={this.validator}

@@ -15,11 +15,12 @@ class MitigationList extends React.Component {
       visible: false,
       mitigationPlanId: "",
       mitigationView: false,
+      canEditMitigationActivity: false,
     };
   }
-  toggleMode = () => {
+  toggleMode = (data) => {
     this.setState((prevState) => {
-      return { visible: !prevState.visible };
+      return { visible: !prevState.visible, canEditMitigationActivity: data };
     });
   };
   viewToggle = () => {
@@ -29,7 +30,12 @@ class MitigationList extends React.Component {
   };
   render() {
     console.log("mitigation details", this.props.mitigationDetails);
-    const { visible, mitigationPlanId, mitigationView } = this.state;
+    const {
+      visible,
+      mitigationPlanId,
+      mitigationView,
+      canEditMitigationActivity,
+    } = this.state;
     return (
       <>
         {visible ? (
@@ -39,6 +45,7 @@ class MitigationList extends React.Component {
             mitigationPlanId={mitigationPlanId}
             updateList={this.props.updateList}
             mitigationDetails={this.props.mitigationDetails}
+            canEditMitigationActivity={canEditMitigationActivity}
           ></MitigationActivity>
         ) : null}
         {mitigationView ? (
@@ -118,11 +125,13 @@ class MitigationList extends React.Component {
                             <td>{format(data.forecastDate, dateFormat)}</td>
                             <td>{data.status ? data.status.name : ""}</td>
                             <td>
-                              {data.status &&
+                              {data.canEdit &&
+                              data.canEdit.canApprove &&
+                              data.status &&
                               (data.status.statusId == 1 ||
                                 data.status.statusId == 3) ? (
                                 <a
-                                  className="link-click"
+                                  className="link-click ml-3"
                                   href="#"
                                   data-placement="bottom"
                                   title="  Approve"
@@ -153,7 +162,9 @@ class MitigationList extends React.Component {
                                   this.setState(
                                     { mitigationPlanId: parseInt(data.id) },
                                     () => {
-                                      this.toggleMode();
+                                      this.toggleMode(
+                                        data.canEdit.canEditMitigationActivity
+                                      );
                                     }
                                   );
                                 }}

@@ -21,6 +21,8 @@ import ButtonComponent from "../Common/form-component/ButtonComponent";
 import TextAreaComponent from "../Common/form-component/TextAreComponent";
 import SelectComponent from "../Common/form-component/SelectComponent";
 import { compareValues } from "../Common/customSort";
+import { errorMessage } from "../../miscellaneous/error-messages";
+import { errorMsg, successMsg } from "../Common/alert";
 class Mitigation extends React.Component {
   constructor(props) {
     super(props);
@@ -201,11 +203,13 @@ class Mitigation extends React.Component {
       .then((result) => {
         console.log("result", result);
         // this.getListOfActivities();
+        successMsg("Approved successfully");
         this.props.history.push("risk-detail");
         // this.props.toggleMode();
       })
       .catch((error) => {
         console.log("error", error);
+        errorMsg([errorMessage(error)][0][0]);
       });
   };
 

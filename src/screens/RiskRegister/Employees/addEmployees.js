@@ -17,7 +17,7 @@ import ReactModal from "../../Common/ReactModal";
 import DisplayErrors from "../../Common/DisplayErrors";
 import { compareValues } from "../../Common/customSort";
 import { SET_TIMEOUT_VALUE } from "../../../constants/app-constants";
-
+import { errorMsg, successMsg } from "../../Common/alert";
 import { errorMessage } from "../../../miscellaneous/error-messages";
 
 class AddEmployee extends React.Component {
@@ -158,11 +158,12 @@ class AddEmployee extends React.Component {
       })
       .then((result) => {
         console.log("result", result);
-
+        successMsg("Employee added successfully");
         this.props.changeMode();
       })
       .catch((error) => {
         console.log("error", error);
+        errorMsg([errorMessage(error)][0][0]);
       });
   };
 

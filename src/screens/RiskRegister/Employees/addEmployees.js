@@ -1,13 +1,11 @@
 import React from "react";
 
 import { withApollo } from "react-apollo";
-import {
-  getListofGenericMasterQuery,
-  ALL_EMPLOYEE_LIST,
-} from "../../../services/graphql/queries/user";
+import { getListofGenericMasterQuery } from "../../../services/graphql/queries/user";
 import {
   GET_LIST_OF_EMPLOYEES,
   ADD_EMPLOYEE,
+  ALL_EMPLOYEE_LIST,
 } from "../../../services/graphql/queries/riskRegister";
 import SimpleReactValidator from "simple-react-validator";
 import ButtonComponent from "../../Common/form-component/ButtonComponent";
@@ -129,12 +127,13 @@ class AddEmployee extends React.Component {
         variables: {
           // employeeId: this.state.employeeId ? this.state.employeeId : null,
           // name: this.state.name ? this.state.name : "",
+          riskId: parseInt(localStorage.getItem("riskId")),
           status: 1,
         },
         fetchPolicy: "network-only",
       })
       .then((result) => {
-        var users = result.data.getListOfAyanaEmployees;
+        var users = result.data.getListOfEmployeesForRiskRegister;
 
         this.setState({
           ...this.initialState,

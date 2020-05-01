@@ -492,3 +492,23 @@ export const MITIGATION_ATTACHMENTS = gql`
     }
   }
 `;
+
+export const ALL_EMPLOYEE_LIST = gql`
+  query($riskId: Int, $status: Int) {
+    getListOfEmployeesForRiskRegister(riskId: $riskId, status: $status) {
+      Id
+      name
+      employeeId
+      userId
+      emailId
+      mobileNumber
+      department
+      reportingManagerId
+      reportingManager {
+        Id
+        name
+        emailId
+      }
+    }
+  }
+`;

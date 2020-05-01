@@ -174,13 +174,13 @@ class Mitigation extends React.Component {
       });
   };
   submitMitigationActivity = () => {
-    const { showReassign, activityDetail } = this.state;
+    const { showReassign, activityDetail,mitigationDetails } = this.state;
     let variables = {};
     if (!showReassign) {
       variables = {
         name: activityDetail.name == "" ? "Approved" : activityDetail.name,
         mitigationPlanId: parseInt(this.state.mitigationplanId),
-        status: 2,
+        status: mitigationDetails.status.statusId==3?4:2,
         // department: activityDetail.department,
         // responsible: activityDetail.responsible,
       };
@@ -203,7 +203,11 @@ class Mitigation extends React.Component {
       .then((result) => {
         console.log("result", result);
         // this.getListOfActivities();
-        successMsg("Approved successfully");
+        if (!showReassign) {
+        successMsg("Approved successfully");}
+        else{
+          successMsg("Reassigned successfully");
+        }
         this.props.history.push("risk-detail");
         // this.props.toggleMode();
       })

@@ -11,6 +11,7 @@ import {
   CREATE_RISK_ATTACHMENT,
   DELETE_RISK_ATTACHMENT,
   RISK_ATTACHMENTS,
+  DOWNLOAD_RISK_ATTACHMENT,
 } from "../../services/graphql/queries/riskRegister";
 import ReactModal from "../Common/ReactModal";
 import { format } from "date-fns";
@@ -329,19 +330,21 @@ class EditRiskRegister extends React.Component {
       })
       .then((result) => {
         // alert("Document Created successfully");
-        this.setState({
-          loading: false,
-          reactModalVisible: true,
-          modalMessage: "Attachment Added Successfully",
-        });
-        // this.getListOfAttachments();
+        // this.setState({
+        //   loading: false,
+        //   reactModalVisible: true,
+        //   modalMessage: "Attachment Added Successfully",
+        // });
+        this.getListOfAttachments();
+        successMsg("Attachment uploaded successfully");
       })
       .catch((error) => {
         console.log("~~~error: ", error);
-        this.setState({ loading: false, errors: [errorMessage(error)] });
-        this.timer = setTimeout(() => {
-          this.setState({ errors: [] });
-        }, SET_TIMEOUT_VALUE);
+        this.setState({ loading: false });
+        // this.timer = setTimeout(() => {
+        //   this.setState({ errors: [] });
+        // }, SET_TIMEOUT_VALUE);
+        errorMsg([errorMessage(error)][0][0]);
       });
   }
 
@@ -392,10 +395,58 @@ class EditRiskRegister extends React.Component {
       })
       .then((result) => {
         console.log("result", result);
+        successMsg("Attachment deleted successfully");
         this.getListOfAttachments();
       })
       .catch((error) => {
         console.log("error", error);
+        errorMsg([errorMessage(error)][0][0]);
+      });
+  };
+
+  downloadAttachment = (id) => {
+    this.setState({ loading: true });
+    this.props.client
+      .mutate({
+        mutation: DOWNLOAD_RISK_ATTACHMENT,
+        variables: {
+          attachmentId: id,
+        },
+        fetchPolicy: "no-cache",
+      })
+      .then((result) => {
+        let document = result.data.downloadRiskAttachment;
+        var byteCharacters = atob(document.fileData);
+
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        const contentType = mime.lookup(document.fileName.split(".")[1]);
+
+        var blob = new Blob([byteArray], {
+          type: contentType,
+        });
+
+        FileSaver.saveAs(blob, document.fileName.substr(32));
+
+        this.setState({
+          errors: [],
+          loading: false,
+        });
+      })
+      .catch((error) => {
+        // this.setState({
+        //   loading: false,
+        //   errors: [errorMessage(error)],
+        // });
+        // this.timer = setTimeout(() => {
+        //   this.setState({ errors: [] });
+        // }, SET_TIMEOUT_VALUE);
+        errorMsg([errorMessage(error)][0][0]);
       });
   };
   submitRisk = () => {
@@ -819,11 +870,19 @@ class EditRiskRegister extends React.Component {
                                       .substr(32)
                                   )}
                                 >
-                                  {decodeURI(
-                                    data.url
-                                      .substring(data.url.lastIndexOf("/") + 1)
-                                      .substr(32)
-                                  ).substring(0, 30)}
+                                  <span
+                                    onClick={() => {
+                                      this.downloadAttachment(data.id);
+                                    }}
+                                  >
+                                    {decodeURI(
+                                      data.url
+                                        .substring(
+                                          data.url.lastIndexOf("/") + 1
+                                        )
+                                        .substr(32)
+                                    ).substring(0, 30)}
+                                  </span>
                                   <img
                                     src={CloseSvg}
                                     title="Delete"

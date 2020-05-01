@@ -12,6 +12,7 @@ import {
   DOWNLOAD_MITIGATION_ATTACHMENT,
   MITIGATION_ATTACHMENTS,
   CREATE_MITIGATION_ACTIVITY,
+  UPDATE_MITIGATION,
 } from "../../services/graphql/queries/riskRegister";
 import {
   getListofGenericMasterQuery,
@@ -287,19 +288,21 @@ class MitigationView extends React.Component {
       })
       .then((result) => {
         // alert("Document Created successfully");
-        this.setState({
-          loading: false,
-          reactModalVisible: true,
-          modalMessage: "Attachment Added Successfully",
-        });
+        // this.setState({
+        //   loading: false,
+        //   reactModalVisible: true,
+        //   modalMessage: "Attachment Added Successfully",
+        // });
+        successMsg("Attachment uploaded successfully");
         this.getListOfAttachments();
       })
       .catch((error) => {
         console.log("~~~error: ", error);
         this.setState({ loading: false, errors: [errorMessage(error)] });
-        this.timer = setTimeout(() => {
-          this.setState({ errors: [] });
-        }, SET_TIMEOUT_VALUE);
+        // this.timer = setTimeout(() => {
+        //   this.setState({ errors: [] });
+        // }, SET_TIMEOUT_VALUE);
+        errorMsg([errorMessage(error)][0][0]);
       });
   }
 
@@ -340,10 +343,56 @@ class MitigationView extends React.Component {
       })
       .then((result) => {
         console.log("result", result);
+        successMsg("Attachment deleted successfully");
         this.getListOfAttachments();
       })
       .catch((error) => {
         console.log("error", error);
+      });
+  };
+
+  downloadAttachment = (id) => {
+    this.setState({ loading: true });
+    this.props.client
+      .mutate({
+        mutation: DOWNLOAD_MITIGATION_ATTACHMENT,
+        variables: {
+          attachmentId: id,
+        },
+        fetchPolicy: "no-cache",
+      })
+      .then((result) => {
+        let document = result.data.downloadMitigationAttachment;
+        var byteCharacters = atob(document.fileData);
+
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        const contentType = mime.lookup(document.fileName.split(".")[1]);
+
+        var blob = new Blob([byteArray], {
+          type: contentType,
+        });
+
+        FileSaver.saveAs(blob, document.fileName.substr(32));
+
+        this.setState({
+          errors: [],
+          loading: false,
+        });
+      })
+      .catch((error) => {
+        this.setState({
+          loading: false,
+          errors: [errorMessage(error)],
+        });
+        this.timer = setTimeout(() => {
+          this.setState({ errors: [] });
+        }, SET_TIMEOUT_VALUE);
       });
   };
   submitModal = () => {
@@ -374,12 +423,44 @@ class MitigationView extends React.Component {
       .then((result) => {
         console.log("result", result);
         // this.getListOfActivities();
+        successMsg("Mitigation reassigned successfully");
 
-        this.props.history.push("risk-detail");
-        // this.props.toggleMode();
+        // this.props.history.push("risk-detail");
+        this.props.updateList();
+        this.props.toggleMode();
       })
       .catch((error) => {
         console.log("error", error);
+        errorMsg([errorMessage(error)][0][0]);
+      });
+  };
+
+  updataMitigationPlan = () => {
+    const { mitigationDetails, name } = this.state;
+    console.log("mitiga", mitigationDetails);
+
+    let details = {
+      id: mitigationDetails.id,
+      name: name,
+      responsible: mitigationDetails.responsible.Id,
+      status: mitigationDetails.status.statusId,
+      department: mitigationDetails.departmentId.Id,
+      completionDate: mitigationDetails.completionDate,
+    };
+    this.props.client
+      .mutate({
+        mutation: UPDATE_MITIGATION,
+        variables: details,
+        fetchPolicy: "no-cache",
+      })
+      .then((result) => {
+        console.log(result);
+        successMsg("Mitigation plan updated successfully");
+        this.props.updateList();
+        this.props.toggleMode();
+      })
+      .catch((error) => {
+        errorMsg([errorMessage(error)][0][0]);
       });
   };
   reassign() {
@@ -507,6 +588,7 @@ class MitigationView extends React.Component {
       </Modal>
     );
   }
+
   toggleReassign() {
     this.setState((prevState) => {
       return {
@@ -589,7 +671,7 @@ class MitigationView extends React.Component {
               <TextAreaComponent
                 required
                 label="Mitigation Plan"
-                title="mitigation plan"
+                title="mitigationPlan"
                 name="name"
                 value={name}
                 placeholder="Enter remarks"
@@ -758,11 +840,17 @@ class MitigationView extends React.Component {
                               .substr(32)
                           )}
                         >
-                          {decodeURI(
-                            data.url
-                              .substring(data.url.lastIndexOf("/") + 1)
-                              .substr(32)
-                          ).substring(0, 30)}
+                          <span
+                            onClick={() => {
+                              this.downloadAttachment(data.id);
+                            }}
+                          >
+                            {decodeURI(
+                              data.url
+                                .substring(data.url.lastIndexOf("/") + 1)
+                                .substr(32)
+                            ).substring(0, 30)}
+                          </span>
                           <img
                             src={CloseSvg}
                             title="Delete"
@@ -787,7 +875,13 @@ class MitigationView extends React.Component {
                 title="Submit"
                 onClick={() => {
                   // this.validator.hideMessages();
-                  // this.submit();
+                  debugger;
+                  if (this.validator.fields.mitigationPlan) {
+                    this.updataMitigationPlan();
+                    this.validator.hideMessages();
+                  } else {
+                    this.validator.showMessages();
+                  }
                 }}
               ></ButtonComponent>
 

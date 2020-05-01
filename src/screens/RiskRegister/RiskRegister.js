@@ -318,7 +318,7 @@ class RiskRegister extends React.Component {
                           {ele.canEdit &&
                           ele.canEdit.canApprove &&
                           ele.status &&
-                          ele.status.statusId == 1 ? (
+                          (ele.status.statusId == 1 || ele.status.statusId == 3) ? (
                             <a
                               href="#"
                               href="#"

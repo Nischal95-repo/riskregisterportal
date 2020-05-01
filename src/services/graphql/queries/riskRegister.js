@@ -55,6 +55,11 @@ export const RISK_REGISTER = gql`
           Id
           statusId
         }
+        canEdit {
+          canEdit
+          canEditMitigationActivity
+          canApprove
+        }
         completionDate
         forecastDate
       }
@@ -267,6 +272,29 @@ export const CREATE_MITIGATION = gql`
     }
   }
 `;
+export const UPDATE_MITIGATION = gql`
+  mutation(
+    $name: String!
+    $department: Int!
+    $responsible: Int!
+    $completionDate: Date!
+    $id: Int!
+    $status: Int!
+  ) {
+    updateMitigation(
+      data: {
+        name: $name
+        responsible: $responsible
+        department: $department
+        id: $id
+        completionDate: $completionDate
+        status: $status
+      }
+    ) {
+      message
+    }
+  }
+`;
 
 // mutation($description:String!riskId:Int!responsible:Int!completionDate:Date!){
 //   createMitigation(data:{
@@ -359,12 +387,15 @@ export const GET_MITIGATION_PLAN_BY_ID = gql`
       name
       departmentId {
         description
+        Id
       }
       status {
         name
+        statusId
       }
       responsible {
         loginId
+        Id
       }
       completionDate
       forecastDate
@@ -402,8 +433,8 @@ export const DELETE_RISK_ATTACHMENT = gql`
 `;
 
 export const DOWNLOAD_RISK_ATTACHMENT = gql`
-  mutation($attachmentId: String!, $versionNo: Int!) {
-    downloadAttachment(attachmentId: $attachmentId, versionNo: $versionNo) {
+  mutation($attachmentId: String!) {
+    downloadRiskAttachment(attachmentId: $attachmentId) {
       fileData
       fileName
     }
@@ -434,8 +465,8 @@ export const DELETE_MITIGATION_ATTACHMENT = gql`
 `;
 
 export const DOWNLOAD_MITIGATION_ATTACHMENT = gql`
-  mutation($attachmentId: String!, $versionNo: Int!) {
-    downloadAttachment(attachmentId: $attachmentId, versionNo: $versionNo) {
+  mutation($attachmentId: String!) {
+    downloadMitigationAttachment(attachmentId: $attachmentId) {
       fileData
       fileName
     }

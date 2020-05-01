@@ -332,7 +332,14 @@ class MitigationActivity extends React.Component {
                       <div className="col-md-3">
                         <div className="form-group">
                           <label>Status</label>
-                          <select className="form-control select-style-1">
+                          <select className="form-control select-style-1" onChange={()=>{debugger
+                            this.setState(prevState=>{return{
+                                      activityDetail: {
+          ...prevState.activityDetail,
+          status:3
+        }
+                            }})
+                          }}>
                             <option>Select</option>
                             {/* <option> Waiting For Approval</option> */}
                             <option value="3"> Waiting For Closure</option>

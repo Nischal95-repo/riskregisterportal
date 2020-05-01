@@ -52,7 +52,8 @@ class MitigationList extends React.Component {
           <MitigationView
             toggleMode={this.viewToggle}
             mitigationPlanId={mitigationPlanId}
-            // updateList={this.props.updateList}
+
+            updateList={this.props.updateList}
           ></MitigationView>
         ) : (
           <div id="mitigationList">

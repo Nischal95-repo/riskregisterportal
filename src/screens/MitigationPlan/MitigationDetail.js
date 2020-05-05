@@ -174,13 +174,13 @@ class Mitigation extends React.Component {
       });
   };
   submitMitigationActivity = () => {
-    const { showReassign, activityDetail,mitigationDetails } = this.state;
+    const { showReassign, activityDetail, mitigationDetails } = this.state;
     let variables = {};
     if (!showReassign) {
       variables = {
         name: activityDetail.name == "" ? "Approved" : activityDetail.name,
         mitigationPlanId: parseInt(this.state.mitigationplanId),
-        status: mitigationDetails.status.statusId==3?4:2,
+        status: mitigationDetails.status.statusId == 3 ? 4 : 2,
         // department: activityDetail.department,
         // responsible: activityDetail.responsible,
       };
@@ -204,8 +204,11 @@ class Mitigation extends React.Component {
         console.log("result", result);
         // this.getListOfActivities();
         if (!showReassign) {
-        successMsg("Approved successfully");}
-        else{
+          if (mitigationDetails.status.statusId == 1)
+            successMsg("Approved successfully");
+          else if (mitigationDetails.status.statusId == 3)
+            successMsg("Mitigation plan closed successfully");
+        } else {
           successMsg("Reassigned successfully");
         }
         this.props.history.push("risk-detail");
@@ -409,6 +412,16 @@ class Mitigation extends React.Component {
                 <label>Due/Completion Date</label>
                 <div className="form-control-plaintext word-break">
                   {format(mitigationDetails.completionDate, dateFormat)}
+                </div>
+              </div>
+            </div>
+            <div className="col-md-3 col-lg-3">
+              <div className="form-group">
+                <label>Status</label>
+                <div className="form-control-plaintext word-break">
+                  {mitigationDetails.status
+                    ? mitigationDetails.status.name
+                    : ""}
                 </div>
               </div>
             </div>

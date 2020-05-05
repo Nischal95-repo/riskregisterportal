@@ -11,6 +11,7 @@ export const RISK_REGISTER = gql`
     $responsible: [Int]
     $noOfRows: Int
     $pageNumber: Int
+    $department: [Int]
   ) {
     getListOfRisk(
       id: $riskId
@@ -22,6 +23,7 @@ export const RISK_REGISTER = gql`
       responsible: $responsible
       noOfRows: $noOfRows
       pageNumber: $pageNumber
+      department: $department
     ) {
       id
       name

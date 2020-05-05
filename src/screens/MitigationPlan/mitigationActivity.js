@@ -258,6 +258,7 @@ class MitigationActivity extends React.Component {
       loading,
       activities,
     } = this.state;
+    console.log("mitigationDetails", this.props.mitigationDetails);
     return (
       <Modal
         visible={this.props.visible}
@@ -295,7 +296,8 @@ class MitigationActivity extends React.Component {
               </div>
             </div>
             <div className="modal-body" style={{ paddingTop: 0 }}>
-              {this.props.canEditMitigationActivity ? (
+              {this.props.canEditMitigationActivity &&
+              this.props.status !== 4 ? (
                 <div>
                   <div className="row">
                     <div className="col-md-6">
@@ -332,17 +334,23 @@ class MitigationActivity extends React.Component {
                       <div className="col-md-3">
                         <div className="form-group">
                           <label>Status</label>
-                          <select className="form-control select-style-1" onChange={()=>{debugger
-                            this.setState(prevState=>{return{
-                                      activityDetail: {
-          ...prevState.activityDetail,
-          status:3
-        }
-                            }})
-                          }}>
+                          <select
+                            className="form-control select-style-1"
+                            onChange={() => {
+                              debugger;
+                              this.setState((prevState) => {
+                                return {
+                                  activityDetail: {
+                                    ...prevState.activityDetail,
+                                    status: 3,
+                                  },
+                                };
+                              });
+                            }}
+                          >
                             <option>Select</option>
                             {/* <option> Waiting For Approval</option> */}
-                            <option value="3"> Waiting For Closure</option>
+                            <option value="3"> Pending For Closure</option>
                           </select>
                         </div>
                       </div>

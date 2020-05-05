@@ -16,6 +16,7 @@ class MitigationList extends React.Component {
       mitigationPlanId: "",
       mitigationView: false,
       canEditMitigationActivity: false,
+      status: 0,
     };
   }
   toggleMode = (data) => {
@@ -35,6 +36,7 @@ class MitigationList extends React.Component {
       mitigationPlanId,
       mitigationView,
       canEditMitigationActivity,
+      status,
     } = this.state;
     return (
       <>
@@ -46,13 +48,13 @@ class MitigationList extends React.Component {
             updateList={this.props.updateList}
             mitigationDetails={this.props.mitigationDetails}
             canEditMitigationActivity={canEditMitigationActivity}
+            status={status}
           ></MitigationActivity>
         ) : null}
         {mitigationView ? (
           <MitigationView
             toggleMode={this.viewToggle}
             mitigationPlanId={mitigationPlanId}
-
             updateList={this.props.updateList}
           ></MitigationView>
         ) : (
@@ -154,24 +156,29 @@ class MitigationList extends React.Component {
                                   <img src={ApproveSvg} />
                                 </a>
                               ) : null}
-                              <a
-                                className="link-click ml-3"
-                                href="#"
-                                data-placement="bottom"
-                                title="  Mitigation Activity"
-                                onClick={() => {
-                                  this.setState(
-                                    { mitigationPlanId: parseInt(data.id) },
-                                    () => {
-                                      this.toggleMode(
-                                        data.canEdit.canEditMitigationActivity
-                                      );
-                                    }
-                                  );
-                                }}
-                              >
-                                <img src={ModifySvg} />
-                              </a>
+                              {data.status && data.status.statusId != 1 ? (
+                                <a
+                                  className="link-click ml-3"
+                                  href="#"
+                                  data-placement="bottom"
+                                  title="  Mitigation Activity"
+                                  onClick={() => {
+                                    this.setState(
+                                      { mitigationPlanId: parseInt(data.id) },
+                                      () => {
+                                        this.toggleMode(
+                                          data.canEdit.canEditMitigationActivity
+                                        );
+                                        this.setState({
+                                          status: data.status.statusId,
+                                        });
+                                      }
+                                    );
+                                  }}
+                                >
+                                  <img src={ModifySvg} />
+                                </a>
+                              ) : null}
                             </td>
                           </tr>
                         );

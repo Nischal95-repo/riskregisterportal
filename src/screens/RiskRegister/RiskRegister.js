@@ -211,6 +211,12 @@ class RiskRegister extends React.Component {
       userSelectedOptions.forEach((element) => {
         user.push(element.value);
       });
+
+    let department = [];
+    departmentSelectedOption &&
+      departmentSelectedOption.forEach((element) => {
+        department.push(element.value);
+      });
     let status = null;
 
     this.props.client
@@ -222,6 +228,7 @@ class RiskRegister extends React.Component {
           projectId: project.length ? project : null,
           riskCategory: risk.length ? risk : null,
           status: statusSelectedOptions ? statusSelectedOptions.value : null,
+          department: department.length ? department : null,
           deviated: customSelectedOptions
             ? customSelectedOptions.value == 1
               ? false
@@ -318,7 +325,8 @@ class RiskRegister extends React.Component {
                           {ele.canEdit &&
                           ele.canEdit.canApprove &&
                           ele.status &&
-                          (ele.status.statusId == 1 || ele.status.statusId == 3) ? (
+                          (ele.status.statusId == 1 ||
+                            ele.status.statusId == 3) ? (
                             <a
                               href="#"
                               href="#"

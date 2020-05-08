@@ -124,7 +124,7 @@ class RiskView extends React.Component {
               <div className="row">
                 <div className="col-md-6 col-lg-3">
                   <div className="form-group">
-                    <label>Impact</label>
+                    <label>Residual Impact</label>
                     <div className="form-control-plaintext word-break">
                       {this.getValue(residualImpact)}
                     </div>
@@ -132,7 +132,7 @@ class RiskView extends React.Component {
                 </div>
                 <div className="col-md-6 col-lg-3">
                   <div className="form-group">
-                    <label>Probability</label>
+                    <label>Residual Probability</label>
                     <div className="form-control-plaintext word-break">
                       {this.getValue(residualProbability)}
                     </div>
@@ -140,7 +140,7 @@ class RiskView extends React.Component {
                 </div>
                 <div className="col-md-6 col-lg-3">
                   <div className="form-group">
-                    <label>Severity</label>
+                    <label>Residual Severity</label>
                     <div className="form-control-plaintext word-break">
                       {/* {residualSeverity == 1
                         ? "Low"
@@ -156,7 +156,7 @@ class RiskView extends React.Component {
               </div>
               {upsidePotential != "" || currentControls != "" ? (
                 <div className="row">
-                  <div className="col-md-4 col-lg-3">
+                  <div className="col-md-6 col-lg-6">
                     <div className="form-group">
                       <label>Upside Potential</label>
                       <div className="form-control-plaintext word-break">
@@ -164,7 +164,7 @@ class RiskView extends React.Component {
                       </div>
                     </div>
                   </div>
-                  <div className="col-md-4 col-lg-3">
+                  <div className="col-md-6 col-lg-6">
                     <div className="form-group">
                       <label>Current Controls</label>
                       <div className="form-control-plaintext word-break">
@@ -249,7 +249,7 @@ class RiskView extends React.Component {
                   </div>
                 </div>
               </div>
-              {this.props.displayEdit ? (
+              {this.props.displayEdit && status == 2 ? (
                 <div className="row">
                   <div className="col-md-12 col-lg-8">
                     <button

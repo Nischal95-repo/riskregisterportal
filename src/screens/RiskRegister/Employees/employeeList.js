@@ -158,7 +158,8 @@ class EmployeeList extends React.Component {
           <div className="col-md-2 text-right">
             {this.props.riskDetails &&
             this.props.riskDetails.canEdit &&
-            this.props.riskDetails.canEdit.canEdit ? (
+            this.props.riskDetails.canEdit.canEdit &&
+            this.props.riskDetails.status == 2 ? (
               <a
                 href="#"
                 title="Add"
@@ -183,9 +184,14 @@ class EmployeeList extends React.Component {
                   <th scope="col" width={400}>
                     EMAIL ID
                   </th>
-                  <th scope="col" width={420}>
-                    ACTION(s)
-                  </th>
+                  {this.props.riskDetails &&
+                  this.props.riskDetails.canEdit &&
+                  this.props.riskDetails.canEdit.canEdit &&
+                  this.props.riskDetails.status == 2 ? (
+                    <th scope="col" width={420}>
+                      ACTION
+                    </th>
+                  ) : null}
                 </tr>
               </thead>
               <tbody>
@@ -198,7 +204,8 @@ class EmployeeList extends React.Component {
                           <td>
                             {this.props.riskDetails &&
                             this.props.riskDetails.canEdit &&
-                            this.props.riskDetails.canEdit.canEdit ? (
+                            this.props.riskDetails.canEdit.canEdit &&
+                            this.props.riskDetails.status == 2 ? (
                               <a
                                 href="#"
                                 className="link-delete m-l-45"

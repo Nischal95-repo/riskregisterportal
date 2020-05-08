@@ -14,6 +14,7 @@ import { GET_PERMISSION } from "../../../services/graphql/queries/accessPermissi
 import RiskRegisterImg from "../../../static/images/svg/category.svg";
 import DashboardImg from "../../../static/images/svg/dashboard.svg";
 import ReportsImg from "../../../static/images/svg/reports.svg";
+import ViewImg from "../../../static/images/svg/view.svg";
 import InfoViewImage from "../../../static/images/info-view.png";
 import QAImage from "../../../static/images/qa.png";
 import EmpTestImage from "../../../static/images/emp-test.png";
@@ -115,14 +116,21 @@ class SideBar extends React.Component {
             </a>
           </li>
           <li title="Reports">
-            <a href="#">
+            <a href="/reports">
               <figure>
-                <img src={ReportsImg} />
+                <img src={ViewImg} />
               </figure>{" "}
               <span>Reports</span>
             </a>
           </li>
-
+          <li title="Risk Profile">
+            <a href="/reports">
+              <figure>
+                <img src={ReportsImg} />
+              </figure>{" "}
+              <span>Risk Profile</span>
+            </a>
+          </li>
           <li title="Logout">
             <a
               href="#"

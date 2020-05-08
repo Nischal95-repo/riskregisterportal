@@ -67,7 +67,8 @@ class MitigationList extends React.Component {
                 <div className="text-right">
                   {this.props.riskDetails &&
                   this.props.riskDetails.canEdit &&
-                  this.props.riskDetails.canEdit.canEdit ? (
+                  this.props.riskDetails.canEdit.canEdit &&
+                  this.props.riskDetails.status == 2 ? (
                     <a
                       className="link-click"
                       href="#"
@@ -185,6 +186,10 @@ class MitigationList extends React.Component {
                       })
                     : null}
                 </tbody>
+                {this.props.mitigationDetails &&
+                !this.props.mitigationDetails.length ? (
+                  <div style={{ textAlign: "center" }}>No Data</div>
+                ) : null}
               </table>
             </div>
           </div>

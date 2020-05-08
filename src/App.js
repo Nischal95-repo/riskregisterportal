@@ -19,6 +19,9 @@ import AddRiskRegister from "./pages/add-risk";
 
 import RiskDetail from "./pages/risk-detail";
 import MitigationApproval from "./pages/approve-mitigation";
+
+// Reports
+import Reports from "./pages/reports";
 toast.configure({
   // autoClose: SET_TIMEOUT_VALUE,
   draggable: false,
@@ -49,6 +52,7 @@ class App extends React.Component {
           path="/approve-mitigation"
           component={MitigationApproval}
         />
+        <Route exact path="/reports" component={Reports} />
         {/* Risk Register */}
       </>
     );

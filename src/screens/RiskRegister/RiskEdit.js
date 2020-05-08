@@ -758,7 +758,7 @@ class EditRiskRegister extends React.Component {
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-4 col-lg-3">
+                <div className="col-md-6 col-lg-6">
                   <InputComponent
                     label="Upside Potential"
                     title="Upside Potential"
@@ -770,7 +770,7 @@ class EditRiskRegister extends React.Component {
                     }}
                   ></InputComponent>
                 </div>
-                <div className="col-md-4 col-lg-3">
+                <div className="col-md-6 col-lg-6">
                   <InputComponent
                     label="Current Controls"
                     title="Current Controls"

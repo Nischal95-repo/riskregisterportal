@@ -27,8 +27,8 @@ import Expand from "../../static/images/svg/plus.svg";
 require("../../static/css/bootstrap.min.css");
 const customStyles = {};
 const statusOptions = [
-  { value: 1, label: "Active" },
-  { value: 2, label: "Closed" },
+  { value: 2, label: "Open" },
+  { value: 1, label: "Closed" },
 ];
 const customOptions = [
   { value: 1, label: "Select All" },
@@ -682,8 +682,16 @@ class RiskRegister extends React.Component {
                         <td>
                           {data.projectId ? data.projectId.description : ""}
                         </td>
-                        <td>Low</td>
-                        <td>Active</td>
+                        <td>
+                          {data.severity == 1
+                            ? "Low"
+                            : data.severity == 2
+                            ? "Medium"
+                            : data.severity == 3
+                            ? "High"
+                            : ""}
+                        </td>
+                        <td>{data.status == 1 ? "Closed" : "Open"}</td>
                         <td>
                           <a
                             href="#"

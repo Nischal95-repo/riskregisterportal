@@ -28,6 +28,7 @@ class Login extends React.Component {
         emailId: "",
         password: "",
       },
+      disabled: false,
       errors: [],
     };
     this.validator = new SimpleReactValidator({
@@ -60,7 +61,7 @@ class Login extends React.Component {
   authUser() {
     if (this.validator.allValid()) {
       const { authDetail } = this.state;
-      this.setState({ errors: [] });
+      this.setState({ errors: [], disabled: true });
       this.props.client
         .mutate({
           mutation: AUTHENTICATE_USER,
@@ -85,6 +86,7 @@ class Login extends React.Component {
           error.graphQLErrors.map(({ message }, i) => {
             this.setState({
               errors: [message],
+              disabled: false,
             });
           });
           setTimeout(() => {
@@ -93,6 +95,7 @@ class Login extends React.Component {
         });
     } else {
       this.validator.showMessages();
+      this.setState({ disabled: false });
     }
   }
   componentDidMount() {
@@ -168,14 +171,25 @@ class Login extends React.Component {
                 </a>
               </div>
               <div className="text-center mt-3 mb-3">
-                <ButtonComponent
+                {/* <ButtonComponent
                   type="submit"
                   className="btn-danger "
                   title="Submit"
                   onClick={() => {
                     this.authUser();
                   }}
-                />
+                /> */}
+                <button
+                  type="submit"
+                  className="btn btn-danger "
+                  title="Submit"
+                  onClick={() => {
+                    this.authUser();
+                  }}
+                  disabled={this.state.disabled}
+                >
+                  Submit
+                </button>
               </div>
             </div>
           </div>

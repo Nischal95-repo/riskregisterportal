@@ -514,3 +514,31 @@ export const ALL_EMPLOYEE_LIST = gql`
     }
   }
 `;
+
+export const DOWNLOAD_RISK_REGISTER = gql`
+  query(
+    $riskId: [Int]
+    $companyId: [Int]
+    $projectId: [Int]
+    $riskCategory: [Int]
+    $status: Int
+    $deviated: Boolean
+    $responsible: [Int]
+    $noOfRows: Int
+    $pageNumber: Int
+    $department: [Int]
+  ) {
+    downloadRiskRegisterReport(
+      id: $riskId
+      company: $companyId
+      project: $projectId
+      riskCategory: $riskCategory
+      status: $status
+      deviated: $deviated
+      responsible: $responsible
+      noOfRows: $noOfRows
+      pageNumber: $pageNumber
+      department: $department
+    )
+  }
+`;

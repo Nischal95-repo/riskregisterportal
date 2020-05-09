@@ -19,12 +19,17 @@ import {
   ALL_EMPLOYEE_LIST,
 } from "../../services/graphql/queries/user";
 import { getListofProjectsByCompanyId } from "../../services/graphql/queries/document-upload";
-import { RISK_REGISTER } from "../../services/graphql/queries/riskRegister";
+import {
+  RISK_REGISTER,
+  DOWNLOAD_RISK_REGISTER,
+} from "../../services/graphql/queries/riskRegister";
 import ApproveImage from "../../static/images/svg/approve.svg";
 import ViewImg from "../../static/images/svg/view.svg";
 import { compareValues } from "../Common/customSort";
 import Expand from "../../static/images/svg/plus.svg";
 require("../../static/css/bootstrap.min.css");
+const FileSaver = require("file-saver");
+const mime = require("mime-types");
 const customStyles = {};
 const statusOptions = [
   { value: 2, label: "Open" },
@@ -254,6 +259,111 @@ class RiskRegister extends React.Component {
       });
   };
 
+  downloadReport = () => {
+    // this.setState({ loading: true });
+    const {
+      companySelectedOption,
+      companyOptions,
+      projectOptions,
+      projectSelectedOption,
+      riskOptions,
+      riskSelectedOption,
+      statusSelectedOptions,
+      departmentOptions,
+      departmentSelectedOption,
+      customSelectedOptions,
+      userOptions,
+      userSelectedOptions,
+      riskId,
+      noOfRows,
+      pageNumber,
+    } = this.state;
+
+    let risk = [];
+    riskSelectedOption &&
+      riskSelectedOption.forEach((element) => {
+        risk.push(element.value);
+      });
+
+    let company = [];
+    companySelectedOption &&
+      companySelectedOption.forEach((element) => {
+        company.push(element.value);
+      });
+    let project = [];
+    projectSelectedOption &&
+      projectSelectedOption.forEach((element) => {
+        project.push(element.value);
+      });
+
+    let user = [];
+    userSelectedOptions &&
+      userSelectedOptions.forEach((element) => {
+        user.push(element.value);
+      });
+
+    let department = [];
+    departmentSelectedOption &&
+      departmentSelectedOption.forEach((element) => {
+        department.push(element.value);
+      });
+    let status = null;
+
+    this.props.client
+      .query({
+        query: DOWNLOAD_RISK_REGISTER,
+        variables: {
+          riskId: riskId,
+          companyId: company.length ? company : null,
+          projectId: project.length ? project : null,
+          riskCategory: risk.length ? risk : null,
+          status: statusSelectedOptions ? statusSelectedOptions.value : null,
+          department: department.length ? department : null,
+          deviated: customSelectedOptions
+            ? customSelectedOptions.value == 1
+              ? false
+              : true
+            : false,
+          responsible: user.length ? user : null,
+          noOfRows: noOfRows,
+          pageNumber: pageNumber,
+        },
+        fetchPolicy: "network-only",
+      })
+      .then((result) => {
+        // this.setState({
+        //   loading: false,
+        //   error: "",
+        //   riskRegisterData: riskList,
+        // });
+        let document = JSON.parse(result.data.downloadRiskRegisterReport);
+        var byteCharacters = atob(document.fileData);
+
+        var byteNumbers = new Array(byteCharacters.length);
+        for (var i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        const contentType = mime.lookup(document.fileName.split(".")[1]);
+
+        var blob = new Blob([byteArray], {
+          type: contentType,
+        });
+
+        FileSaver.saveAs(blob, document.fileName);
+
+        this.setState({
+          errors: [],
+          loading: false,
+        });
+      })
+      .catch((error) => {
+        this.setState({ loading: false, error: error.message });
+      });
+  };
+
   clearFilter = () => {
     this.setState(
       {
@@ -302,7 +412,9 @@ class RiskRegister extends React.Component {
                 <th scope="col" width={150}>
                   FORECAST DATE
                 </th>
-                <th scope="col">ACTION</th>
+                {this.props && !this.props.isReports ? (
+                  <th scope="col">ACTION</th>
+                ) : null}
               </tr>
             </thead>
             <tbody className="mitigation-table">
@@ -321,45 +433,49 @@ class RiskRegister extends React.Component {
                         <td>{ele.status ? ele.status.name : ""}</td>
                         <td>{format(ele.completionDate, dateFormat)}</td>
                         <td>{format(ele.forecastDate, dateFormat)}</td>
-                        <td>
-                          {ele.canEdit &&
-                          ele.canEdit.canApprove &&
-                          ele.status &&
-                          (ele.status.statusId == 1 ||
-                            ele.status.statusId == 3) ? (
-                            <a
-                              href="#"
-                              href="#"
-                              className="link-primary"
-                              title="Approve"
-                              onClick={() => {
-                                localStorage.setItem("riskId", riskId);
-                                localStorage.setItem(
-                                  "mitigationPlanId",
-                                  ele.id
-                                );
-                                this.props.history.push("/approve-mitigation");
-                              }}
-                            >
-                              <img src={ApproveImage} />
-                            </a>
-                          ) : null}
+                        {this.props && !this.props.isReports ? (
+                          <td>
+                            {ele.canEdit &&
+                            ele.canEdit.canApprove &&
+                            ele.status &&
+                            (ele.status.statusId == 1 ||
+                              ele.status.statusId == 3) ? (
+                              <a
+                                href="#"
+                                href="#"
+                                className="link-primary"
+                                title="Approve"
+                                onClick={() => {
+                                  localStorage.setItem("riskId", riskId);
+                                  localStorage.setItem(
+                                    "mitigationPlanId",
+                                    ele.id
+                                  );
+                                  this.props.history.push(
+                                    "/approve-mitigation"
+                                  );
+                                }}
+                              >
+                                <img src={ApproveImage} />
+                              </a>
+                            ) : null}
 
-                          {ele.status && ele.status.statusId == 2 ? (
-                            <a
-                              href="#"
-                              href="#"
-                              className="link-primary"
-                              title="view"
-                              onClick={() => {
-                                localStorage.setItem("riskId", riskId);
-                                this.props.history.push("/risk-detail");
-                              }}
-                            >
-                              <img src={ViewImg} />
-                            </a>
-                          ) : null}
-                        </td>
+                            {ele.status && ele.status.statusId == 2 ? (
+                              <a
+                                href="#"
+                                href="#"
+                                className="link-primary"
+                                title="view"
+                                onClick={() => {
+                                  localStorage.setItem("riskId", riskId);
+                                  this.props.history.push("/risk-detail");
+                                }}
+                              >
+                                <img src={ViewImg} />
+                              </a>
+                            ) : null}
+                          </td>
+                        ) : null}
                       </tr>
                     );
                   })
@@ -427,11 +543,11 @@ class RiskRegister extends React.Component {
             <h1 className="heading m-b-0">Risk Register</h1>
           </div>
           <div className="col-md-4 text-right">
-            <a href="/add-risk" className="btn btn-danger">
-              Add
-            </a>
-            {/* Changed btn-danger*/}
-            {/* <button class="btn btn-primary filter-btn  m-l-10">Filter</button> */}
+            {this.props && !this.props.isReports ? (
+              <a href="/add-risk" className="btn btn-danger">
+                Add
+              </a>
+            ) : null}
           </div>
           {/* style="width: 100%;    box-shadow: 0 0 2px rgba(0,0,0, .65);
   padding: 15px;
@@ -598,7 +714,7 @@ class RiskRegister extends React.Component {
                 </div>
               </div>
               <div className="row">
-                <div className="col-md-4">
+                <div className="col-md-12">
                   <ButtonComponent
                     className="btn-danger"
                     type="button"
@@ -616,6 +732,16 @@ class RiskRegister extends React.Component {
                       this.clearFilter();
                     }}
                   ></ButtonComponent>
+                  {this.props && this.props.isReports ? (
+                    <ButtonComponent
+                      className="btn-light  ml-3"
+                      type="button"
+                      title="Download"
+                      onClick={() => {
+                        this.downloadReport();
+                      }}
+                    ></ButtonComponent>
+                  ) : null}
                 </div>
               </div>
             </div>
@@ -643,7 +769,9 @@ class RiskRegister extends React.Component {
                 <th scope="col">PROJECT</th>
                 <th scope="col">SEVERITY</th>
                 <th scope="col">STATUS</th>
-                <th scope="col">ACTION</th>
+                {this.props && !this.props.isReports ? (
+                  <th scope="col">ACTION</th>
+                ) : null}
               </tr>
             </thead>
             <tbody>
@@ -692,19 +820,21 @@ class RiskRegister extends React.Component {
                             : ""}
                         </td>
                         <td>{data.status == 1 ? "Closed" : "Open"}</td>
-                        <td>
-                          <a
-                            href="#"
-                            className="link-primary"
-                            title="view"
-                            onClick={() => {
-                              localStorage.setItem("riskId", data.id);
-                              this.props.history.push("/risk-detail");
-                            }}
-                          >
-                            <img src={ViewImg} />
-                          </a>
-                        </td>
+                        {this.props && !this.props.isReports ? (
+                          <td>
+                            <a
+                              href="#"
+                              className="link-primary"
+                              title="view"
+                              onClick={() => {
+                                localStorage.setItem("riskId", data.id);
+                                this.props.history.push("/risk-detail");
+                              }}
+                            >
+                              <img src={ViewImg} />
+                            </a>
+                          </td>
+                        ) : null}
                       </tr>
 
                       {this.state.display[index] &&

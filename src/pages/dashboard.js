@@ -2,18 +2,15 @@ import BreadCrumb from "../screens/Common/BreadCrumb";
 import React from "react";
 
 import LayoutContainer from "../screens/layout/admin-dashboard";
-import Reports from "../screens/Reports/riskRegisterReports";
+import Dashboard from "../screens/Dashboard/dashboard";
 
-const breadCrumbData = [
-  { link: "/reports", name: "Reports" },
-  { name: "Risk Register Report" },
-];
+const breadCrumbData = [{ link: "/dashboard", name: "Dashboard" }];
 
 const Home = () => (
   <>
     <LayoutContainer>
       <BreadCrumb data={breadCrumbData} />
-      <Reports />
+      <Dashboard />
     </LayoutContainer>
   </>
 );

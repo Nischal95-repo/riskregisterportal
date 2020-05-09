@@ -100,7 +100,7 @@ class SideBar extends React.Component {
             ""
           )} */}
           <li title="Dashboard">
-            <a href="#">
+            <a href="/dashboard">
               <figure>
                 <img src={DashboardImg} />
               </figure>{" "}

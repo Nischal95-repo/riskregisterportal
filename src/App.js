@@ -22,6 +22,11 @@ import MitigationApproval from "./pages/approve-mitigation";
 
 // Reports
 import Reports from "./pages/reports";
+import RiskRegisterReports from "./pages/risk-register-report";
+
+// Dashboard
+import Dashboard from "./pages/dashboard";
+
 toast.configure({
   // autoClose: SET_TIMEOUT_VALUE,
   draggable: false,
@@ -53,6 +58,12 @@ class App extends React.Component {
           component={MitigationApproval}
         />
         <Route exact path="/reports" component={Reports} />
+        <Route
+          exact
+          path="/risk-register-report"
+          component={RiskRegisterReports}
+        />
+        <Route exact path="/dashboard" component={Dashboard} />
         {/* Risk Register */}
       </>
     );

@@ -4,6 +4,7 @@ import {
   RISK_DETAILS,
 } from "../../services/graphql/queries/dashboard";
 import { withApollo } from "react-apollo";
+import { withRouter } from "react-router-dom";
 class Cards extends React.Component {
   constructor(props) {
     super(props);
@@ -38,7 +39,13 @@ class Cards extends React.Component {
         <div className="row">
           <div className="col-md-3">
             {/* <div class="widget red-gradient"> */}
-            <div className="widget " style={{ backgroundColor: "#17a2b8" }}>
+            <div
+              className="widget "
+              style={{ backgroundColor: "#17a2b8" }}
+              onClick={() => {
+                this.props.history.push("/risk-register");
+              }}
+            >
               <div className="row  align-items-center">
                 <div className="col">
                   <div className="counter-label">Total</div>
@@ -51,7 +58,13 @@ class Cards extends React.Component {
           </div>
           <div className="col-md-3">
             {/* <div class="widget cracyn-gradient"> */}
-            <div className="widget " style={{ backgroundColor: "#6c757d" }}>
+            <div
+              className="widget "
+              style={{ backgroundColor: "#6c757d" }}
+              onClick={() => {
+                this.props.history.push("/risk-register?status=1");
+              }}
+            >
               <div className="row  align-items-center">
                 <div className="col">
                   <div className="counter-label">Closed</div>
@@ -64,7 +77,13 @@ class Cards extends React.Component {
           </div>
           <div className="col-md-3">
             {/* <div class="widget black-gradient"> */}
-            <div className="widget " style={{ backgroundColor: "#f3ad06" }}>
+            <div
+              className="widget "
+              style={{ backgroundColor: "#f3ad06" }}
+              onClick={() => {
+                this.props.history.push("/risk-register?status=2");
+              }}
+            >
               <div className="row  align-items-center">
                 <div className="col">
                   <div className="counter-label">Pending</div>
@@ -77,7 +96,13 @@ class Cards extends React.Component {
           </div>
           <div className="col-md-3">
             {/* <div class="widget purple-gradient"> */}
-            <div className="widget " style={{ backgroundColor: "#343a40" }}>
+            <div
+              className="widget "
+              style={{ backgroundColor: "#343a40" }}
+              onClick={() => {
+                this.props.history.push("/risk-register?deviated=true");
+              }}
+            >
               <div className="row  align-items-center">
                 <div className="col">
                   <div className="counter-label">Deviated</div>
@@ -94,4 +119,4 @@ class Cards extends React.Component {
   }
 }
 
-export default withApollo(Cards);
+export default withRouter(withApollo(Cards));

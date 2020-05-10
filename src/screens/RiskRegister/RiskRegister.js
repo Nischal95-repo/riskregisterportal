@@ -27,6 +27,7 @@ import ApproveImage from "../../static/images/svg/approve.svg";
 import ViewImg from "../../static/images/svg/view.svg";
 import { compareValues } from "../Common/customSort";
 import Expand from "../../static/images/svg/plus.svg";
+import queryString from "query-string";
 require("../../static/css/bootstrap.min.css");
 const FileSaver = require("file-saver");
 const mime = require("mime-types");
@@ -512,8 +513,26 @@ class RiskRegister extends React.Component {
     this.getListOfOptions(4);
     this.getListOfOptions(18);
     this.getListOfOptions(2);
-    this.getListOfRisk();
+
     this.getUserList();
+    let status = queryString.parse(this.props.location.search).status;
+    let deviated = queryString.parse(this.props.location.search).deviated;
+    console.log("status", status);
+    if (status) {
+      let label = status == 1 ? "Closed" : "Open";
+      this.setState(
+        { statusSelectedOptions: { value: parseInt(status), label: label } },
+        () => {
+          this.getListOfRisk();
+        }
+      );
+    } else if (deviated == "true") {
+      this.setState({ customOptions: { value: 2, label: "Deviated" } }, () => {
+        this.getListOfRisk();
+      });
+    } else {
+      this.getListOfRisk();
+    }
   }
   componentDidUpdate() {}
   render() {

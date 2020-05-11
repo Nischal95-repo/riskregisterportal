@@ -63,8 +63,8 @@ function ColumnCharts(data, legendPos, id) {
         {
           ticks: {
             min: 0,
-            // max: parseInt(data.count) + 5,
-            max: 10,
+            max: parseInt(data.count) + 5,
+            // max: 10,
             stepSize: 2,
           },
           scaleLabel: {

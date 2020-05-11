@@ -23,6 +23,7 @@ import MitigationApproval from "./pages/approve-mitigation";
 // Reports
 import Reports from "./pages/reports";
 import RiskRegisterReports from "./pages/risk-register-report";
+import RiskProfile from "./pages/risk-profile";
 
 // Dashboard
 import Dashboard from "./pages/dashboard";
@@ -64,6 +65,7 @@ class App extends React.Component {
           component={RiskRegisterReports}
         />
         <Route exact path="/dashboard" component={Dashboard} />
+        <Route exact path="/risk-profile" component={RiskProfile} />
         {/* Risk Register */}
       </>
     );

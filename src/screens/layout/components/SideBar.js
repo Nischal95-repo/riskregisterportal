@@ -124,7 +124,7 @@ class SideBar extends React.Component {
             </a>
           </li>
           <li title="Risk Profile">
-            <a href="/reports">
+            <a href="/risk-profile">
               <figure>
                 <img src={ReportsImg} />
               </figure>{" "}

@@ -76,25 +76,6 @@ class Dashboard extends React.Component {
             </div>
             <div className="col-md-6 col-lg-6">
               <div className="inner-box" style={{ minHeight: "300px" }}>
-                <h4>Risk By Company</h4>
-                {/* <PieChart
-                  data={companies}
-                  legendPos={"bottom"}
-                  maxWidth={100}
-                ></PieChart> */}
-                {!this.state.loading ? (
-                  <canvas
-                    style={{ width: "100%", height: "90%" }}
-                    id="company"
-                  />
-                ) : null}
-              </div>
-            </div>
-          </div>
-          <div className="row">
-            {/* <div class="col-md-3 col-lg-3"></div> */}
-            <div className="col-md-12 col-lg-12">
-              <div className="inner-box" style={{ minHeight: "300px" }}>
                 <h4>Risk By Project</h4>
                 {/* <PieChart
                   data={projects}
@@ -104,11 +85,30 @@ class Dashboard extends React.Component {
                 {!this.state.loading ? (
                   <>
                     <canvas
-                      style={{ width: "100%", height: "60%" }}
+                      style={{ width: "100%", height: "90%" }}
                       id="project"
                     />
                     <div id="chart-legends"></div>
                   </>
+                ) : null}
+              </div>
+            </div>
+          </div>
+          <div className="row">
+            {/* <div class="col-md-3 col-lg-3"></div> */}
+            <div className="col-md-12 col-lg-12">
+              <div className="inner-box" style={{ minHeight: "300px" }}>
+                <h4>Risk By Company</h4>
+                {/* <PieChart
+                  data={companies}
+                  legendPos={"bottom"}
+                  maxWidth={100}
+                ></PieChart> */}
+                {!this.state.loading ? (
+                  <canvas
+                    style={{ width: "100%", height: "50%" }}
+                    id="company"
+                  />
                 ) : null}
               </div>
             </div>
@@ -125,7 +125,7 @@ class Dashboard extends React.Component {
                 ></ColumnChart> */}
                 {!this.state.loading ? (
                   <canvas
-                    style={{ width: "100%", height: "70%" }}
+                    style={{ width: "100%", height: "60%" }}
                     id="department"
                   />
                 ) : null}

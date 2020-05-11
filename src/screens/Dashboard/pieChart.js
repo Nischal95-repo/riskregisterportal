@@ -32,31 +32,14 @@ import Chart from "chart.js";
 
 function PieCharts(data, legendPos, id) {
   // console.log("test", document.getElementById(id));
+
   const options = {
     // maintainAspectRatio: false,
     // responsive: false,
     legend: {
       position: legendPos,
       display: true,
-    },
-    legendCallback: function(chart) {
-      console.log("text", chart.data);
-      var text = [];
-      text.push("<ul>");
-      for (var i = 0; i < chart.data.datasets.length; i++) {
-        console.log(chart.data.datasets[i]); // see what's inside the obj.
-        text.push("<li>");
-        text.push(
-          '<span style="background-color:' +
-            chart.data.datasets[i].borderColor +
-            '">' +
-            chart.data.datasets[i].label +
-            "</span>"
-        );
-        text.push("</li>");
-      }
-      text.push("</ul>");
-      return text.join("");
+      // onHover: legendOnHover,
     },
   };
 
@@ -67,6 +50,11 @@ function PieCharts(data, legendPos, id) {
     options: options,
   });
   // document.getElementById("chart-legends").innerHTML = chart.generateLegend();
+}
+
+function legendOnHover(e, legendItem) {
+  console.log(legendItem);
+  // return <h1> {legendItem.text}</h1>;
 }
 
 export default PieCharts;

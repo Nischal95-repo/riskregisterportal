@@ -230,3 +230,33 @@
 .error-progress-bar {
   background-color: #ee5f33 !important;
 }
+
+.risk-profile {
+  width: 400px;
+  margin: 65px;
+}
+.risk-profile td {
+  border: 2px solid black;
+  text-align: center;
+  font-weight: 500;
+  font-size: 20px;
+  width: 100px !important;
+}
+
+.risk-profile td:first-child {
+  border: None;
+  text-align: center;
+  font-weight: 500;
+  font-size: 20px;
+}
+
+.risk-profile tr:last-child td {
+  border: None !important;
+  text-align: center;
+  font-weight: 500;
+  font-size: 20px;
+}
+.y-axis {
+  -ms-transform: rotate(270deg); /* IE 9 */
+  transform: rotate(270deg);
+}

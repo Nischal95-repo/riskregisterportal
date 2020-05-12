@@ -69,7 +69,7 @@ function ColumnCharts(data, legendPos, id) {
           },
           scaleLabel: {
             display: true,
-            labelString: "Risk",
+            labelString: "Count",
             fontColor: "black",
             fontSize: 15,
           },
@@ -93,12 +93,13 @@ function ColumnCharts(data, legendPos, id) {
           },
           ticks: {
             callback: function(label, index, values) {
-              if (label.length > 10) {
-                return label.substring(0, 10) + "...";
+              if (label.length > 15) {
+                return label.substring(0, 15) + "...";
               } else {
                 return label;
               }
             },
+            fontSize: 10,
           },
         },
       ],

@@ -287,7 +287,7 @@ class Mitigation extends React.Component {
                     title="remarks"
                     name="reassignRemarks"
                     value={activityDetail.reassignRemarks}
-                    placeholder="Enter remarks"
+                    placeholder="Enter Remarks"
                     handleChange={(e) => {
                       this.handleInput(e);
                     }}
@@ -472,7 +472,7 @@ class Mitigation extends React.Component {
                 title="remarks"
                 name="name"
                 value={activityDetail.name}
-                placeholder="Enter remarks"
+                placeholder="Enter Remarks"
                 handleChange={(e) => {
                   this.handleInput(e);
                 }}
@@ -496,7 +496,7 @@ class Mitigation extends React.Component {
               <ButtonComponent
                 className="btn-light  ml-3"
                 type="button"
-                title="Reassign"
+                title="Re-Assign"
                 onClick={() => {
                   this.toggleReassign();
                 }}

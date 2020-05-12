@@ -160,8 +160,7 @@ class RiskProfile extends React.Component {
                 "right",
                 "riskCategory"
               );
-            else
-              successMsg("There are no risks for selected company and project");
+            else successMsg("No risks for selected Company and Project");
           }
         );
       })
@@ -176,7 +175,7 @@ class RiskProfile extends React.Component {
         company: null,
         project: null,
       },
-      loading: true,
+      // loading: true,
       isEmpty: true,
       projectOptions: [],
       companyOptions: [],
@@ -315,7 +314,7 @@ class RiskProfile extends React.Component {
                       <h1 className="heading m-b-0">Risk Distribution</h1>
                     </div>
                     <div className="row">
-                      <div className="col-md-6">
+                      <div className="col-md-12 col-lg-6">
                         {/* <img
                     src={matrix}
                     style={{ height: "240px", margin: "35px 0px 0px 75px" }}
@@ -374,7 +373,10 @@ class RiskProfile extends React.Component {
                           ) : null}
                         </div>
                       </div>
-                      <div className="col-md-6">
+                      <div
+                        className="col-md-12 col-lg-6"
+                        style={{ padding: "25px" }}
+                      >
                         {!this.state.loading ? (
                           <canvas
                             style={{ width: "100%", height: "100%" }}
@@ -388,8 +390,10 @@ class RiskProfile extends React.Component {
               </div>
             </div>
           </>
-        ) : (
+        ) : !loading ? (
           <NotAccessible />
+        ) : (
+          ""
         )}
       </>
     );

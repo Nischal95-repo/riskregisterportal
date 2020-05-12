@@ -840,7 +840,7 @@ class RiskRegister extends React.Component {
                   <tr>
                     <th />
                     <th>ID</th>
-                    <th scope="col">RISK DESCRIPTION</th>
+                    <th scope="col">RISK NAME</th>
                     <th scope="col">CATEGORY</th>
                     {/* <th scope="col">DESCRIPTION</!*/}
                     <th scope="col" style={{ width: "270px" }}>

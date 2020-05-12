@@ -233,7 +233,7 @@
 
 .risk-profile {
   width: 400px;
-  margin: 65px;
+  margin: 60px;
 }
 .risk-profile td {
   border: 2px solid black;
@@ -247,14 +247,14 @@
   border: None;
   text-align: center;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 15px;
 }
 
 .risk-profile tr:last-child td {
   border: None !important;
   text-align: center;
   font-weight: 500;
-  font-size: 20px;
+  font-size: 15px;
 }
 .y-axis {
   -ms-transform: rotate(270deg); /* IE 9 */

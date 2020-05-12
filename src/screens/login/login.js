@@ -79,7 +79,7 @@ class Login extends React.Component {
           localStorage.setItem("userType", 5);
           this.props.dispatch(loginAction(result.data.authenticateUser.name));
           this.props.dispatch(addPermission({}));
-          this.props.history.push("/home");
+          this.props.history.push("/dashboard");
           // this.props.history.push("/users-view");
         })
         .catch((error) => {

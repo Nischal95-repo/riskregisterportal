@@ -58,7 +58,7 @@ class Dashboard extends React.Component {
         <RiskCards></RiskCards>
         <div>
           <div className="row">
-            <div className="col-md-6 col-lg-6">
+            <div className="col-md-12 col-lg-6">
               <div className="inner-box" style={{ minHeight: "300px" }}>
                 <h4>Risk By Category</h4>
                 {/* <PieChart
@@ -68,13 +68,13 @@ class Dashboard extends React.Component {
                 ></PieChart> */}
                 {!this.state.loading ? (
                   <canvas
-                    style={{ width: "100%", height: "90%" }}
+                    style={{ width: "100%", height: "50vh" }}
                     id="category"
                   />
                 ) : null}
               </div>
             </div>
-            <div className="col-md-6 col-lg-6">
+            <div className="col-md-12 col-lg-6">
               <div className="inner-box" style={{ minHeight: "300px" }}>
                 <h4>Risk By Project</h4>
                 {/* <PieChart
@@ -85,7 +85,7 @@ class Dashboard extends React.Component {
                 {!this.state.loading ? (
                   <>
                     <canvas
-                      style={{ width: "100%", height: "90%" }}
+                      style={{ width: "100%", height: "50vh" }}
                       id="project"
                     />
                     <div id="chart-legends"></div>
@@ -106,7 +106,7 @@ class Dashboard extends React.Component {
                 ></PieChart> */}
                 {!this.state.loading ? (
                   <canvas
-                    style={{ width: "100%", height: "50%" }}
+                    style={{ width: "100%", height: "50vh" }}
                     id="company"
                   />
                 ) : null}
@@ -125,7 +125,7 @@ class Dashboard extends React.Component {
                 ></ColumnChart> */}
                 {!this.state.loading ? (
                   <canvas
-                    style={{ width: "100%", height: "60%" }}
+                    style={{ width: "100%", height: "50vh" }}
                     id="department"
                   />
                 ) : null}

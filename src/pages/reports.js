@@ -4,10 +4,7 @@ import React from "react";
 import LayoutContainer from "../screens/layout/admin-dashboard";
 import Reports from "../screens/Reports/reports";
 
-const breadCrumbData = [
-  { link: "/home", name: "Home" },
-  { link: "/reports", name: "Reports" },
-];
+const breadCrumbData = [{ link: "/reports", name: "Reports" }];
 
 const Home = () => (
   <>

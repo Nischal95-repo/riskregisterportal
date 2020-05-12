@@ -40,6 +40,7 @@ function PieCharts(data, legendPos, id) {
       position: legendPos,
       display: true,
       // onHover: legendOnHover,
+      labels: { usePointStyle: true, boxWidth: 10, fontSize: 10 },
     },
   };
 

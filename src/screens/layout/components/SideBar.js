@@ -107,30 +107,44 @@ class SideBar extends React.Component {
               <span>Dashboard</span>
             </a>
           </li>
-          <li title="Risk Register">
-            <a href="/risk-register">
-              <figure>
-                <img src={RiskRegisterImg} />
-              </figure>{" "}
-              <span>Risk Register</span>
-            </a>
-          </li>
-          <li title="Reports">
-            <a href="/reports">
-              <figure>
-                <img src={ViewImg} />
-              </figure>{" "}
-              <span>Reports</span>
-            </a>
-          </li>
-          <li title="Risk Profile">
-            <a href="/risk-profile">
-              <figure>
-                <img src={ReportsImg} />
-              </figure>{" "}
-              <span>Risk Profile</span>
-            </a>
-          </li>
+          {accessPermission && accessPermission[240] ? (
+            <li title="Risk Register">
+              <a href="/risk-register">
+                <figure>
+                  <img src={RiskRegisterImg} />
+                </figure>{" "}
+                <span>Risk Register</span>
+              </a>
+            </li>
+          ) : (
+            ""
+          )}
+          {accessPermission && accessPermission[241] ? (
+            <li title="Reports">
+              <a href="/reports">
+                <figure>
+                  <img src={ViewImg} />
+                </figure>{" "}
+                <span>Reports</span>
+              </a>
+            </li>
+          ) : (
+            ""
+          )}
+
+          {accessPermission && accessPermission[242] ? (
+            <li title="Risk Profile">
+              <a href="/risk-profile">
+                <figure>
+                  <img src={ReportsImg} />
+                </figure>{" "}
+                <span>Risk Profile</span>
+              </a>
+            </li>
+          ) : (
+            ""
+          )}
+
           <li title="Logout">
             <a
               href="#"

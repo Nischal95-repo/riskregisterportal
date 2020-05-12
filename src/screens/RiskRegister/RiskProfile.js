@@ -7,6 +7,9 @@ import RiskEdit from "./RiskEdit";
 import MitigationProfile from "../MitigationPlan/mitigationProfile";
 import Employee from "../RiskRegister/Employees/employee";
 import { withApollo } from "react-apollo";
+import ReactModal from "../Common/ReactModal";
+
+import { DO_NOT_ACCESS_MESSAGE } from "../../constants/app-constants";
 
 class RiskProfile extends React.Component {
   constructor(props) {
@@ -16,6 +19,9 @@ class RiskProfile extends React.Component {
       riskDetails: {},
       loading: true,
       riskId: "",
+      reactModalVisible: false,
+      requireCancel: false,
+      accessSpecifier: {},
     };
   }
   getRiskDetail = () => {
@@ -36,22 +42,63 @@ class RiskProfile extends React.Component {
       });
   };
   changeMode = () => {
-    this.setState((prevState) => {
-      return {
-        editMode: !prevState.editMode,
-      };
-    });
+    if (this.state.accessSpecifier[240].editP) {
+      this.setState((prevState) => {
+        return {
+          editMode: !prevState.editMode,
+        };
+      });
+    } else this.setState({ reactModalVisible: true });
+  };
+  submitModal = () => {
+    this.setState({ reactModalVisible: false });
   };
   componentDidMount() {
-    this.setState({ riskId: localStorage.getItem("riskId") }, () => {
-      this.getRiskDetail();
-    });
+    this.props.client
+      .query({
+        query: getAccessPermisionQuery,
+        variables: {
+          moduleId: 14,
+        },
+        fetchPolicy: "network-only",
+      })
+      .then((result) => {
+        let response = result.data.getFunctionByModuleId;
+        response = JSON.parse(response);
+
+        this.setState(
+          { riskId: localStorage.getItem("riskId"), accessSpecifier: response },
+          () => {
+            this.getRiskDetail();
+          }
+        );
+      })
+      .catch((error) => {
+        this.setState({
+          loading: false,
+          error: error.message,
+        });
+      });
   }
   render() {
-    const { riskDetails, editMode, loading, riskId } = this.state;
+    const {
+      riskDetails,
+      editMode,
+      loading,
+      riskId,
+      reactModalVisible,
+      requireCancel,
+      accessSpecifier,
+    } = this.state;
 
     return (
       <>
+        <ReactModal
+          reactModalVisible={reactModalVisible}
+          submitModal={this.submitModal}
+          modalMessage={DO_NOT_ACCESS_MESSAGE}
+          requireCancel={requireCancel}
+        />
         {!editMode && !loading ? (
           <RiskView
             riskDetails={riskDetails}
@@ -67,11 +114,16 @@ class RiskProfile extends React.Component {
         ) : null}
         {!loading ? (
           <>
-            <Employee riskId={riskId} riskDetails={riskDetails}></Employee>
+            <Employee
+              riskId={riskId}
+              riskDetails={riskDetails}
+              editPermission={accessSpecifier[240].editP}
+            ></Employee>
             <MitigationProfile
               mitigationDetails={riskDetails.mitigationplanSet}
               riskId={riskId}
               riskDetails={riskDetails}
+              editPermission={accessSpecifier[240].editP}
             ></MitigationProfile>
           </>
         ) : null}

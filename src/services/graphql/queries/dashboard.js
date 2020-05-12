@@ -27,6 +27,7 @@ export const RISK_PROFILE = gql`
     ) {
       distribution
       categories
+      isEmpty
     }
   }
 `;

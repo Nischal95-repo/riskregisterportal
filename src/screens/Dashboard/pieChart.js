@@ -51,10 +51,12 @@ function PieCharts(data, legendPos, id) {
   });
   // document.getElementById("chart-legends").innerHTML = chart.generateLegend();
 }
-
-function legendOnHover(e, legendItem) {
-  console.log(legendItem);
-  // return <h1> {legendItem.text}</h1>;
-}
+// Chart.Legend.prototype.afterFit = function() {
+//   this.width = this.width + 50;
+// };
+// function legendOnHover(e, legendItem) {
+//   console.log(legendItem);
+//   // return <h1> {legendItem.text}</h1>;
+// }
 
 export default PieCharts;

@@ -11,7 +11,10 @@ import { getListofProjectsByCompanyId } from "../../services/graphql/queries/doc
 import { RISK_PROFILE } from "../../services/graphql/queries/dashboard";
 import { withApollo } from "react-apollo";
 import PieCharts from "../Dashboard/pieChart";
-import matrix from "../../static/images/matrix.PNG";
+import { errorMsg, successMsg } from "../Common/alert";
+import { getAccessPermisionQuery } from "../../services/graphql/queries/accessPermission";
+import NotAccessible from "../Common/NotAccessible";
+import { DO_NOT_ACCESS_MESSAGE } from "../../constants/app-constants";
 class RiskProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -25,7 +28,9 @@ class RiskProfile extends React.Component {
 
       projectOptions: [],
       distribution: [],
+      isEmpty: true,
       loading: true,
+      accessSpecifier: {},
     };
     this.validator = new SimpleReactValidator({
       autoForceUpdate: this,
@@ -144,15 +149,19 @@ class RiskProfile extends React.Component {
             distribution: JSON.parse(
               result.data.getRiskDetailsByCompanyAndProject.distribution
             ),
+            isEmpty: result.data.getRiskDetailsByCompanyAndProject.isEmpty,
           },
           () => {
-            PieCharts(
-              JSON.parse(
-                result.data.getRiskDetailsByCompanyAndProject.categories
-              ),
-              "right",
-              "riskCategory"
-            );
+            if (!result.data.getRiskDetailsByCompanyAndProject.isEmpty)
+              PieCharts(
+                JSON.parse(
+                  result.data.getRiskDetailsByCompanyAndProject.categories
+                ),
+                "right",
+                "riskCategory"
+              );
+            else
+              successMsg("There are no risks for selected company and project");
           }
         );
       })
@@ -168,16 +177,39 @@ class RiskProfile extends React.Component {
         project: null,
       },
       loading: true,
+      isEmpty: true,
       projectOptions: [],
       companyOptions: [],
     });
     this.validator.hideMessages();
     this.getListOfOptions(3);
   }
-
+  accessPermission = () => {
+    this.props.client
+      .query({
+        query: getAccessPermisionQuery,
+        variables: {
+          moduleId: 14,
+        },
+        fetchPolicy: "network-only",
+      })
+      .then((result) => {
+        let response = result.data.getFunctionByModuleId;
+        response = JSON.parse(response);
+        this.setState({
+          accessSpecifier: response[242],
+        });
+        this.getListOfOptions(3);
+      })
+      .catch((error) => {
+        this.setState({
+          loading: false,
+          error: error.message,
+        });
+      });
+  };
   componentDidMount() {
-    // this.getListOfOptions(18);
-    this.getListOfOptions(3);
+    this.accessPermission();
   }
 
   render() {
@@ -186,164 +218,179 @@ class RiskProfile extends React.Component {
       distribution,
       companyOptions,
       projectOptions,
+      isEmpty,
+      accessSpecifier,
+      loading,
     } = this.state;
     console.log("test", distribution);
+    if (loading) {
+      return <div>Loading...</div>;
+    }
     return (
       <>
-        <div className="row align-items-center no-gutters">
-          <div className="col-md-8">
-            <h1 className="heading m-b-0">Risk Profile</h1>
-          </div>
-          {/* style="width: 100%;    box-shadow: 0 0 2px rgba(0,0,0, .65);
+        {accessSpecifier && accessSpecifier.viewP ? (
+          <>
+            <div className="row align-items-center no-gutters">
+              <div className="col-md-8">
+                <h1 className="heading m-b-0">Risk Profile</h1>
+              </div>
+              {/* style="width: 100%;    box-shadow: 0 0 2px rgba(0,0,0, .65);
   padding: 15px;
   border-radius: 3px;" */}
-          <div className="col-md-12 mt-3">
-            <div className="box-card">
-              <div className="row">
-                <div className="col-md-4">
-                  <SelectComponent
-                    required
-                    label="Company"
-                    title={"company"}
-                    name="company"
-                    options={companyOptions}
-                    optionKey={"label"}
-                    valueKey={"Id"}
-                    value={riskDetail.company}
-                    placeholder={"Select Company"}
-                    handleChange={(e) => {
-                      this.handleCompany(e);
-                    }}
-                    validator={this.validator}
-                    validation="required"
-                  />
-                </div>
-                <div className="col-md-4">
-                  <SelectComponent
-                    required
-                    label="Project"
-                    title={"project"}
-                    name="project"
-                    options={projectOptions}
-                    optionKey={"label"}
-                    valueKey={"Id"}
-                    value={riskDetail.project}
-                    placeholder={"Select Project"}
-                    handleChange={this.handleInput}
-                    validator={this.validator}
-                    validation="required"
-                  />
-                </div>
-              </div>
-              <div className="row mt-3">
-                <div className="col-md-12 col-lg-8">
-                  <ButtonComponent
-                    className="btn-danger"
-                    type="button"
-                    title="Apply"
-                    onClick={() => {
-                      if (this.validator.allValid()) {
-                        // this.validator.hideMessages();
-                        this.submitRisk();
-                      } else {
-                        this.validator.showMessages();
-                        // rerender to show messages for the first time
-                        // you can use the autoForceUpdate option to do this automatically`
-                        this.forceUpdate();
-                      }
-                    }}
-                  ></ButtonComponent>
+              <div className="col-md-12 mt-3">
+                <div className="box-card">
+                  <div className="row">
+                    <div className="col-md-4">
+                      <SelectComponent
+                        required
+                        label="Company"
+                        title={"company"}
+                        name="company"
+                        options={companyOptions}
+                        optionKey={"label"}
+                        valueKey={"Id"}
+                        value={riskDetail.company}
+                        placeholder={"Select Company"}
+                        handleChange={(e) => {
+                          this.handleCompany(e);
+                        }}
+                        validator={this.validator}
+                        validation="required"
+                      />
+                    </div>
+                    <div className="col-md-4">
+                      <SelectComponent
+                        required
+                        label="Project"
+                        title={"project"}
+                        name="project"
+                        options={projectOptions}
+                        optionKey={"label"}
+                        valueKey={"Id"}
+                        value={riskDetail.project}
+                        placeholder={"Select Project"}
+                        handleChange={this.handleInput}
+                        validator={this.validator}
+                        validation="required"
+                      />
+                    </div>
+                  </div>
+                  <div className="row mt-3">
+                    <div className="col-md-12 col-lg-8">
+                      <ButtonComponent
+                        className="btn-danger"
+                        type="button"
+                        title="Apply"
+                        onClick={() => {
+                          if (this.validator.allValid()) {
+                            // this.validator.hideMessages();
+                            this.submitRisk();
+                          } else {
+                            this.validator.showMessages();
+                            // rerender to show messages for the first time
+                            // you can use the autoForceUpdate option to do this automatically`
+                            this.forceUpdate();
+                          }
+                        }}
+                      ></ButtonComponent>
 
-                  <ButtonComponent
-                    className="btn-light  ml-3"
-                    type="button"
-                    title="Clear"
-                    onClick={() => {
-                      this.clear();
-                    }}
-                  ></ButtonComponent>
+                      <ButtonComponent
+                        className="btn-light  ml-3"
+                        type="button"
+                        title="Clear"
+                        onClick={() => {
+                          this.clear();
+                        }}
+                      ></ButtonComponent>
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div className="box-card">
-              {/* <div class="col-md-8">
+                {!isEmpty ? (
+                  <div className="box-card">
+                    {/* <div class="col-md-8">
         <h1 class="heading m-b-0">Risk Distribution</h1>
       </div> */}
-              <div className="row">
-                <h1 className="heading m-b-0">Risk Distribution</h1>
-              </div>
-              <div className="row">
-                <div className="col-md-6">
-                  {/* <img
+                    <div className="row">
+                      <h1 className="heading m-b-0">Risk Distribution</h1>
+                    </div>
+                    <div className="row">
+                      <div className="col-md-6">
+                        {/* <img
                     src={matrix}
                     style={{ height: "240px", margin: "35px 0px 0px 75px" }}
                   /> */}
 
-                  {/* <div className="col-md-2 y-axis">
+                        {/* <div className="col-md-2 y-axis">
                       <h4>-Probability-></h4>
                     </div> */}
 
-                  <div className="risk-profile">
-                    <table className=" table ">
-                      {distribution && distribution.length
-                        ? distribution.map((data, index) => {
-                            return (
-                              <tr>
-                                <td
-                                  style={{
-                                    backgroundColor: data[0].colour,
-                                    width: "100px",
-                                  }}
-                                >
-                                  {data[0].val}
-                                </td>
-                                <td
-                                  style={{
-                                    backgroundColor: data[1].colour,
-                                    width: "100px",
-                                  }}
-                                >
-                                  {data[1].val}
-                                </td>
-                                <td
-                                  style={{
-                                    backgroundColor: data[2].colour,
-                                    width: "100px",
-                                  }}
-                                >
-                                  {data[2].val}
-                                </td>
-                                <td
-                                  style={{
-                                    backgroundColor: data[3].colour,
-                                    width: "100px",
-                                  }}
-                                >
-                                  {data[3].val}
-                                </td>
-                              </tr>
-                            );
-                          })
-                        : null}
-                    </table>
-                    {distribution && distribution.length ? (
-                      <h4 style={{ paddingLeft: "215px" }}>-IMPACT-></h4>
-                    ) : null}
+                        <div className="risk-profile">
+                          {/* <h4 className="y-axis">-Probability-></h4> */}
+                          <table className=" table ">
+                            {distribution && distribution.length
+                              ? distribution.map((data, index) => {
+                                  return (
+                                    <tr>
+                                      <td
+                                        style={{
+                                          backgroundColor: data[0].colour,
+                                          width: "100px",
+                                        }}
+                                      >
+                                        {data[0].val}
+                                      </td>
+                                      <td
+                                        style={{
+                                          backgroundColor: data[1].colour,
+                                          width: "100px",
+                                        }}
+                                      >
+                                        {data[1].val}
+                                      </td>
+                                      <td
+                                        style={{
+                                          backgroundColor: data[2].colour,
+                                          width: "100px",
+                                        }}
+                                      >
+                                        {data[2].val}
+                                      </td>
+                                      <td
+                                        style={{
+                                          backgroundColor: data[3].colour,
+                                          width: "100px",
+                                        }}
+                                      >
+                                        {data[3].val}
+                                      </td>
+                                    </tr>
+                                  );
+                                })
+                              : null}
+                          </table>
+                          {distribution && distribution.length ? (
+                            <h4 style={{ paddingLeft: "215px" }}>-IMPACT-></h4>
+                          ) : null}
+                        </div>
+                      </div>
+                      <div className="col-md-6">
+                        {!this.state.loading ? (
+                          <canvas
+                            style={{ width: "100%", height: "100%" }}
+                            id="riskCategory"
+                          />
+                        ) : null}
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="col-md-6">
-                  {!this.state.loading ? (
-                    <canvas
-                      style={{ width: "100%", height: "100%" }}
-                      id="riskCategory"
-                    />
-                  ) : null}
-                </div>
+                ) : null}
               </div>
             </div>
-          </div>
-        </div>
+          </>
+        ) : (
+          <NotAccessible />
+        )}
       </>
     );
   }

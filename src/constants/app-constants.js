@@ -1,6 +1,3 @@
-import chifSign from "../../src/static/certificateImage/sign.png";
-import CeoSign from "../../src/static/certificateImage/sign2.png";
-
 export const PAGINATION_OFFSET_VALUE = 10;
 // export const NOTIFICATION_OFFSET_VALUE = 10;
 export const SET_TIMEOUT_VALUE = 10000;
@@ -36,10 +33,6 @@ export const SPACE = " ";
 // export const CUSTOMER_USER_COUNT = 5;
 export const UNDERSCORE = " _";
 export const ALPHABET_NAME_SPECIAL_CHAR = "_& ";
-export const CERTIFICATE_NAME = "Shivanand Nimbargi";
-export const CERTTIFCATE_POSITION_FIRST = "MD & CEO";
-export const CERTTIFCATE_POSITION_SECOND = "Chief Compliance Officer";
-export const CHIF_SIGN = chifSign;
-export const CEO_SIGN = CeoSign;
+
 export const DO_NOT_ACCESS_MESSAGE =
   "Sorry, you do not have access rights to do this Action";

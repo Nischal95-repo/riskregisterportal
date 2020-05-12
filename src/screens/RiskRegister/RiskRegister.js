@@ -4,15 +4,17 @@ import { withApollo } from "react-apollo";
 import { withRouter } from "react-router-dom";
 import { format } from "date-fns";
 import { dateFormatMonth, dateFormat } from "../../constants/app-constants";
-
+import { getAccessPermisionQuery } from "../../services/graphql/queries/accessPermission";
 import NotAccessible from "../Common/NotAccessible";
 import InputComponent from "../Common/form-component/InputComponent";
 import Pagination from "../Common/Pagination";
 import ButtonComponent from "../Common/form-component/ButtonComponent";
+
 import {
   SET_TIMEOUT_VALUE,
   dateInputFormat,
   PAGINATION_OFFSET_VALUE,
+  DO_NOT_ACCESS_MESSAGE,
 } from "../../constants/app-constants";
 import {
   getListofGenericMasterQuery,
@@ -28,6 +30,7 @@ import ViewImg from "../../static/images/svg/view.svg";
 import { compareValues } from "../Common/customSort";
 import Expand from "../../static/images/svg/plus.svg";
 import queryString from "query-string";
+import ReactModal from "../Common/ReactModal";
 require("../../static/css/bootstrap.min.css");
 const FileSaver = require("file-saver");
 const mime = require("mime-types");
@@ -55,7 +58,7 @@ class RiskRegister extends React.Component {
       departmentSelectedOption: null,
       departmentOptions: [],
       customSelectedOptions: null,
-      loading: false,
+      loading: true,
       riskRegisterData: [],
       userOptions: [],
       userSelectedOptions: null,
@@ -63,6 +66,9 @@ class RiskRegister extends React.Component {
       pageNumber: 1,
       options: [],
       noOfRows: PAGINATION_OFFSET_VALUE,
+      accessSpecifier: {},
+      reactModalVisible: false,
+      requireCancel: false,
     };
   }
   handlePageChange(pageNumber) {
@@ -507,7 +513,41 @@ class RiskRegister extends React.Component {
       }
     );
   }
-
+  accessPermission = () => {
+    this.props.client
+      .query({
+        query: getAccessPermisionQuery,
+        variables: {
+          moduleId: 14,
+        },
+        fetchPolicy: "network-only",
+      })
+      .then((result) => {
+        let response = result.data.getFunctionByModuleId;
+        response = JSON.parse(response);
+        this.setState({
+          accessSpecifier: response[240],
+        });
+        this.getListOfRisk();
+      })
+      .catch((error) => {
+        this.setState({
+          loading: false,
+          error: error.message,
+        });
+      });
+  };
+  submitModal = () => {
+    this.setState({ reactModalVisible: false });
+  };
+  onAddRisk() {
+    if (this.state.accessSpecifier.createP) {
+      // redirectTo("/createusers");
+      this.props.history.push("/add-risk");
+    } else {
+      this.setState({ reactModalVisible: true });
+    }
+  }
   componentDidMount() {
     this.getListOfOptions(3);
     this.getListOfOptions(4);
@@ -523,15 +563,18 @@ class RiskRegister extends React.Component {
       this.setState(
         { statusSelectedOptions: { value: parseInt(status), label: label } },
         () => {
-          this.getListOfRisk();
+          // this.getListOfRisk();
+          this.accessPermission();
         }
       );
     } else if (deviated == "true") {
       this.setState({ customOptions: { value: 2, label: "Deviated" } }, () => {
-        this.getListOfRisk();
+        // this.getListOfRisk();
+        this.accessPermission();
       });
     } else {
-      this.getListOfRisk();
+      // this.getListOfRisk();
+      this.accessPermission();
     }
   }
   componentDidUpdate() {}
@@ -552,393 +595,400 @@ class RiskRegister extends React.Component {
       userOptions,
       userSelectedOptions,
       riskId,
+      accessSpecifier,
+      reactModalVisible,
+      requireCancel,
+      modalMessage,
     } = this.state;
     // console.log("company", companySelectedOption);
-    // if (loading) return <>Fetching!!!</>;
+    if (loading) {
+      return <div>Loading...</div>;
+    }
     return (
       <>
-        <div className="row align-items-center no-gutters">
-          <div className="col-md-8">
-            <h1 className="heading m-b-0">Risk Register</h1>
-          </div>
-          <div className="col-md-4 text-right">
-            {this.props && !this.props.isReports ? (
-              <a href="/add-risk" className="btn btn-danger">
-                Add
-              </a>
-            ) : null}
-          </div>
-          {/* style="width: 100%;    box-shadow: 0 0 2px rgba(0,0,0, .65);
+        {accessSpecifier && accessSpecifier.viewP ? (
+          <>
+            <ReactModal
+              reactModalVisible={reactModalVisible}
+              submitModal={this.submitModal}
+              modalMessage={DO_NOT_ACCESS_MESSAGE}
+              requireCancel={requireCancel}
+            />
+            <div className="row align-items-center no-gutters">
+              <div className="col-md-8">
+                <h1 className="heading m-b-0">Risk Register</h1>
+              </div>
+              <div className="col-md-4 text-right">
+                {this.props && !this.props.isReports ? (
+                  <a
+                    href="#"
+                    className="btn btn-danger"
+                    onClick={() => this.onAddRisk()}
+                  >
+                    Add
+                  </a>
+                ) : null}
+              </div>
+              {/* style="width: 100%;    box-shadow: 0 0 2px rgba(0,0,0, .65);
   padding: 15px;
   border-radius: 3px;" */}
-          <div className="col-md-12 mt-3">
-            <div className="box-card">
-              <div className="row">
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <Select
-                      value={companySelectedOption}
-                      onChange={(e) => {
-                        this.setState({ companySelectedOption: e }, (e) => {
-                          console.log("inside", companySelectedOption);
-                        });
-                      }}
-                      options={companyOptions}
-                      isMulti={true}
-                      closeMenuOnSelect={false}
-                      placeholder="Select Company"
-                      styles={customStyles}
-                    />
+              <div className="col-md-12 mt-3">
+                <div className="box-card">
+                  <div className="row">
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <Select
+                          value={companySelectedOption}
+                          onChange={(e) => {
+                            this.setState({ companySelectedOption: e }, (e) => {
+                              console.log("inside", companySelectedOption);
+                            });
+                          }}
+                          options={companyOptions}
+                          isMulti={true}
+                          closeMenuOnSelect={false}
+                          placeholder="Select Company"
+                          styles={customStyles}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <Select
+                          value={projectSelectedOption}
+                          onChange={(e) => {
+                            this.setState({ projectSelectedOption: e });
+                          }}
+                          options={projectOptions}
+                          isMulti={true}
+                          closeMenuOnSelect={false}
+                          placeholder="Select Project"
+                          styles={customStyles}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <Select
+                          value={riskSelectedOption}
+                          onChange={(e) => {
+                            this.setState({ riskSelectedOption: e });
+                          }}
+                          options={riskOptions}
+                          isMulti={true}
+                          closeMenuOnSelect={false}
+                          placeholder="Select Risk Category"
+                          styles={customStyles}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <input
+                          type="number"
+                          min="1"
+                          value={riskId}
+                          className="form-control"
+                          style={{
+                            height: "37px !important",
+                            borderColor: "hsl(0,0%,80%)",
+                          }}
+                          placeholder="Enter Risk Id"
+                          onChange={(e) => {
+                            this.setState({ riskId: parseInt(e.target.value) });
+                          }}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <Select
-                      value={projectSelectedOption}
-                      onChange={(e) => {
-                        this.setState({ projectSelectedOption: e });
-                      }}
-                      options={projectOptions}
-                      isMulti={true}
-                      closeMenuOnSelect={false}
-                      placeholder="Select Project"
-                      styles={customStyles}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <Select
-                      value={riskSelectedOption}
-                      onChange={(e) => {
-                        this.setState({ riskSelectedOption: e });
-                      }}
-                      options={riskOptions}
-                      isMulti={true}
-                      closeMenuOnSelect={false}
-                      placeholder="Select Risk Category"
-                      styles={customStyles}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <input
-                      type="number"
-                      min="1"
-                      value={riskId}
-                      className="form-control"
-                      style={{
-                        height: "37px !important",
-                        borderColor: "hsl(0,0%,80%)",
-                      }}
-                      placeholder="Enter Risk Id"
-                      onChange={(e) => {
-                        this.setState({ riskId: parseInt(e.target.value) });
-                      }}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <Select
-                      value={statusSelectedOptions}
-                      onChange={(e) => {
-                        this.setState({ statusSelectedOptions: e });
-                      }}
-                      options={statusOptions}
-                      placeholder="Select Status"
-                      styles={customStyles}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <Select
-                      value={departmentSelectedOption}
-                      onChange={(e) => {
-                        this.setState(
-                          { departmentSelectedOption: e }
+                  <div className="row">
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <Select
+                          value={statusSelectedOptions}
+                          onChange={(e) => {
+                            this.setState({ statusSelectedOptions: e });
+                          }}
+                          options={statusOptions}
+                          placeholder="Select Status"
+                          styles={customStyles}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <Select
+                          value={departmentSelectedOption}
+                          onChange={(e) => {
+                            this.setState(
+                              { departmentSelectedOption: e }
 
-                          // () => {
-                          //   let users = [];
-                          //   users.concat(userOptions);
+                              // () => {
+                              //   let users = [];
+                              //   users.concat(userOptions);
 
-                          //   let departments = [];
-                          //   console.log("options", e);
-                          //   e &&
-                          //     e.forEach(data => {
-                          //       departments.push(data.value);
-                          //     });
-                          //   console.log(departments);
-                          //   departments.forEach(data => {
-                          //     this.state.options.forEach(element => {
-                          //       if (element.department.includes(data)) {
-                          //         let obj = {
-                          //           Id: element.Id,
-                          //           label: element.name
-                          //         };
+                              //   let departments = [];
+                              //   console.log("options", e);
+                              //   e &&
+                              //     e.forEach(data => {
+                              //       departments.push(data.value);
+                              //     });
+                              //   console.log(departments);
+                              //   departments.forEach(data => {
+                              //     this.state.options.forEach(element => {
+                              //       if (element.department.includes(data)) {
+                              //         let obj = {
+                              //           Id: element.Id,
+                              //           label: element.name
+                              //         };
 
-                          //         users.push(obj);
-                          //       }
-                          //     });
-                          //   });
+                              //         users.push(obj);
+                              //       }
+                              //     });
+                              //   });
 
-                          //   users = users.sort(compareValues("label"));
+                              //   users = users.sort(compareValues("label"));
 
-                          //   this.setState({ userOptions: users });
-                          // }
-                        );
-                        console.log("test", e);
-                      }}
-                      options={departmentOptions}
-                      isMulti={true}
-                      closeMenuOnSelect={false}
-                      placeholder="Select Department"
-                      styles={customStyles}
-                    />
+                              //   this.setState({ userOptions: users });
+                              // }
+                            );
+                            console.log("test", e);
+                          }}
+                          options={departmentOptions}
+                          isMulti={true}
+                          closeMenuOnSelect={false}
+                          placeholder="Select Department"
+                          styles={customStyles}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <Select
+                          value={userSelectedOptions}
+                          onChange={(e) => {
+                            this.setState({ userSelectedOptions: e }, () => {
+                              console.log("test", userOptions);
+                            });
+                          }}
+                          isMulti
+                          closeMenuOnSelect={false}
+                          options={userOptions}
+                          placeholder="Select Assignee"
+                          styles={customStyles}
+                        />
+                      </div>
+                    </div>
+                    <div className="col-md-3">
+                      <div className="form-group">
+                        <Select
+                          value={customSelectedOptions}
+                          onChange={(e) => {
+                            this.setState({ customSelectedOptions: e });
+                          }}
+                          options={customOptions}
+                          placeholder="Custom Filter"
+                          styles={customStyles}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <Select
-                      value={userSelectedOptions}
-                      onChange={(e) => {
-                        this.setState({ userSelectedOptions: e }, () => {
-                          console.log("test", userOptions);
-                        });
-                      }}
-                      isMulti
-                      closeMenuOnSelect={false}
-                      options={userOptions}
-                      placeholder="Select Assignee"
-                      styles={customStyles}
-                    />
-                  </div>
-                </div>
-                <div className="col-md-3">
-                  <div className="form-group">
-                    <Select
-                      value={customSelectedOptions}
-                      onChange={(e) => {
-                        this.setState({ customSelectedOptions: e });
-                      }}
-                      options={customOptions}
-                      placeholder="Custom Filter"
-                      styles={customStyles}
-                    />
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-                <div className="col-md-12">
-                  <ButtonComponent
-                    className="btn-danger"
-                    type="button"
-                    title="Apply"
-                    onClick={() => {
-                      this.getListOfRisk();
-                    }}
-                  ></ButtonComponent>
+                  <div className="row">
+                    <div className="col-md-12">
+                      <ButtonComponent
+                        className="btn-danger"
+                        type="button"
+                        title="Apply"
+                        onClick={() => {
+                          this.getListOfRisk();
+                        }}
+                      ></ButtonComponent>
 
-                  <ButtonComponent
-                    className="btn-light  ml-3"
-                    type="button"
-                    title="Clear"
-                    onClick={() => {
-                      this.clearFilter();
-                    }}
-                  ></ButtonComponent>
-                  {this.props && this.props.isReports ? (
-                    <ButtonComponent
-                      className="btn-light  ml-3"
-                      type="button"
-                      title="Download"
-                      onClick={() => {
-                        this.downloadReport();
-                      }}
-                    ></ButtonComponent>
-                  ) : null}
+                      <ButtonComponent
+                        className="btn-light  ml-3"
+                        type="button"
+                        title="Clear"
+                        onClick={() => {
+                          this.clearFilter();
+                        }}
+                      ></ButtonComponent>
+                      {this.props && this.props.isReports ? (
+                        <ButtonComponent
+                          className="btn-light  ml-3"
+                          type="button"
+                          title="Download"
+                          onClick={() => {
+                            this.downloadReport();
+                          }}
+                        ></ButtonComponent>
+                      ) : null}
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
-        </div>
 
-        <div className="table-responsive">
-          <table
-            className="table table-style-1 risk-register-table"
-            data-toggle="collapse"
-            data-target="#collapseOne"
-            aria-expanded="true"
-            aria-controls="collapseOne"
-          >
-            <thead>
-              <tr>
-                <th />
-                <th>ID</th>
-                <th scope="col">RISK DESCRIPTION</th>
-                <th scope="col">CATEGORY</th>
-                {/* <th scope="col">DESCRIPTION</!*/}
-                <th scope="col" style={{ width: "270px" }}>
-                  COMPANY
-                </th>
-                <th scope="col">PROJECT</th>
-                <th scope="col">SEVERITY</th>
-                <th scope="col">STATUS</th>
-                {this.props && !this.props.isReports ? (
-                  <th scope="col">ACTION</th>
-                ) : null}
-              </tr>
-            </thead>
-            <tbody>
-              {!loading && riskRegisterData && riskRegisterData.length ? (
-                riskRegisterData.map((data, index) => {
-                  return (
-                    <>
-                      <tr className="risk-register-table-colour">
-                        <td>
-                          {data.mitigationplanSet.length > 0 ? (
-                            <figure style={{ cursor: "pointer" }}>
-                              <img
-                                src={Expand}
-                                onClick={() => {
-                                  this.setState((prevState) => {
-                                    let display = [];
-                                    display[index] = !prevState.display[index];
-                                    return {
-                                      display: [...display],
-                                    };
-                                  });
-                                }}
-                                alt=""
-                              />
-                            </figure>
-                          ) : null}
-                        </td>
-                        <td>{data.id}</td>
-                        <td>{data.name}</td>
-                        <td>
-                          {data.categoryId ? data.categoryId.description : ""}
-                        </td>
-                        <td>
-                          {data.companyId ? data.companyId.description : ""}
-                        </td>
-                        <td>
-                          {data.projectId ? data.projectId.description : ""}
-                        </td>
-                        <td>
-                          {data.severity == 1
-                            ? "Low"
-                            : data.severity == 2
-                            ? "Medium"
-                            : data.severity == 3
-                            ? "High"
-                            : ""}
-                        </td>
-                        <td>{data.status == 1 ? "Closed" : "Open"}</td>
-                        {this.props && !this.props.isReports ? (
-                          <td>
-                            <a
-                              href="#"
-                              className="link-primary"
-                              title="view"
-                              onClick={() => {
-                                localStorage.setItem("riskId", data.id);
-                                this.props.history.push("/risk-detail");
-                              }}
-                            >
-                              <img src={ViewImg} />
-                            </a>
-                          </td>
-                        ) : null}
-                      </tr>
+            <div className="table-responsive">
+              <table
+                className="table table-style-1 risk-register-table"
+                data-toggle="collapse"
+                data-target="#collapseOne"
+                aria-expanded="true"
+                aria-controls="collapseOne"
+              >
+                <thead>
+                  <tr>
+                    <th />
+                    <th>ID</th>
+                    <th scope="col">RISK DESCRIPTION</th>
+                    <th scope="col">CATEGORY</th>
+                    {/* <th scope="col">DESCRIPTION</!*/}
+                    <th scope="col" style={{ width: "270px" }}>
+                      COMPANY
+                    </th>
+                    <th scope="col">PROJECT</th>
+                    <th scope="col">SEVERITY</th>
+                    <th scope="col">STATUS</th>
+                    {this.props && !this.props.isReports ? (
+                      <th scope="col">ACTION</th>
+                    ) : null}
+                  </tr>
+                </thead>
+                <tbody>
+                  {!loading && riskRegisterData && riskRegisterData.length ? (
+                    riskRegisterData.map((data, index) => {
+                      return (
+                        <>
+                          <tr className="risk-register-table-colour">
+                            <td>
+                              {data.mitigationplanSet.length > 0 ? (
+                                <figure style={{ cursor: "pointer" }}>
+                                  <img
+                                    src={Expand}
+                                    onClick={() => {
+                                      this.setState((prevState) => {
+                                        let display = [];
+                                        display[index] = !prevState.display[
+                                          index
+                                        ];
+                                        return {
+                                          display: [...display],
+                                        };
+                                      });
+                                    }}
+                                    alt=""
+                                  />
+                                </figure>
+                              ) : null}
+                            </td>
+                            <td>{data.id}</td>
+                            <td>{data.name}</td>
+                            <td>
+                              {data.categoryId
+                                ? data.categoryId.description
+                                : ""}
+                            </td>
+                            <td>
+                              {data.companyId ? data.companyId.description : ""}
+                            </td>
+                            <td>
+                              {data.projectId ? data.projectId.description : ""}
+                            </td>
+                            <td>
+                              {data.severity == 1
+                                ? "Low"
+                                : data.severity == 2
+                                ? "Medium"
+                                : data.severity == 3
+                                ? "High"
+                                : ""}
+                            </td>
+                            <td>{data.status == 1 ? "Closed" : "Open"}</td>
+                            {this.props && !this.props.isReports ? (
+                              <td>
+                                <a
+                                  href="#"
+                                  className="link-primary"
+                                  title="view"
+                                  onClick={() => {
+                                    localStorage.setItem("riskId", data.id);
+                                    this.props.history.push("/risk-detail");
+                                  }}
+                                >
+                                  <img src={ViewImg} />
+                                </a>
+                              </td>
+                            ) : null}
+                          </tr>
 
-                      {this.state.display[index] &&
-                      data.mitigationplanSet.length > 0
-                        ? this.accordion(data.mitigationplanSet, data.id)
-                        : null}
-                      {/* {this.accordion(data.mitigationPlanSet)} */}
-                    </>
-                  );
-                })
-              ) : !loading && !riskRegisterData.length ? (
-                <div>No Data</div>
-              ) : (
-                <div>Fetching !!!</div>
-              )}
-            </tbody>
-          </table>
-          {/* {!pageOfItems.length && error ? <div>{error}</div> : null}
+                          {this.state.display[index] &&
+                          data.mitigationplanSet.length > 0
+                            ? this.accordion(data.mitigationplanSet, data.id)
+                            : null}
+                          {/* {this.accordion(data.mitigationPlanSet)} */}
+                        </>
+                      );
+                    })
+                  ) : !loading && !riskRegisterData.length ? (
+                    <div>No Data</div>
+                  ) : (
+                    <div>Fetching !!!</div>
+                  )}
+                </tbody>
+              </table>
+              {/* {!pageOfItems.length && error ? <div>{error}</div> : null}
             {!pageOfItems.length && loading ? <div>Fetching...</div> : null}
             {!pageOfItems.length && !error && !loading ? (
             <div style={{ textAlign: "center" }}>No Data</div>
             ) : null} */}
 
-          {loading ? null : (
-            <div className="row" style={{ margin: "0px" }}>
-              <div className="col-md-2">
-                {/* <select
-                  value={this.state.noOfRows}
-                  style={{ width: "70px", marginTop: "8px" }}
-                  className="form-control ml-2"
-                  onChange={(e) =>
-                    this.setState(
-                      { noOfRows: parseInt(e.target.value) },
-                      () => {
-                        this.getListOfRisk();
+              {loading ? null : (
+                <div className="row" style={{ margin: "0px" }}>
+                  <div className="col-md-2"></div>
+                  <div className="col-md-8">
+                    <Pagination
+                      loading={loading}
+                      items={riskRegisterData}
+                      pageSize={this.state.noOfRows}
+                      initialPage={this.state.pageNumber}
+                      onChangePage={this.onChangePage.bind(this)}
+                    />
+                  </div>
+                  <div
+                    className="col-md-2 text-right"
+                    style={{ display: "inline-flex" }}
+                  >
+                    <label style={{ marginTop: "12px", fontSize: "15px" }}>
+                      Page Size:{" "}
+                    </label>
+                    <select
+                      value={this.state.noOfRows}
+                      style={{ width: "70px", marginTop: "8px" }}
+                      className="form-control ml-2"
+                      onChange={(e) =>
+                        this.setState(
+                          { noOfRows: parseInt(e.target.value) },
+                          () => {
+                            this.getListOfRisk();
+                          }
+                        )
                       }
-                    )
-                  }
-                >
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="25">25</option>
-                </select> */}
-              </div>
-              <div className="col-md-8">
-                <Pagination
-                  loading={loading}
-                  items={riskRegisterData}
-                  pageSize={this.state.noOfRows}
-                  initialPage={this.state.pageNumber}
-                  onChangePage={this.onChangePage.bind(this)}
-                />
-              </div>
-              <div
-                className="col-md-2 text-right"
-                style={{ display: "inline-flex" }}
-              >
-                <label style={{ marginTop: "12px", fontSize: "15px" }}>
-                  Page Size:{" "}
-                </label>
-                <select
-                  value={this.state.noOfRows}
-                  style={{ width: "70px", marginTop: "8px" }}
-                  className="form-control ml-2"
-                  onChange={(e) =>
-                    this.setState(
-                      { noOfRows: parseInt(e.target.value) },
-                      () => {
-                        this.getListOfRisk();
-                      }
-                    )
-                  }
-                >
-                  <option value="5">5</option>
-                  <option value="10">10</option>
-                  <option value="20">20</option>
-                  <option value="25">25</option>
-                </select>
-              </div>
+                    >
+                      <option value="5">5</option>
+                      <option value="10">10</option>
+                      <option value="20">20</option>
+                      <option value="25">25</option>
+                    </select>
+                  </div>
+                </div>
+              )}
             </div>
-          )}
-        </div>
-        {/* Table Section End */}
-        {/* Pagination Start */}
+            {/* Table Section End */}
+            {/* Pagination Start */}
+          </>
+        ) : (
+          <NotAccessible />
+        )}
       </>
     );
   }

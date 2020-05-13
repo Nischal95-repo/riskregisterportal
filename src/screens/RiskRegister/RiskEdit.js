@@ -115,17 +115,36 @@ class EditRiskRegister extends React.Component {
             this.state.riskDetail.probability,
             this.state.riskDetail.impact
           );
-          let severity = this.state.riskDetail.probability;
-          if (
-            this.state.riskDetail.impact > this.state.riskDetail.probability
-          ) {
-            severity = this.state.riskDetail.impact;
-          }
+          // let severity = this.state.riskDetail.probability;
+          // if (
+          //   this.state.riskDetail.impact > this.state.riskDetail.probability
+          // ) {
+          //   severity = this.state.riskDetail.impact;
+          // }
+          let combinationArray = [
+            "33",
+            "32",
+            "31",
+            "23",
+            "22",
+            "21",
+            "13",
+            "12",
+            "11",
+          ];
+          let severityArray = ["3", "3", "2", "3", "2", "1", "2", "1", "1"];
+          let severity =
+            severityArray[
+              combinationArray.indexOf(
+                String(this.state.riskDetail.probability) +
+                  String(this.state.riskDetail.impact)
+              )
+            ];
           this.setState((prevstate) => {
             return {
               riskDetail: {
                 ...prevstate.riskDetail,
-                severity: severity,
+                severity: parseInt(severity),
               },
             };
           });
@@ -136,17 +155,36 @@ class EditRiskRegister extends React.Component {
             this.state.riskDetail.residualImpact
           );
           let severity = this.state.riskDetail.residualProbability;
-          if (
-            this.state.riskDetail.residualImpact >
-            this.state.riskDetail.residualProbability
-          ) {
-            severity = this.state.riskDetail.residualImpact;
-          }
+          // if (
+          //   this.state.riskDetail.residualImpact >
+          //   this.state.riskDetail.residualProbability
+          // ) {
+          //   severity = this.state.riskDetail.residualImpact;
+          // }
+          let combinationArray = [
+            "33",
+            "32",
+            "31",
+            "23",
+            "22",
+            "21",
+            "13",
+            "12",
+            "11",
+          ];
+          let severityArray = ["3", "3", "2", "3", "2", "1", "2", "1", "1"];
+          severity =
+            severityArray[
+              combinationArray.indexOf(
+                String(this.state.riskDetail.residualProbability) +
+                  String(this.state.riskDetail.residualImpact)
+              )
+            ];
           this.setState((prevstate) => {
             return {
               riskDetail: {
                 ...prevstate.riskDetail,
-                residualSeverity: severity,
+                residualSeverity: parseInt(severity),
               },
             };
           });
@@ -648,7 +686,7 @@ class EditRiskRegister extends React.Component {
                     optionKey={"label"}
                     valueKey={"Id"}
                     value={riskDetail.impact}
-                    placeholder={"Select Impact"}
+                    // placeholder={"Select Impact"}
                     handleChange={this.handleInput}
                     validator={this.validator}
                     validation="required"
@@ -664,7 +702,7 @@ class EditRiskRegister extends React.Component {
                     optionKey={"label"}
                     valueKey={"Id"}
                     value={riskDetail.probability}
-                    placeholder={"Select Probability"}
+                    // placeholder={"Select Probability"}
                     handleChange={this.handleInput}
                     validator={this.validator}
                     validation="required"
@@ -716,7 +754,7 @@ class EditRiskRegister extends React.Component {
                     optionKey={"label"}
                     valueKey={"Id"}
                     value={riskDetail.residualImpact}
-                    placeholder={"Select Impact"}
+                    // placeholder={"Select Impact"}
                     handleChange={this.handleInput}
                     // validator={this.validator}
                     // validation="required"
@@ -731,7 +769,7 @@ class EditRiskRegister extends React.Component {
                     optionKey={"label"}
                     valueKey={"Id"}
                     value={riskDetail.residualProbability}
-                    placeholder={"Select Probability"}
+                    // placeholder={"Select Probability"}
                     handleChange={this.handleInput}
                     // validator={this.validator}
                     // validation="required"

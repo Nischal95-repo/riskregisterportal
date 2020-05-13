@@ -68,7 +68,7 @@ class Dashboard extends React.Component {
                 ></PieChart> */}
                 {!this.state.loading ? (
                   <canvas
-                    style={{ width: "100%", height: "50vh" }}
+                    style={{ width: "100%", height: "40vh" }}
                     id="category"
                   />
                 ) : null}
@@ -85,10 +85,23 @@ class Dashboard extends React.Component {
                 {!this.state.loading ? (
                   <>
                     <canvas
-                      style={{ width: "100%", height: "50vh" }}
+                      style={{ width: "100%", height: "40vh" }}
                       id="project"
                     />
                     <div id="chart-legends"></div>
+                    {/* <div className="pie">
+                      <div class="float-left col-md-12">
+                        <div class="float-left col-md-8">
+                          <canvas
+                            id="project"
+                            style={{ width: "100%", height: "40vh" }}
+                          ></canvas>
+                        </div>
+                        <div class="float-left col-md-4">
+                          <div id="js-legend" class="chart-legend"></div>
+                        </div>
+                      </div>
+                    </div> */}
                   </>
                 ) : null}
               </div>
@@ -106,7 +119,7 @@ class Dashboard extends React.Component {
                 ></PieChart> */}
                 {!this.state.loading ? (
                   <canvas
-                    style={{ width: "100%", height: "50vh" }}
+                    style={{ width: "100%", height: "45vh" }}
                     id="company"
                   />
                 ) : null}

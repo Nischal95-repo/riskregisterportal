@@ -260,3 +260,37 @@
   -ms-transform: rotate(270deg); /* IE 9 */
   transform: rotate(270deg);
 }
+
+/* Pie Chart */
+.pie .chart-legend li span {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  margin-right: 5px;
+  list-style: none !important;
+  border-radius: 10px;
+  margin-bottom: -2px;
+}
+
+.pie .chart-legend {
+  height: 150px;
+  overflow: auto;
+}
+
+.pie .chart-legend li {
+  cursor: pointer;
+  list-style: none !important;
+  font-size: 10px;
+  color: grey;
+}
+.pie .chart-legend ul {
+  padding-left: 0;
+}
+
+.pie .strike {
+  text-decoration: line-through !important;
+}
+
+.pie .float-left {
+  float: left;
+}

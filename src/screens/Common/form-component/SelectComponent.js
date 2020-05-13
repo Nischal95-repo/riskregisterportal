@@ -1,5 +1,5 @@
 import React from "react";
-const SelectComponent = props => (
+const SelectComponent = (props) => (
   <>
     <div className="form-group" style={props.style ? props.style : {}}>
       {props.label ? (
@@ -15,9 +15,11 @@ const SelectComponent = props => (
         disabled={props.disabled}
         className="form-control"
       >
-        <option value="">{props.placeholder}</option>
+        {props.placeholder ? (
+          <option value="">{props.placeholder}</option>
+        ) : null}
         {props.optionKey
-          ? props.options.map(option => {
+          ? props.options.map((option) => {
               return (
                 <option
                   key={option[props.optionKey]}
@@ -28,7 +30,7 @@ const SelectComponent = props => (
                 </option>
               );
             })
-          : props.options.map(option => {
+          : props.options.map((option) => {
               return (
                 <option key={option} value={option} label={option}>
                   {option}

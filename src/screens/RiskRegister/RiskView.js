@@ -39,7 +39,7 @@ class RiskView extends React.Component {
       residualProbability,
       residualImpact,
     } = this.props.riskDetails;
-    console.log("test details");
+    console.log("test details", canEdit);
 
     return (
       <>
@@ -249,7 +249,7 @@ class RiskView extends React.Component {
                   </div>
                 </div>
               </div>
-              {this.props.displayEdit && status == 2 ? (
+              {this.props.displayEdit ? (
                 <div className="row">
                   <div className="col-md-12 col-lg-8">
                     <button

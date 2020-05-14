@@ -192,6 +192,16 @@ class MitigationActivity extends React.Component {
         department: activityDetail.department,
         responsible: activityDetail.responsible,
       };
+    } else if (showReassign && activityDetail.forecastDate == "") {
+      // status 1->Pending , 2-> Open , 3-> Pending for closure ,4->closed
+      variables = {
+        name: activityDetail.name,
+        mitigationPlanId: parseInt(this.props.mitigationPlanId),
+
+        status: 1,
+        department: activityDetail.department,
+        responsible: activityDetail.responsible,
+      };
     } else {
       variables = {
         name: activityDetail.name,
@@ -315,22 +325,62 @@ class MitigationActivity extends React.Component {
                         validator={this.validator}
                       ></TextAreaComponent>
                     </div>
-                    <div className="col-md-3">
-                      <InputComponent
-                        label="Forecast Date"
-                        title="forecast date"
-                        name="forecastDate"
-                        value={activityDetail.forecastDate}
-                        handleChange={(e) => {
-                          this.handleInput(e);
-                        }}
-                        // validator={this.validator}
-                        // validation="required"
-                        type="date"
-                        min={format(new Date(), dateInputFormat)}
-                      ></InputComponent>
-                    </div>
-                    {showReassign ? null : (
+                    {showReassign ? (
+                      <div className="col-md-3 col-lg-3">
+                        <SelectComponent
+                          required
+                          label="Department"
+                          title="department"
+                          name="department"
+                          options={departmentOptions}
+                          optionKey={"label"}
+                          valueKey={"Id"}
+                          value={activityDetail.department}
+                          placeholder={"Select Department"}
+                          handleChange={(e) => {
+                            this.handleInput(e);
+                          }}
+                          validator={this.validator}
+                          validation="required"
+                        />
+                      </div>
+                    ) : (
+                      <div className="col-md-3">
+                        <InputComponent
+                          label="Forecast Date"
+                          title="forecast date"
+                          name="forecastDate"
+                          value={activityDetail.forecastDate}
+                          handleChange={(e) => {
+                            this.handleInput(e);
+                          }}
+                          // validator={this.validator}
+                          // validation="required"
+                          type="date"
+                          min={format(new Date(), dateInputFormat)}
+                        ></InputComponent>
+                      </div>
+                    )}
+                    {showReassign ? (
+                      <div className="col-md-3 col-lg-3">
+                        <SelectComponent
+                          required
+                          label="Responsible"
+                          title="responsible"
+                          name="responsible"
+                          options={userOptions}
+                          optionKey={"label"}
+                          valueKey={"Id"}
+                          value={activityDetail.responsible}
+                          placeholder={"Select Responsible"}
+                          handleChange={(e) => {
+                            this.handleInput(e);
+                          }}
+                          validator={this.validator}
+                          validation="required"
+                        />
+                      </div>
+                    ) : (
                       <div className="col-md-3">
                         <div className="form-group">
                           <label>Status</label>
@@ -356,7 +406,7 @@ class MitigationActivity extends React.Component {
                       </div>
                     )}
                   </div>
-                  {showReassign ? (
+                  {/* {showReassign ? (
                     <div className="row" id="reassign">
                       <div className="col-md-3 col-lg-3">
                         <SelectComponent
@@ -395,7 +445,7 @@ class MitigationActivity extends React.Component {
                         />
                       </div>
                     </div>
-                  ) : null}
+                  ) : null} */}
                   <div className="row">
                     <div className="col-md-12 col-lg-8">
                       <ButtonComponent

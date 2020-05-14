@@ -812,7 +812,7 @@ class RiskRegister extends React.Component {
                           this.clearFilter();
                         }}
                       ></ButtonComponent>
-                      {this.props && this.props.isReports ? (
+                      {/* {this.props && this.props.isReports ? (
                         <ButtonComponent
                           className="btn-light  ml-3"
                           type="button"
@@ -821,7 +821,7 @@ class RiskRegister extends React.Component {
                             this.downloadReport();
                           }}
                         ></ButtonComponent>
-                      ) : null}
+                      ) : null} */}
                     </div>
                   </div>
                 </div>
@@ -944,7 +944,22 @@ class RiskRegister extends React.Component {
 
               {loading ? null : (
                 <div className="row" style={{ margin: "0px" }}>
-                  <div className="col-md-2"></div>
+                  <div className="col-md-2">
+                    {" "}
+                    {this.props &&
+                    this.props.isReports &&
+                    riskRegisterData &&
+                    riskRegisterData.length ? (
+                      <ButtonComponent
+                        className="btn-light m-t-5"
+                        type="button"
+                        title="Download"
+                        onClick={() => {
+                          this.downloadReport();
+                        }}
+                      ></ButtonComponent>
+                    ) : null}
+                  </div>
                   <div className="col-md-8">
                     <Pagination
                       loading={loading}

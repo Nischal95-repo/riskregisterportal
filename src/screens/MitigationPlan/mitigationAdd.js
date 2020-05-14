@@ -277,7 +277,7 @@ class MitigationAdd extends React.Component {
               ></InputComponent>
             </div>
           </div>
-          <div className="row">
+          {/* <div className="row">
             <div className="col-md-12 col-lg-12 ">
               <div className="row" style={{ paddingLeft: "10px" }}>
                 <label />
@@ -302,7 +302,7 @@ class MitigationAdd extends React.Component {
                 </ol>
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="row">
             <div className="col-md-12 col-lg-8">
               <ButtonComponent

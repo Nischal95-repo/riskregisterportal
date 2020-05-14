@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Header from "./components/Header";
 import SideBar from "./components/SideBar";
 import Notifications from "./components/Notifications";
-
+import Footer from "./components/Footer";
 class AdminDashboard extends React.Component {
   constructor(props) {
     super(props);
@@ -41,36 +41,15 @@ class AdminDashboard extends React.Component {
           toggleNotifications={this.toggleNotifications}
           toggleMenu={this.toggleMenu}
         />
-        {window.location.pathname != "/grid-input-edit" ? (
-          <>
-            {window.location.pathname != "/pdf-viewer" &&
-            window.location.pathname != "/xls-viewer" ? (
-              <SideBar expandMenuClass={this.state.expandMenuClass} />
-            ) : null}
-          </>
-        ) : (
-          ""
-        )}
-        <section
-          className={
-            window.location.pathname == "/grid-input-edit"
-              ? "main-section gridViewStyle"
-              : `main-section ${this.state.expandMenuClass}`
-          }
-          style={
-            window.location.pathname != "/pdf-viewer" &&
-            window.location.pathname != "/xls-viewer"
-              ? null
-              : { width: "100%" }
-          }
-        >
+        <SideBar expandMenuClass={this.state.expandMenuClass} />
+        <section className={`main-section ${this.state.expandMenuClass}`}>
           {this.props.children}
         </section>
-        {/* <Footer /> */}
-        <Notifications
+        <Footer />
+        {/* <Notifications
           toggleNotifications={this.toggleNotifications}
           showNotificationsClass={this.state.showNotificationsClass}
-        />
+        /> */}
       </div>
     );
   }

@@ -36,3 +36,5 @@ export const ALPHABET_NAME_SPECIAL_CHAR = "_& ";
 
 export const DO_NOT_ACCESS_MESSAGE =
   "Sorry, you do not have access rights to do this Action";
+
+export const TOKEN_VERIFICATION_CHECK = 120000;

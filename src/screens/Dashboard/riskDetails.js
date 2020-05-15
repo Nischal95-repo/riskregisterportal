@@ -22,6 +22,9 @@ class Cards extends React.Component {
       .then((result) => {
         console.log("result", result.data.getRiskDetailByUserId);
         let data = result.data.getRiskDetailByUserId;
+        if (data.total == 0) {
+          this.props.history.push("/home");
+        }
         this.setState({ data: data });
       })
       .catch((error) => {

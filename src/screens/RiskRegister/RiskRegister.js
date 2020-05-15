@@ -557,7 +557,8 @@ class RiskRegister extends React.Component {
     this.getUserList();
     let status = queryString.parse(this.props.location.search).status;
     let deviated = queryString.parse(this.props.location.search).deviated;
-    console.log("status", status);
+    console.log("status", status, deviated);
+    debugger;
     if (status) {
       let label = status == 1 ? "Closed" : "Open";
       this.setState(
@@ -568,10 +569,13 @@ class RiskRegister extends React.Component {
         }
       );
     } else if (deviated == "true") {
-      this.setState({ customOptions: { value: 2, label: "Deviated" } }, () => {
-        // this.getListOfRisk();
-        this.accessPermission();
-      });
+      this.setState(
+        { customSelectedOptions: { value: 2, label: "Deviated" } },
+        () => {
+          // this.getListOfRisk();
+          this.accessPermission();
+        }
+      );
     } else {
       // this.getListOfRisk();
       this.accessPermission();

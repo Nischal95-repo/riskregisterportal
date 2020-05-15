@@ -15,9 +15,11 @@ class Dashboard extends React.Component {
       projects: {},
       departments: {},
       loading: true,
+      records: 0,
     };
   }
   getRiskDetails = () => {
+    this.setState({ loading: true });
     this.props.client
       .query({
         query: RISK_DETAILS_FOR_CHARTS,
@@ -33,9 +35,14 @@ class Dashboard extends React.Component {
             companies: JSON.parse(data.getRisksByCompanies),
             departments: JSON.parse(data.getRisksByDepartments),
             loading: false,
+            records: JSON.parse(data.getRisksByCategories).records,
+            loading: false,
           },
           () => {
             console.log("piechart");
+            if (this.state.records == 0) {
+              this.props.history.push("/home");
+            }
             PieCharts(this.state.categories, "right", "category");
             PieCharts(this.state.companies, "right", "company");
             PieCharts(this.state.projects, "right", "project");
@@ -52,7 +59,14 @@ class Dashboard extends React.Component {
     this.getRiskDetails();
   }
   render() {
-    const { categories, companies, projects, departments } = this.state;
+    const {
+      categories,
+      companies,
+      projects,
+      departments,
+      loading,
+      records,
+    } = this.state;
     return (
       <>
         <RiskCards></RiskCards>

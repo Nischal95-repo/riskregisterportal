@@ -31,6 +31,7 @@ class RiskProfile extends React.Component {
       isEmpty: true,
       loading: true,
       accessSpecifier: {},
+      total: 0,
     };
     this.validator = new SimpleReactValidator({
       autoForceUpdate: this,
@@ -131,6 +132,7 @@ class RiskProfile extends React.Component {
   }
 
   submitRisk = () => {
+    this.setState({ loading: true });
     this.props.client
       .mutate({
         mutation: RISK_PROFILE,
@@ -150,6 +152,7 @@ class RiskProfile extends React.Component {
               result.data.getRiskDetailsByCompanyAndProject.distribution
             ),
             isEmpty: result.data.getRiskDetailsByCompanyAndProject.isEmpty,
+            total: result.data.getRiskDetailsByCompanyAndProject.total,
           },
           () => {
             if (!result.data.getRiskDetailsByCompanyAndProject.isEmpty)
@@ -220,6 +223,7 @@ class RiskProfile extends React.Component {
       isEmpty,
       accessSpecifier,
       loading,
+      total,
     } = this.state;
     console.log("test", distribution);
     if (loading) {
@@ -307,19 +311,11 @@ class RiskProfile extends React.Component {
 
                 {!isEmpty ? (
                   <div className="box-card">
-                    {/* <div class="col-md-8">
-        <h1 class="heading m-b-0">Risk Distribution</h1>
-      </div> */}
                     <div className="row">
                       <h1 className="heading m-b-0">Risk Distribution</h1>
                     </div>
                     <div className="row">
-                      <div className="col-md-12 col-lg-6">
-                        {/* <img
-                    src={matrix}
-                    style={{ height: "240px", margin: "35px 0px 0px 75px" }}
-                  /> */}
-
+                      <div className="col-md-6 col-lg-6">
                         {/* <div className="col-md-2 y-axis">
                       <h4>-Probability-></h4>
                     </div> */}
@@ -369,12 +365,14 @@ class RiskProfile extends React.Component {
                               : null}
                           </table>
                           {distribution && distribution.length ? (
-                            <h4 style={{ paddingLeft: "215px" }}>-IMPACT-></h4>
+                            <h6 style={{ paddingLeft: "215px" }}>-IMPACT-></h6>
                           ) : null}
+
+                          <h6>Current number of issues : {total}</h6>
                         </div>
                       </div>
                       <div
-                        className="col-md-12 col-lg-6"
+                        className="col-md-6 col-lg-6"
                         style={{ padding: "25px" }}
                       >
                         {!this.state.loading ? (

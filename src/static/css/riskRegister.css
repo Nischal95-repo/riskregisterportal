@@ -234,6 +234,7 @@
 .risk-profile {
   width: 400px;
   margin: 60px;
+  margin-left: 0;
 }
 .risk-profile td {
   border: 2px solid black;

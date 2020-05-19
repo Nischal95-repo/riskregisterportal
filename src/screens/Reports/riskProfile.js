@@ -15,6 +15,7 @@ import { errorMsg, successMsg } from "../Common/alert";
 import { getAccessPermisionQuery } from "../../services/graphql/queries/accessPermission";
 import NotAccessible from "../Common/NotAccessible";
 import { DO_NOT_ACCESS_MESSAGE } from "../../constants/app-constants";
+import { withRouter, Redirect } from "react-router-dom";
 class RiskProfile extends React.Component {
   constructor(props) {
     super(props);
@@ -52,6 +53,7 @@ class RiskProfile extends React.Component {
     });
   };
   handleCompany = (e) => {
+    debugger;
     let value = e.target.value;
     let name = e.target.name;
     this.setState((prevState) => {
@@ -210,6 +212,32 @@ class RiskProfile extends React.Component {
         });
       });
   };
+  redirect = () => {
+    console.log(this.state.companyOptions, this.state.projectOptions);
+    let companyName = "";
+    let projectName = "";
+    this.state.companyOptions.forEach((element) => {
+      if (parseInt(this.state.riskDetail.company) == element.Id) {
+        companyName = element.label;
+      }
+    });
+    this.state.projectOptions.forEach((element) => {
+      if (parseInt(this.state.riskDetail.project) == element.Id) {
+        projectName = element.label;
+      }
+    });
+    console.log("names", companyName, projectName);
+    this.props.history.push(
+      "/risk-register?company=" +
+        this.state.riskDetail.company +
+        "&companyName=" +
+        companyName +
+        "&project=" +
+        this.state.riskDetail.project +
+        "&projectName=" +
+        projectName
+    );
+  };
   componentDidMount() {
     this.accessPermission();
   }
@@ -322,7 +350,13 @@ class RiskProfile extends React.Component {
 
                         <div className="risk-profile">
                           {/* <h4 className="y-axis">-Probability-></h4> */}
-                          <table className=" table ">
+                          <table
+                            className=" table "
+                            style={{
+                              borderCollapse: "separate",
+                              borderSpacing: "10px 9px",
+                            }}
+                          >
                             {distribution && distribution.length
                               ? distribution.map((data, index) => {
                                   return (
@@ -336,25 +370,40 @@ class RiskProfile extends React.Component {
                                         {data[0].val}
                                       </td>
                                       <td
+                                        className="wobble-horizontal"
                                         style={{
                                           backgroundColor: data[1].colour,
                                           width: "100px",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          this.redirect();
                                         }}
                                       >
                                         {data[1].val}
                                       </td>
                                       <td
+                                        className="wobble-horizontal"
                                         style={{
                                           backgroundColor: data[2].colour,
                                           width: "100px",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          this.redirect();
                                         }}
                                       >
                                         {data[2].val}
                                       </td>
                                       <td
+                                        className="wobble-horizontal"
                                         style={{
                                           backgroundColor: data[3].colour,
                                           width: "100px",
+                                          cursor: "pointer",
+                                        }}
+                                        onClick={() => {
+                                          this.redirect();
                                         }}
                                       >
                                         {data[3].val}
@@ -363,6 +412,33 @@ class RiskProfile extends React.Component {
                                   );
                                 })
                               : null}
+                            <tr>
+                              <td></td>
+                              <td
+                                style={{
+                                  backgroundColor: "white",
+                                  width: "100px",
+                                }}
+                              >
+                                Low
+                              </td>
+                              <td
+                                style={{
+                                  backgroundColor: "white",
+                                  width: "100px",
+                                }}
+                              >
+                                Medium
+                              </td>
+                              <td
+                                style={{
+                                  backgroundColor: "white",
+                                  width: "100px",
+                                }}
+                              >
+                                High
+                              </td>{" "}
+                            </tr>
                           </table>
                           {distribution && distribution.length ? (
                             <h6 style={{ paddingLeft: "215px" }}>-IMPACT-></h6>
@@ -398,4 +474,4 @@ class RiskProfile extends React.Component {
   }
 }
 
-export default withApollo(RiskProfile);
+export default withRouter(withApollo(RiskProfile));

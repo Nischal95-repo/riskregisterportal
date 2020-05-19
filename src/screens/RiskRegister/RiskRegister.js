@@ -557,6 +557,7 @@ class RiskRegister extends React.Component {
     this.getUserList();
     let status = queryString.parse(this.props.location.search).status;
     let deviated = queryString.parse(this.props.location.search).deviated;
+    let company = queryString.parse(this.props.location.search).company;
     console.log("status", status, deviated);
     debugger;
     if (status) {
@@ -571,6 +572,26 @@ class RiskRegister extends React.Component {
     } else if (deviated == "true") {
       this.setState(
         { customSelectedOptions: { value: 2, label: "Deviated" } },
+        () => {
+          // this.getListOfRisk();
+          this.accessPermission();
+        }
+      );
+    } else if (company) {
+      let data = queryString.parse(this.props.location.search);
+      console.log(dateFormat);
+      this.setState(
+        {
+          companySelectedOption: [
+            { value: parseInt(company), label: data.companyName },
+          ],
+          projectSelectedOption: [
+            {
+              value: parseInt(data.project),
+              label: data.projectName,
+            },
+          ],
+        },
         () => {
           // this.getListOfRisk();
           this.accessPermission();

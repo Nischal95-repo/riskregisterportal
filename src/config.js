@@ -17,5 +17,5 @@ console.log(
   process.env.REACT_APP_BUILD_ENV === "production"
 );
 export default {
-  ...productionConfig,
+  ...localConfig,
 };

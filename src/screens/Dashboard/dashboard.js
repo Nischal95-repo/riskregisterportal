@@ -40,9 +40,9 @@ class Dashboard extends React.Component {
           },
           () => {
             console.log("piechart");
-            if (this.state.records == 0) {
-              this.props.history.push("/home");
-            }
+            // if (this.state.records == 0) {
+            //   this.props.history.push("/home");
+            // }
             PieCharts(this.state.categories, "right", "category");
             PieCharts(this.state.companies, "right", "company");
             PieCharts(this.state.projects, "right", "project");

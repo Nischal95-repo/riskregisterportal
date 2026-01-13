@@ -60,7 +60,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "nwb": "0.21.0",
+    "nwb": "0.25.2",
     "flow-bin": "0.73.0",
     "flow-copy-source": "^1.1.0",
     "gh-pages": "0.11.0",

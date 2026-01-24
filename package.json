@@ -21,7 +21,7 @@
     "faker": "^4.1.0",
     "file-saver": "^2.0.2",
     "graphql": "14.5.8",
-    "lodash": "^4.17.10",
+    "lodash": "^4.17.23",
     "mime-types": "^2.1.26",
     "node-sass": "^4.13.1",
     "path": "0.12.7",
@@ -60,7 +60,7 @@
     "extends": "react-app"
   },
   "devDependencies": {
-    "nwb": "0.21.0",
+    "nwb": "0.25.2",
     "flow-bin": "0.73.0",
     "flow-copy-source": "^1.1.0",
     "gh-pages": "0.11.0",
